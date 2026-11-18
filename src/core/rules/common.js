@@ -98,7 +98,7 @@ export const commonRules = [
 
   rule('SENTENCE_CAPITAL', 'grammar', (ctx) => {
     const abbr = ctx.pack?.abbr || new Set();
-    scan(ctx, /(\p{L}{3,})\.( +)(\p{Ll}{2,})/gu, (m) => {
+    scan(ctx, /(?<!\p{L})(\p{L}{3,64})\.( {1,8})(\p{Ll}{2,64})/gu, (m) => {
       const prev = m[1].toLowerCase();
       if (abbr.has(prev) || ctx.protectedAt(m.index)) return null;
       const lead = ctx.text.slice(Math.max(0, m.index - 2), m.index);

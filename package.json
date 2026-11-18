@@ -1,11 +1,11 @@
 {
   "name": "erata",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ERATA — corector gramatical și ortografic offline pentru browser, implementat clean-room.",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "author": "Alexio <alexio@trom.tf>",
+  "author": "Alexandru-Ionuț Chiuță (Alexio) <alexio@trom.tf>",
   "engines": {
     "node": ">=24"
   },

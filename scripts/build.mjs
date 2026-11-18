@@ -54,6 +54,7 @@ for (const [name, patch] of Object.entries(targets)) {
   });
   for (const f of STATIC) cpSync(resolve(ext, f), resolve(out, f));
   cpSync(resolve(ext, 'icons'), resolve(out, 'icons'), { recursive: true });
+  cpSync(resolve(ext, '_locales'), resolve(out, '_locales'), { recursive: true });
   cpSync(resolve(root, 'dict'), resolve(out, 'dict'), { recursive: true });
   writeFileSync(resolve(out, 'manifest.json'), JSON.stringify(patch(structuredClone(base)), null, 2));
   if (zip) {

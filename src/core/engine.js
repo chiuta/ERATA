@@ -139,7 +139,7 @@ export class Erata {
       const d = detectLanguage(text);
       docLang = d && d.confidence >= 0.15 ? d.lang : opts.defaultLang;
     }
-    const sig = String(hash(JSON.stringify([opts.categories, opts.disabledRules, opts.userRules, opts.enVariant, opts.ui, opts.longSentence, opts.personal.length, opts.personal.slice(-5)])));
+    const sig = String(hash(JSON.stringify([opts.categories, opts.disabledRules, opts.userRules, opts.enVariant, opts.ui, opts.longSentence, opts.personal])));
     const all = [];
     const langCount = {};
     for (const p of paras) {
@@ -179,7 +179,17 @@ export class Erata {
       pack,
       opts,
       spell: (w) => (sp ? sp.spell(w) : true),
-      protectedAt: (pos) => prot.some((t) => pos >= t.start && pos < t.end),
+      protectedAt: (pos) => {
+        let lo = 0, hi = prot.length - 1;
+        while (lo <= hi) {
+          const mid = (lo + hi) >> 1;
+          const t = prot[mid];
+          if (pos < t.start) hi = mid - 1;
+          else if (pos >= t.end) lo = mid + 1;
+          else return true;
+        }
+        return false;
+      },
       add: (m) => {
         let { offset, length } = m;
         let rep = m.rep || [];
@@ -239,11 +249,21 @@ export class Erata {
     const kept = out.filter((m) => opts.categories[m.c] !== false && !disabled.has(m.id));
     const prio = (m) => m.pr ?? (m.c === 'style' ? PRIORITY.style : m.c === 'typography' ? PRIORITY.typography : m.c === 'punctuation' ? PRIORITY.punctuation : PRIORITY.RULE);
     const order = kept.slice().sort((a, b) => prio(b) - prio(a) || a.o - b.o);
-    const taken = [];
+    const MAX_MATCHES = 5000;
+    const taken = []; // disjuncte, sortate după offset
     for (const m of order) {
-      if (!taken.some((x) => m.o < x.o + x.l && x.o < m.o + m.l)) taken.push(m);
+      if (taken.length >= MAX_MATCHES) break;
+      let lo = 0, hi = taken.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (taken[mid].o < m.o) lo = mid + 1;
+        else hi = mid;
+      }
+      const prev = taken[lo - 1], next = taken[lo];
+      if (prev && prev.o + prev.l > m.o) continue;
+      if (next && m.o + m.l > next.o) continue;
+      taken.splice(lo, 0, m);
     }
-    taken.sort((a, b) => a.o - b.o);
     return taken.map(({ pr, ...m }) => m);
   }
 

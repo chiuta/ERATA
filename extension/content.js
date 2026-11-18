@@ -628,7 +628,7 @@ function boot() {
     if (!st.matches.length) p.append(el('div', 'muted', T('none')));
     if (st.stats?.readability) {
       const r = st.stats.readability;
-      p.append(el('div', 'muted', `${T('readability')}: ${r.score}/100 · ${T(r.label)}${r.approx ? ' ≈' : ''} · ${r.words} ${ui === 'ro' ? 'cuv.' : 'w.'}`));
+      p.append(el('div', 'muted', `${T('readability')}: ${r.score}/100 · ${T(r.label)}${r.approx ? ' ≈' : ''} · ${r.words} ${T('words_abbr')}`));
     }
     const lrow = el('div', 'line');
     lrow.style.marginTop = '8px';

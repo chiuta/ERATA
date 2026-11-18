@@ -1,0 +1,8 @@
+{
+ "extName": {
+  "message": "ERATA — offline helyesírás-ellenőrző"
+ },
+ "extDesc": {
+  "message": "Helyesírás-, nyelvtan- és tipográfiai ellenőrző, amely 100%-ban helyben fut: ro, en, fr, es, pt. Fiók nélkül, a szöveg nem kerül elküldésre."
+ }
+}

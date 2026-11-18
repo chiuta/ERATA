@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<title>ERATA — offline proofreader for your browser</title>
+<meta name="description" content="ERATA is a free, open-source, clean-room proofreader for Chrome, Edge, Firefox and Safari. Spelling, grammar, punctuation and typography checked 100% locally.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='26' fill='%231849a9'/%3E%3Ctext x='64' y='78' font-family='Arial,sans-serif' font-weight='700' font-size='84' text-anchor='middle' fill='%23fff'%3EE%3C/text%3E%3Cpath d='M18 102q11-14 23 0t23 0 23 0 23 0' fill='none' stroke='%23ff7a68' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light dark;--bg:#fff;--bg2:#f5f8ff;--fg:#1d2939;--mut:#4b5565;--line:#c7ced9;--acc:#1849a9;--accbg:#eef4ff;--onacc:#fff;--ok:#16794c;--bad:#b42318;--coral:#e5533f;--scale:100;--shadow:0 1px 3px rgba(16,24,40,.12)}
+@media (prefers-color-scheme:dark){:root{--bg:#101828;--bg2:#162036;--fg:#f2f4f7;--mut:#b0b9c8;--line:#3b4760;--acc:#84adff;--accbg:#1e2a4a;--onacc:#0b1220;--ok:#6ce9a6;--bad:#fda29b;--coral:#ff8a78;--shadow:none}}
+html.hc{--bg:#fff;--bg2:#fff;--fg:#000;--mut:#000;--line:#000;--acc:#0000c8;--accbg:#fff;--onacc:#fff;--ok:#005a2b;--bad:#a00000;--coral:#a00000}
+@media (prefers-color-scheme:dark){html.hc{--bg:#000;--bg2:#000;--fg:#fff;--mut:#fff;--line:#fff;--acc:#9cc2ff;--accbg:#000;--onacc:#000;--ok:#7dffb5;--bad:#ffb4ab;--coral:#ffb4ab}}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:calc(var(--scale) * 1%);scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.rm{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;overflow-wrap:anywhere}
+html.font body{font-family:"OpenDyslexic","Atkinson Hyperlegible","Lexend","Verdana","Tahoma",sans-serif}
+html.space body{line-height:1.9;letter-spacing:.12em;word-spacing:.16em}
+html.space p,html.space li{margin-bottom:1.5em}
+a{color:var(--acc);text-underline-offset:.15em}
+a:hover{text-decoration-thickness:.12em}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:3px}
+html.hc :focus-visible{outline-width:4px}
+.wrap{max-width:68rem;margin:0 auto;padding:0 1rem}
+.skip{position:absolute;left:.5rem;top:-4rem;background:var(--acc);color:var(--onacc);padding:.6rem 1rem;border-radius:.4rem;z-index:100;text-decoration:none;font-weight:600}
+.skip:focus{top:.5rem}
+header.top{border-bottom:1px solid var(--line);background:var(--bg)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;padding:.7rem 0}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.25rem;color:var(--fg);text-decoration:none;margin-right:auto;letter-spacing:.02em}
+.brand svg{width:2.2rem;height:2.2rem;flex:none}
+.tools{display:flex;align-items:center;gap:.5rem}
+select,button,.btn{font:inherit}
+select{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:.5rem;padding:.4rem .5rem;min-height:2.5rem;max-width:100%}
+.iconbtn{min-width:2.5rem;min-height:2.5rem;border:1px solid var(--line);background:var(--accbg);color:var(--acc);border-radius:.5rem;font-weight:700;cursor:pointer;padding:.2rem .6rem}
+.iconbtn[aria-expanded=true]{background:var(--acc);color:var(--onacc)}
+nav.main ul{list-style:none;margin:0;padding:0 0 .6rem;display:flex;flex-wrap:wrap;gap:.2rem .3rem}
+nav.main a{display:inline-block;padding:.3rem .6rem;border-radius:.4rem;text-decoration:none;color:var(--fg)}
+nav.main a:hover{background:var(--accbg);color:var(--acc)}
+.hero{background:linear-gradient(180deg,var(--bg2),var(--bg));padding:2.5rem 0 2rem}
+.hero .grid{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center}
+.hero .logo{width:7rem;height:7rem}
+.badge{display:inline-block;font-size:.85rem;font-weight:600;background:var(--accbg);color:var(--acc);border:1px solid var(--line);padding:.15rem .7rem;border-radius:2rem}
+h1{font-size:clamp(1.7rem,5vw,2.8rem);line-height:1.15;margin:.5rem 0}
+h2{font-size:1.6rem;line-height:1.25;margin:0 0 .6rem}
+h3{font-size:1.1rem;margin:0 0 .3rem}
+.lead{font-size:1.15rem;max-width:46rem;margin:.4rem 0 1rem}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0 0 1.2rem}
+.pills li{border:1px solid var(--acc);color:var(--acc);border-radius:2rem;padding:.15rem .8rem;font-weight:600;font-size:.95rem}
+.cta{display:flex;flex-wrap:wrap;gap:.6rem}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:.55rem;border:2px solid var(--acc);text-decoration:none;font-weight:600;cursor:pointer;background:transparent;color:var(--acc)}
+.btn.pri{background:var(--acc);color:var(--onacc)}
+.btn:hover{filter:brightness(1.08)}
+.mut{color:var(--mut)}
+.small{font-size:.9rem}
+section{padding:2.2rem 0;border-top:1px solid var(--line)}
+section>.wrap>p.intro{max-width:50rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin:1rem 0}
+.card{border:1px solid var(--line);border-radius:.8rem;padding:1rem;background:var(--bg);box-shadow:var(--shadow)}
+.card p{margin:0}
+kbd{font:inherit;font-size:.9em;border:1px solid var(--line);border-bottom-width:2px;border-radius:.3rem;padding:0 .35rem;background:var(--accbg)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+pre{background:var(--accbg);border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;max-width:100%;white-space:pre-wrap}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:.6rem;max-width:100%}
+.tablewrap:focus-visible{outline-offset:0}
+table{border-collapse:collapse;width:100%;min-width:38rem}
+table.cmp{min-width:64rem}
+caption{text-align:left;padding:.6rem .8rem;font-weight:600}
+th,td{border-top:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;overflow-wrap:normal;word-break:normal}
+thead th{background:var(--accbg);border-top:0;color:var(--fg)}
+tbody th{font-weight:600}
+td.er,th.er{background:var(--accbg)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:1rem}
+ul.ticks{padding-left:1.2rem}
+ul.ticks li{margin:.3rem 0}
+.win h3{color:var(--ok)}.lose h3{color:var(--bad)}
+ol.steps{padding-left:1.4rem}ol.steps li{margin:.3rem 0}
+.demo{border:1px solid var(--line);border-radius:.8rem;padding:1rem;background:var(--bg2)}
+.demo .txt{font-size:1.2rem;line-height:2;padding:.8rem;border:1px dashed var(--line);border-radius:.6rem;background:var(--bg)}
+.mk{font:inherit;color:inherit;background:transparent;border:0;padding:0 .1em;margin:0;cursor:pointer;text-decoration:underline wavy var(--bad);text-decoration-thickness:2px;text-underline-offset:.25em;border-radius:.2rem}
+.mk:hover{background:var(--accbg)}
+.mk.fixed{text-decoration:underline solid var(--ok);text-decoration-thickness:2px;color:var(--ok);font-weight:600}
+.demo ul{padding-left:1.2rem;margin:.6rem 0}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.7rem 0}
+.row .btn{padding:.4rem .9rem}
+.licbox{border:1px solid var(--line);border-radius:.6rem;padding:1rem;background:var(--bg2)}
+footer{border-top:1px solid var(--line);padding:1.6rem 0 4.5rem}
+footer ul{list-style:none;padding:0;margin:.5rem 0 0;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+#a11y{position:fixed;top:3.6rem;right:.75rem;width:min(22rem,calc(100vw - 1.5rem));max-height:calc(100vh - 5rem);overflow:auto;background:var(--bg);color:var(--fg);border:2px solid var(--acc);border-radius:.8rem;padding:1rem;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#a11y[hidden]{display:none}
+#a11y h2{font-size:1.2rem}
+#a11y .f{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin:.7rem 0}
+#a11y label{font-weight:600}
+#a11y input[type=range]{width:9rem;max-width:50%}
+#a11y input[type=checkbox]{width:1.4rem;height:1.4rem;accent-color:var(--acc);flex:none}
+#a11y .row{justify-content:space-between}
+#totop{position:fixed;right:1rem;bottom:1rem;width:3rem;height:3rem;border-radius:50%;border:2px solid var(--acc);background:var(--acc);color:var(--onacc);font-size:1.4rem;line-height:1;cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(.6rem);transition:opacity .25s,transform .25s,visibility .25s}
+#totop.show{opacity:1;visibility:visible;transform:none}
+html.rm #totop{transition:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#totop{transition:none}}
+@media (max-width:40rem){.hero .grid{grid-template-columns:1fr}.hero .logo{width:5rem;height:5rem}}
+@media print{#totop,#a11y,.tools{display:none!important}}
+</style>
+</head>
+<body id="top" tabindex="-1">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<header class="top">
+ <div class="wrap">
+  <div class="bar">
+   <a class="brand" href="#top" aria-label="ERATA">
+    <svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5fc7"/><stop offset="1" stop-color="#1849a9"/></linearGradient></defs><rect width="128" height="128" rx="26" fill="url(#g1)"/><path d="M40 28h50v14H58v16h28v14H58v16h34v14H40z" fill="#fff"/><path d="M16 108q12-16 24 0t24 0 24 0 24 0" fill="none" stroke="#ff7a68" stroke-width="9" stroke-linecap="round"/></svg>
+    <span>ERATA</span>
+   </a>
+   <div class="tools">
+    <label class="mut small" for="langsel" id="langlbl">Language</label>
+    <select id="langsel">
+     <option value="en" lang="en">English</option>
+     <option value="ro" lang="ro">Română</option>
+     <option value="fr" lang="fr">Français</option>
+     <option value="it" lang="it">Italiano</option>
+     <option value="es" lang="es">Español</option>
+     <option value="pt" lang="pt">Português</option>
+     <option value="de" lang="de">Deutsch</option>
+     <option value="hu" lang="hu">Magyar</option>
+    </select>
+    <button type="button" class="iconbtn" id="a11ybtn" aria-expanded="false" aria-controls="a11y" aria-haspopup="dialog" aria-label="Accessibility settings"><span aria-hidden="true">Aa</span></button>
+   </div>
+  </div>
+  <nav class="main" id="nav" aria-label="Sections"><ul></ul></nav>
+ </div>
+</header>
+
+<div id="a11y" role="dialog" aria-labelledby="a11yh" hidden>
+ <h2 id="a11yh" data-i18n="a_title">Accessibility</h2>
+ <div class="f"><label for="a_size" data-i18n="a_size">Text size</label><input type="range" id="a_size" min="100" max="160" step="10" value="100"></div>
+ <div class="f"><label for="a_hc" data-i18n="a_hc">High contrast</label><input type="checkbox" id="a_hc"></div>
+ <div class="f"><label for="a_font" data-i18n="a_font">Readable font</label><input type="checkbox" id="a_font"></div>
+ <div class="f"><label for="a_space" data-i18n="a_space">Wider spacing</label><input type="checkbox" id="a_space"></div>
+ <div class="f"><label for="a_rm" data-i18n="a_rm">Reduce motion</label><input type="checkbox" id="a_rm"></div>
+ <div class="row"><button type="button" class="btn" id="a_reset" data-i18n="a_reset">Reset</button><button type="button" class="btn pri" id="a_close" data-i18n="a_close">Close</button></div>
+</div>
+
+<main id="main" tabindex="-1">
+ <div class="hero">
+  <div class="wrap">
+   <div class="grid">
+    <svg class="logo" viewBox="0 0 128 128" aria-hidden="true" focusable="false"><rect width="128" height="128" rx="26" fill="url(#g1)"/><path d="M40 28h50v14H58v16h28v14H58v16h34v14H40z" fill="#fff"/><path d="M16 108q12-16 24 0t24 0 24 0 24 0" fill="none" stroke="#ff7a68" stroke-width="9" stroke-linecap="round"/></svg>
+    <div>
+     <span class="badge" data-i18n="badge">Version 0.3.0</span>
+     <h1 data-i18n="h1">Proofreading that never leaves your browser</h1>
+     <p class="lead" data-i18n="lead"></p>
+     <ul class="pills"><li data-i18n="p1">100% local</li><li data-i18n="p2">Clean-room</li><li data-i18n="p3">MIT licence</li></ul>
+     <div class="cta">
+      <a class="btn pri" href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="dl">Download</a>
+      <a class="btn" href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="gh">GitHub</a>
+      <a class="btn" href="#demo" data-i18n="ctaDemo">Demo</a>
+     </div>
+     <p class="mut small" data-i18n="hnote"></p>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <section id="demo" aria-labelledby="demoH">
+  <div class="wrap">
+   <h2 id="demoH" data-i18n="demoH"></h2>
+   <p class="intro" data-i18n="demoIntro"></p>
+   <div class="demo">
+    <p class="mut small" style="margin:0 0 .5rem"><span data-i18n="demoSample"></span> <strong id="demoLangName"></strong>. <span data-i18n="demoNote"></span></p>
+    <p class="txt" id="demoTxt"></p>
+    <div class="row"><button type="button" class="btn pri" id="demoFix" data-i18n="demoFix"></button><button type="button" class="btn" id="demoReset" data-i18n="demoReset"></button><span id="demoCount" role="status" aria-live="polite" class="mut small"></span></div>
+    <h3 data-i18n="demoIssues" style="margin-top:.8rem"></h3>
+    <ul id="demoList"></ul>
+   </div>
+  </div>
+ </section>
+
+ <section id="features" aria-labelledby="featH">
+  <div class="wrap">
+   <h2 id="featH" data-i18n="featH"></h2>
+   <p class="intro" data-i18n="featIntro"></p>
+   <div class="cards" id="featCards"></div>
+   <p data-i18n="keys"></p>
+  </div>
+ </section>
+
+ <section id="languages" aria-labelledby="langH">
+  <div class="wrap">
+   <h2 id="langH" data-i18n="langH"></h2>
+   <p class="intro" data-i18n="langIntro"></p>
+   <div class="tablewrap" tabindex="0" role="region" aria-labelledby="langCap">
+    <table id="langTable"><caption id="langCap"></caption><thead></thead><tbody></tbody></table>
+   </div>
+   <p class="mut" data-i18n="langNote"></p>
+  </div>
+ </section>
+
+ <section id="privacy" aria-labelledby="privH">
+  <div class="wrap">
+   <h2 id="privH" data-i18n="privH"></h2>
+   <p class="intro" data-i18n="privIntro"></p>
+   <ul class="ticks" id="privList"></ul>
+   <p class="mut" data-i18n="privNote"></p>
+  </div>
+ </section>
+
+ <section id="compare" aria-labelledby="cmpH">
+  <div class="wrap">
+   <h2 id="cmpH" data-i18n="cmpH"></h2>
+   <p class="intro" data-i18n="cmpIntro"></p>
+   <div class="tablewrap" tabindex="0" role="region" aria-labelledby="cmpCap">
+    <table class="cmp" id="cmpTable"><caption id="cmpCap"></caption><thead></thead><tbody></tbody></table>
+   </div>
+   <p class="mut small" data-i18n="cmpNote"></p>
+   <div class="two">
+    <div class="card win"><h3 data-i18n="winH"></h3><ul class="ticks" id="winList"></ul></div>
+    <div class="card lose"><h3 data-i18n="loseH"></h3><ul class="ticks" id="loseList"></ul></div>
+   </div>
+  </div>
+ </section>
+
+ <section id="install" aria-labelledby="instH">
+  <div class="wrap">
+   <h2 id="instH" data-i18n="instH"></h2>
+   <p class="intro" data-i18n="instIntro"></p>
+   <div class="cards" id="instCards"></div>
+   <h3 data-i18n="buildH"></h3>
+   <pre><code>npm ci &amp;&amp; npm run dicts &amp;&amp; npm test &amp;&amp; npm run build</code></pre>
+   <p><a class="btn pri" href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="dl"></a></p>
+  </div>
+ </section>
+
+ <section id="cleanroom" aria-labelledby="cleanH">
+  <div class="wrap">
+   <h2 id="cleanH" data-i18n="cleanH"></h2>
+   <div id="cleanText"></div>
+  </div>
+ </section>
+
+ <section id="limits" aria-labelledby="limH">
+  <div class="wrap">
+   <h2 id="limH" data-i18n="limH"></h2>
+   <ul class="ticks" id="limList"></ul>
+  </div>
+ </section>
+
+ <section id="license" aria-labelledby="licH">
+  <div class="wrap">
+   <h2 id="licH" data-i18n="licH"></h2>
+   <div class="licbox">
+    <p style="margin:0"><strong>MIT License</strong><br>Copyright (c) 2026 Alexandru-Ionuț Chiuță (Alexio)</p>
+   </div>
+   <p data-i18n="licText"></p>
+   <p><a href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="ftGh">GitHub</a></p>
+  </div>
+ </section>
+
+ <section id="support" aria-labelledby="supH">
+  <div class="wrap">
+   <h2 id="supH" data-i18n="supH"></h2>
+   <p class="intro" data-i18n="supText"></p>
+   <p><a class="btn pri" href="https://buymeacoffee.com/echo.of.the.strings" rel="noopener noreferrer" data-i18n="supBtn"></a></p>
+  </div>
+ </section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <p style="margin:0"><strong>ERATA 0.3.0</strong> — <span data-i18n="foot"></span></p>
+  <ul>
+   <li><a href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="ftGh"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="ftRel"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="ftPriv"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/blob/main/LICENSE" rel="noopener noreferrer" data-i18n="ftLic"></a></li>
+  </ul>
+ </div>
+</footer>
+
+<button type="button" id="totop" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
+
+<script>
+(function(){
+'use strict';
+var SUP=['en','ro','fr','it','es','pt','de','hu'];
+var NAMES={en:'English',ro:'Română',fr:'Français',it:'Italiano',es:'Español',pt:'Português',de:'Deutsch',hu:'Magyar'};
+var T={};
+
+T.en={
+title:`ERATA — offline proofreader for your browser`,
+desc:`ERATA is a free, open-source, clean-room proofreader for Chrome, Edge, Firefox and Safari. Spelling, grammar, punctuation and typography checked 100% locally.`,
+skip:`Skip to content`,langLabel:`Language`,navLabel:`Sections`,
+nav:[`Features`,`Languages`,`Privacy`,`Comparison`,`Install`,`Limits`,`Support`],
+a11yBtn:`Accessibility settings`,a_title:`Accessibility`,a_size:`Text size`,a_hc:`High contrast`,a_font:`Readable font`,a_space:`Wider spacing`,a_rm:`Reduce motion`,a_reset:`Reset`,a_close:`Close`,
+backTop:`Back to top`,
+badge:`Version 0.3.0`,h1:`Proofreading that never leaves your browser`,
+lead:`ERATA checks spelling, grammar, punctuation and typography in any text field, entirely on your device. No account, no server, no telemetry. It is written from scratch, clean-room, and released under the MIT licence.`,
+p1:`100% local`,p2:`Clean-room`,p3:`MIT licence`,dl:`Download from GitHub Releases`,gh:`Source on GitHub`,ctaDemo:`Try the demo`,hnote:`Free, with no account. Chrome, Edge, Opera, Firefox; Safari through a converter.`,
+demoH:`Try the idea`,demoIntro:`A small simulation running in this page: select an underlined word to apply the suggestion, select it again to undo.`,demoSample:`Sample language:`,demoNote:`Illustrative demo with fixed sentences, not the real engine.`,demoFix:`Fix all`,demoReset:`Reset`,demoIssues:`Detected issues`,demoApplied:`fixed`,demoCount:`fixed`,
+featH:`What it does`,featIntro:`A proofreader that lives inside the extension and works wherever you type.`,
+feats:[
+[`Local checking`,`Spelling, grammar, punctuation and typography are checked inside the extension. Your text is never sent anywhere.`],
+[`Per-paragraph language detection`,`Each paragraph is identified separately, so a foreign quotation does not trigger false alarms.`],
+[`Deep Romanian support`,`Comma-below ș/ț, “să/sa”, “într-un”, “între 5 și 10”, commas before “dar/însă”, lowercase months, pleonasms and more.`],
+[`Diacritics restoration`,`For Romanian, French, Spanish and Portuguese, applied only where the fix is unambiguous.`],
+[`Works where you type`,`textarea, input and contenteditable fields. Underlines are drawn in a separate layer and never touch the page's DOM.`],
+[`Accessible markers`,`Wavy, solid, dashed or dotted underlines, so meaning does not depend on colour alone.`],
+[`Yours to tune`,`Personal dictionary, custom regex rules, per-site switch, import and export of settings, and import of any Hunspell dictionary.`],
+[`Text Studio`,`A full-page editor with “Fix all”, a readability score and an optional rewrite through a local model on localhost (off by default).`]],
+keys:`Shortcuts: Alt+Shift+F fixes everything in the active field; Alt+Shift+E switches ERATA on or off for the current site.`,
+langH:`Languages and real depth`,langIntro:`The interface is available in eight languages, but the checking depth differs a lot from one language to another. Here is the honest picture for version 0.3.0.`,
+langCap:`Checking support by language, version 0.3.0`,th_lang:`Language`,th_spell:`Spelling`,th_rules:`Grammar and style rules`,
+spell:[`Bundled dictionary`,`Only with a Hunspell dictionary you import`,`Not available yet`],
+rules:[`Own rules`,`Own rules and diacritics restoration`,`Minimal rule pack`,`None: the interface is translated only`],
+langNote:`ERATA has far fewer grammar rules than long-established checkers. Romanian gets the most attention; German and Italian are minimal; Hungarian is interface-only in 0.3.0, with no dictionary and no rules.`,
+privH:`Privacy`,privIntro:`Privacy here is architectural, not a promise: there is nothing to send text to.`,
+privItems:[`There is no ERATA server, no account, and no telemetry or analytics.`,`The extension asks for no network permission. The only exception is the optional “rewrite with a local model”, off by default, which can send one sentence to a localhost or 127.0.0.1 endpoint that you choose.`,`Settings, personal dictionary and imported dictionaries stay in local extension storage and IndexedDB, on this device only.`,`Password, e-mail and card fields, and any field marked data-erata="off", are ignored.`],
+privNote:`This page loads nothing from other sites and uses no trackers or cookies. It stores only your display preferences (language, accessibility) in your browser's localStorage.`,
+cmpH:`Honest comparison`,cmpIntro:`How ERATA stands against LanguageTool, Grammarly, Harper and Microsoft Editor, including where it loses.`,cmpCap:`ERATA compared with other proofreaders`,
+cmpHead:[`Criterion`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Runs offline; text stays on device`,`Yes`,`No by default: text goes to vendor servers`,`No: cloud processing (US servers)`,`Yes`,`No: Microsoft cloud`],
+[`Account needed`,`No`,`Unclear: sources disagree`,`Yes`,`No`,`Microsoft account`],
+[`Romanian`,`Dedicated rules and diacritics restoration`,`Supported, but the project marks it inactive`,`Beta, corrections only`,`No`,`Spelling only`],
+[`Other languages`,`en, fr, es, pt with own rules; de and it minimal; hu interface only`,`30+ languages, with far more rules`,`Several languages; English is strongest`,`English only`,`Many languages, including Hungarian`],
+[`Google Docs and apps`,`No Google Docs, no mobile or desktop app`,`Google Docs, desktop and iOS apps`,`Google Docs, desktop and mobile`,`Browser, macOS app and editors; Google Docs not confirmed`,`Chrome/Edge extension and Word`],
+[`Style and AI rewriting`,`Basic style hints; optional rewrite with your own local model`,`Premium paraphrasing`,`Yes (limited on the free tier)`,`None, deliberately no LLM`,`Refinements need Microsoft 365`],
+[`Open source`,`Yes (MIT)`,`Engine yes, extension no`,`No`,`Yes (Apache-2.0)`,`No`],
+[`Cost`,`Free`,`Limited free tier; Premium is paid`,`Free tier; Pro is paid`,`Free`,`Basic free; Microsoft 365 for more`],
+[`Maturity`,`New: no published precision or recall`,`Established, large user base`,`Established, large user base`,`Very active development`,`Established`]],
+cmpNote:`Based on the project's own adversarial comparison (docs/COMPARISON.md, prepared on 18 November 2026 from public product pages). Competing products change quickly and some facts are disputed between sources, so verify before you decide.`,
+winH:`Where ERATA wins`,wins:[`Architectural privacy: no server at all. Among the browser tools compared, only Harper matches it, and Harper covers English only.`,`Local spelling plus own rules for Romanian, French, Spanish, Portuguese and English in a single extension.`,`Diacritics restoration for ro, fr, es and pt, which we did not find advertised by the other products reviewed.`,`Extensible and free: any Hunspell dictionary, regex rules, MIT licence, no subscription.`],
+loseH:`Where ERATA loses`,loses:[`Far fewer grammar rules than established engines, especially in English, German and Italian.`,`No statistical layer, so real-word errors (there/their) are caught only by hand-written patterns.`,`Style and AI rewriting are minimal; the optional rewrite needs a local model that you set up yourself.`,`No Google Docs, mobile or desktop integration; Safari is untested.`,`A brand-new project: no published precision or recall, no external accessibility audit, no track record yet.`],
+instH:`Install`,instIntro:`Install from the GitHub Releases page, or build it yourself. Store listings are not documented yet.`,
+inst:[
+[`Chrome, Edge and Opera`,`Download the Chromium build from GitHub Releases and unzip it (or build from source, below).`,`Open chrome://extensions (edge://extensions in Edge) and turn on Developer mode.`,`Select “Load unpacked” and choose the unzipped folder.`,`Click into any text field and start typing.`],
+[`Firefox`,`Get the Firefox build from GitHub Releases (or build from source).`,`Open about:debugging#/runtime/this-firefox.`,`Select “Load Temporary Add-on” and pick manifest.json from the Firefox build.`,`Temporary add-ons are removed when Firefox restarts.`],
+[`Safari (experimental)`,`Requires macOS and Xcode. This path is untested in the project.`,`Run: xcrun safari-web-extension-converter dist/chrome`,`Build the generated app in Xcode, then enable the extension in Safari settings.`]],
+buildH:`Build from source (Node.js 24 or newer)`,
+cleanH:`Clean-room`,clean:[`ERATA was written from scratch. It does not contain or derive from the code, rules (XML/Java), data or message texts of LanguageTool or any other proofreader, and no source file from those projects was opened, copied or translated.`,`The Hunspell engine is our own implementation of the public file format. Rules were drafted from general grammar and typography knowledge and normative references, and language detection and suggestions use our own algorithms. Bundled dictionaries are independent Hunspell projects with their own licences. Details are in CLEANROOM.md in the repository.`],
+limH:`Known limits`,lims:[`Fewer grammar rules than established checkers: many errors will go unnoticed.`,`German and Italian: minimal rules, and spelling works only after you import a dictionary.`,`Hungarian: interface only in 0.3.0, with no dictionary and no rules.`,`No statistical layer for real-word errors, and no measured false-positive or recall rates yet.`,`No Google Docs (a canvas editor), no mobile, no desktop or Office integration.`,`Automated tests run on Chromium only; Safari support is untested.`,`Very long texts are truncated: only about the first 80,000 characters are checked.`],
+licH:`Licence`,licText:`ERATA's code is released under the MIT licence. Bundled dictionaries keep their own licences, listed in the repository (dict/LICENSES.md).`,
+supH:`Support the project`,supText:`ERATA is free, with no ads and no tracking. If it helps you, you can buy me a coffee.`,supBtn:`Buy me a coffee`,
+foot:`free, open-source, clean-room.`,ftGh:`GitHub`,ftRel:`Releases`,ftPriv:`Privacy policy`,ftLic:`Licence`
+};
+
+T.ro={
+title:`ERATA — corector offline pentru browser`,
+desc:`ERATA este un corector gratuit, open-source, clean-room, pentru Chrome, Edge, Firefox și Safari. Ortografie, gramatică, punctuație și tipografie verificate 100% local.`,
+skip:`Sari la conținut`,langLabel:`Limba`,navLabel:`Secțiuni`,
+nav:[`Funcții`,`Limbi`,`Confidențialitate`,`Comparație`,`Instalare`,`Limite`,`Sprijin`],
+a11yBtn:`Setări de accesibilitate`,a_title:`Accesibilitate`,a_size:`Mărimea textului`,a_hc:`Contrast ridicat`,a_font:`Font lizibil`,a_space:`Spațiere mai mare`,a_rm:`Reduce animațiile`,a_reset:`Resetează`,a_close:`Închide`,
+backTop:`Înapoi sus`,
+badge:`Versiunea 0.3.0`,h1:`Corectură care nu iese niciodată din browserul tău`,
+lead:`ERATA verifică ortografia, gramatica, punctuația și tipografia în orice câmp de text, în întregime pe dispozitivul tău. Fără cont, fără server, fără telemetrie. Este scris de la zero, clean-room, și publicat sub licența MIT.`,
+p1:`100% local`,p2:`Clean-room`,p3:`Licență MIT`,dl:`Descarcă de pe GitHub Releases`,gh:`Cod sursă pe GitHub`,ctaDemo:`Încearcă demonstrația`,hnote:`Gratuit, fără cont. Chrome, Edge, Opera, Firefox; Safari printr-un convertor.`,
+demoH:`Încearcă ideea`,demoIntro:`O mică simulare care rulează în această pagină: selectează un cuvânt subliniat ca să aplici sugestia, selectează-l din nou ca să o anulezi.`,demoSample:`Limba exemplului:`,demoNote:`Demonstrație ilustrativă, cu propoziții fixe, nu motorul real.`,demoFix:`Corectează tot`,demoReset:`Resetează`,demoIssues:`Probleme detectate`,demoApplied:`corectat`,demoCount:`corectate`,
+featH:`Ce face`,featIntro:`Un corector care trăiește în extensie și funcționează oriunde scrii.`,
+feats:[
+[`Verificare locală`,`Ortografia, gramatica, punctuația și tipografia sunt verificate în interiorul extensiei. Textul tău nu este trimis nicăieri.`],
+[`Detecția limbii pe paragraf`,`Fiecare paragraf este identificat separat, așa că un citat în altă limbă nu produce alarme false.`],
+[`Suport aprofundat pentru română`,`ș/ț cu virgulă, „să/sa”, „într-un”, „între 5 și 10”, virgula înainte de „dar/însă”, lunile cu literă mică, pleonasme și altele.`],
+[`Restaurarea diacriticelor`,`Pentru română, franceză, spaniolă și portugheză, aplicată doar acolo unde corectura este fără echivoc.`],
+[`Funcționează unde scrii`,`Câmpuri textarea, input și contenteditable. Sublinierile sunt desenate pe un strat separat și nu ating niciodată DOM-ul paginii.`],
+[`Marcaje accesibile`,`Subliniere ondulată, continuă, întreruptă sau punctată, astfel încât sensul să nu depindă doar de culoare.`],
+[`Îl configurezi tu`,`Dicționar personal, reguli proprii (regex), comutator per site, import și export al setărilor și import de orice dicționar Hunspell.`],
+[`Studio de text`,`Un editor pe pagină întreagă cu „Corectează tot”, scor de lizibilitate și reformulare opțională printr-un model local pe localhost (dezactivată implicit).`]],
+keys:`Scurtături: Alt+Shift+F corectează tot în câmpul activ; Alt+Shift+E activează sau dezactivează ERATA pe site-ul curent.`,
+langH:`Limbi și adâncimea reală`,langIntro:`Interfața este disponibilă în opt limbi, dar adâncimea verificării diferă mult de la o limbă la alta. Iată imaginea onestă pentru versiunea 0.3.0.`,
+langCap:`Suportul de verificare pe limbi, versiunea 0.3.0`,th_lang:`Limba`,th_spell:`Ortografie`,th_rules:`Reguli de gramatică și stil`,
+spell:[`Dicționar inclus`,`Doar cu un dicționar Hunspell importat de tine`,`Încă indisponibilă`],
+rules:[`Reguli proprii`,`Reguli proprii și restaurarea diacriticelor`,`Pachet minimal de reguli`,`Niciuna: doar interfața este tradusă`],
+langNote:`ERATA are mult mai puține reguli de gramatică decât corectoarele consacrate. Româna primește cea mai multă atenție; germana și italiana sunt minimale; maghiara este doar interfață în 0.3.0, fără dicționar și fără reguli.`,
+privH:`Confidențialitate`,privIntro:`Confidențialitatea aici este arhitecturală, nu o promisiune: nu există unde să fie trimis textul.`,
+privItems:[`Nu există server ERATA, cont, telemetrie sau analitice.`,`Extensia nu cere nicio permisiune de rețea. Singura excepție este „reformularea cu un model local”, opțională și dezactivată implicit, care poate trimite o propoziție către un endpoint localhost sau 127.0.0.1 ales de tine.`,`Setările, dicționarul personal și dicționarele importate rămân în stocarea locală a extensiei și în IndexedDB, doar pe acest dispozitiv.`,`Câmpurile de parolă, e-mail și card, precum și orice câmp marcat data-erata="off", sunt ignorate.`],
+privNote:`Această pagină nu încarcă nimic de pe alte site-uri și nu folosește trackere sau cookie-uri. Salvează doar preferințele tale de afișare (limbă, accesibilitate) în localStorage-ul browserului.`,
+cmpH:`Comparație onestă`,cmpIntro:`Cum se situează ERATA față de LanguageTool, Grammarly, Harper și Microsoft Editor, inclusiv unde pierde.`,cmpCap:`ERATA comparat cu alte corectoare`,
+cmpHead:[`Criteriu`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Rulează offline; textul rămâne pe dispozitiv`,`Da`,`Nu, implicit: textul merge la serverele furnizorului`,`Nu: procesare în cloud (servere din SUA)`,`Da`,`Nu: cloud Microsoft`],
+[`Cont necesar`,`Nu`,`Neclar: sursele se contrazic`,`Da`,`Nu`,`Cont Microsoft`],
+[`Româna`,`Reguli dedicate și restaurarea diacriticelor`,`Suportată, dar proiectul o marchează ca inactivă`,`Beta, doar corecturi`,`Nu`,`Doar ortografie`],
+[`Alte limbi`,`en, fr, es, pt cu reguli proprii; de și it minimale; hu doar interfață`,`Peste 30 de limbi, cu mult mai multe reguli`,`Mai multe limbi; engleza este cea mai bună`,`Doar engleză`,`Multe limbi, inclusiv maghiara`],
+[`Google Docs și aplicații`,`Fără Google Docs, fără aplicație mobilă sau desktop`,`Google Docs, aplicații desktop și iOS`,`Google Docs, desktop și mobil`,`Browser, aplicație macOS și editoare; Google Docs neconfirmat`,`Extensie Chrome/Edge și Word`],
+[`Stil și reformulare cu IA`,`Indicii de stil de bază; reformulare opțională cu propriul tău model local`,`Parafrazare în versiunea Premium`,`Da (limitat în planul gratuit)`,`Niciuna, în mod deliberat fără LLM`,`Rafinările cer Microsoft 365`],
+[`Open source`,`Da (MIT)`,`Motorul da, extensia nu`,`Nu`,`Da (Apache-2.0)`,`Nu`],
+[`Cost`,`Gratuit`,`Plan gratuit limitat; Premium este cu plată`,`Plan gratuit; Pro este cu plată`,`Gratuit`,`Varianta de bază gratuită; Microsoft 365 pentru mai mult`],
+[`Maturitate`,`Nou: fără precizie sau recall publicate`,`Consacrat, bază mare de utilizatori`,`Consacrat, bază mare de utilizatori`,`Dezvoltare foarte activă`,`Consacrat`]],
+cmpNote:`Pe baza comparației adversariale a proiectului (docs/COMPARISON.md, redactată la 18 noiembrie 2026 din paginile publice ale produselor). Produsele concurente se schimbă rapid și unele fapte sunt contestate între surse, deci verifică înainte de a decide.`,
+winH:`Unde câștigă ERATA`,wins:[`Confidențialitate arhitecturală: niciun server. Dintre uneltele de browser comparate, doar Harper o egalează, iar Harper acoperă doar engleza.`,`Ortografie locală plus reguli proprii pentru română, franceză, spaniolă, portugheză și engleză, într-o singură extensie.`,`Restaurarea diacriticelor pentru ro, fr, es și pt, pe care nu am găsit-o promovată de celelalte produse analizate.`,`Extensibil și gratuit: orice dicționar Hunspell, reguli regex, licență MIT, fără abonament.`],
+loseH:`Unde pierde ERATA`,loses:[`Mult mai puține reguli de gramatică decât motoarele consacrate, mai ales la engleză, germană și italiană.`,`Fără strat statistic, deci erorile cu cuvinte reale (there/their) sunt prinse doar de tipare scrise manual.`,`Stilul și reformularea cu IA sunt minimale; reformularea opțională cere un model local pe care ți-l configurezi singur.`,`Fără integrare cu Google Docs, mobil sau desktop; Safari este netestat.`,`Un proiect foarte nou: fără precizie sau recall publicate, fără audit extern de accesibilitate, fără istoric încă.`],
+instH:`Instalare`,instIntro:`Instalează de pe pagina GitHub Releases sau compilează singur. Listările în magazinele de extensii nu sunt încă documentate.`,
+inst:[
+[`Chrome, Edge și Opera`,`Descarcă varianta Chromium de pe GitHub Releases și dezarhiveaz-o (sau compilează din sursă, mai jos).`,`Deschide chrome://extensions (edge://extensions în Edge) și activează Modul dezvoltator.`,`Alege „Încărcare extensie despachetată” și selectează dosarul dezarhivat.`,`Fă clic în orice câmp de text și începe să scrii.`],
+[`Firefox`,`Ia varianta Firefox de pe GitHub Releases (sau compilează din sursă).`,`Deschide about:debugging#/runtime/this-firefox.`,`Alege „Încarcă un supliment temporar” și selectează manifest.json din varianta Firefox.`,`Suplimentele temporare sunt eliminate la repornirea Firefox.`],
+[`Safari (experimental)`,`Necesită macOS și Xcode. Calea aceasta este netestată în proiect.`,`Rulează: xcrun safari-web-extension-converter dist/chrome`,`Compilează aplicația generată în Xcode, apoi activează extensia în setările Safari.`]],
+buildH:`Compilare din sursă (Node.js 24 sau mai nou)`,
+cleanH:`Clean-room`,clean:[`ERATA a fost scris de la zero. Nu conține și nu derivă din codul, regulile (XML/Java), datele sau textele de mesaje ale LanguageTool ori ale altui corector, iar niciun fișier sursă din acele proiecte nu a fost deschis, copiat sau tradus.`,`Motorul Hunspell este implementarea noastră a formatului public de fișiere. Regulile au fost redactate din cunoștințe generale de gramatică și tipografie și din norme de limbă, iar detecția limbii și sugestiile folosesc algoritmi proprii. Dicționarele incluse sunt proiecte Hunspell independente, cu licențe proprii. Detalii în CLEANROOM.md din depozit.`],
+limH:`Limite cunoscute`,lims:[`Mai puține reguli de gramatică decât corectoarele consacrate: multe greșeli vor trece neobservate.`,`Germană și italiană: reguli minimale, iar ortografia funcționează doar după ce imporți un dicționar.`,`Maghiară: doar interfață în 0.3.0, fără dicționar și fără reguli.`,`Fără strat statistic pentru erorile cu cuvinte reale și fără rate măsurate de fals pozitiv sau recall.`,`Fără Google Docs (editor pe canvas), fără mobil, fără integrare desktop sau Office.`,`Testele automate rulează doar pe Chromium; suportul Safari este netestat.`,`Textele foarte lungi sunt trunchiate: se verifică doar primele aproximativ 80.000 de caractere.`],
+licH:`Licență`,licText:`Codul ERATA este publicat sub licența MIT. Dicționarele incluse își păstrează licențele proprii, enumerate în depozit (dict/LICENSES.md).`,
+supH:`Sprijină proiectul`,supText:`ERATA este gratuit, fără reclame și fără urmărire. Dacă te ajută, îmi poți oferi o cafea.`,supBtn:`Cumpără-mi o cafea`,
+foot:`gratuit, open-source, clean-room.`,ftGh:`GitHub`,ftRel:`Versiuni (Releases)`,ftPriv:`Politica de confidențialitate`,ftLic:`Licență`
+};
+
+T.fr={
+title:`ERATA — correcteur hors ligne pour votre navigateur`,
+desc:`ERATA est un correcteur gratuit, open source et clean-room pour Chrome, Edge, Firefox et Safari. Orthographe, grammaire, ponctuation et typographie vérifiées à 100 % en local.`,
+skip:`Aller au contenu`,langLabel:`Langue`,navLabel:`Sections`,
+nav:[`Fonctions`,`Langues`,`Confidentialité`,`Comparaison`,`Installation`,`Limites`,`Soutien`],
+a11yBtn:`Paramètres d'accessibilité`,a_title:`Accessibilité`,a_size:`Taille du texte`,a_hc:`Contraste élevé`,a_font:`Police lisible`,a_space:`Espacement accru`,a_rm:`Réduire les animations`,a_reset:`Réinitialiser`,a_close:`Fermer`,
+backTop:`Retour en haut`,
+badge:`Version 0.3.0`,h1:`Une correction qui ne quitte jamais votre navigateur`,
+lead:`ERATA vérifie l'orthographe, la grammaire, la ponctuation et la typographie dans n'importe quel champ de texte, entièrement sur votre appareil. Pas de compte, pas de serveur, pas de télémétrie. Il est écrit de zéro, en clean-room, et publié sous licence MIT.`,
+p1:`100 % local`,p2:`Clean-room`,p3:`Licence MIT`,dl:`Télécharger sur GitHub Releases`,gh:`Code source sur GitHub`,ctaDemo:`Essayer la démo`,hnote:`Gratuit, sans compte. Chrome, Edge, Opera, Firefox ; Safari via un convertisseur.`,
+demoH:`Essayez l'idée`,demoIntro:`Une petite simulation exécutée dans cette page : sélectionnez un mot souligné pour appliquer la suggestion, sélectionnez-le à nouveau pour l'annuler.`,demoSample:`Langue de l'exemple :`,demoNote:`Démo illustrative avec des phrases fixes, pas le vrai moteur.`,demoFix:`Tout corriger`,demoReset:`Réinitialiser`,demoIssues:`Problèmes détectés`,demoApplied:`corrigé`,demoCount:`corrigés`,
+featH:`Ce qu'il fait`,featIntro:`Un correcteur qui vit dans l'extension et fonctionne partout où vous écrivez.`,
+feats:[
+[`Vérification locale`,`L'orthographe, la grammaire, la ponctuation et la typographie sont vérifiées dans l'extension. Votre texte n'est envoyé nulle part.`],
+[`Détection de la langue par paragraphe`,`Chaque paragraphe est identifié séparément, de sorte qu'une citation étrangère ne déclenche pas de fausses alertes.`],
+[`Prise en charge approfondie du roumain`,`ș/ț avec virgule souscrite, « să/sa », « într-un », « între 5 și 10 », virgule avant « dar/însă », mois en minuscules, pléonasmes et plus encore.`],
+[`Restauration des diacritiques`,`Pour le roumain, le français, l'espagnol et le portugais, appliquée uniquement quand la correction est sans ambiguïté.`],
+[`Fonctionne là où vous écrivez`,`Champs textarea, input et contenteditable. Les soulignements sont dessinés sur une couche séparée et ne touchent jamais le DOM de la page.`],
+[`Marqueurs accessibles`,`Soulignements ondulés, pleins, tiretés ou pointillés, pour que le sens ne dépende pas de la seule couleur.`],
+[`À régler selon vos besoins`,`Dictionnaire personnel, règles regex personnalisées, interrupteur par site, import et export des réglages, et import de tout dictionnaire Hunspell.`],
+[`Text Studio`,`Un éditeur pleine page avec « Tout corriger », un score de lisibilité et une reformulation facultative via un modèle local sur localhost (désactivée par défaut).`]],
+keys:`Raccourcis : Alt+Maj+F corrige tout dans le champ actif ; Alt+Maj+E active ou désactive ERATA sur le site courant.`,
+langH:`Langues et profondeur réelle`,langIntro:`L'interface existe en huit langues, mais la profondeur de vérification varie beaucoup d'une langue à l'autre. Voici le tableau honnête pour la version 0.3.0.`,
+langCap:`Prise en charge de la vérification par langue, version 0.3.0`,th_lang:`Langue`,th_spell:`Orthographe`,th_rules:`Règles de grammaire et de style`,
+spell:[`Dictionnaire inclus`,`Seulement avec un dictionnaire Hunspell que vous importez`,`Pas encore disponible`],
+rules:[`Règles propres`,`Règles propres et restauration des diacritiques`,`Jeu de règles minimal`,`Aucune : l'interface est seulement traduite`],
+langNote:`ERATA a beaucoup moins de règles de grammaire que les correcteurs établis de longue date. Le roumain reçoit le plus d'attention ; l'allemand et l'italien sont minimaux ; le hongrois n'est qu'une interface en 0.3.0, sans dictionnaire ni règles.`,
+privH:`Confidentialité`,privIntro:`Ici, la confidentialité est architecturale, pas une promesse : il n'y a nulle part où envoyer le texte.`,
+privItems:[`Il n'y a ni serveur ERATA, ni compte, ni télémétrie ou statistiques d'usage.`,`L'extension ne demande aucune permission réseau. Seule exception : la « reformulation avec un modèle local », facultative et désactivée par défaut, qui peut envoyer une phrase à un point de terminaison localhost ou 127.0.0.1 de votre choix.`,`Les réglages, le dictionnaire personnel et les dictionnaires importés restent dans le stockage local de l'extension et dans IndexedDB, sur cet appareil uniquement.`,`Les champs de mot de passe, d'e-mail et de carte, ainsi que tout champ marqué data-erata="off", sont ignorés.`],
+privNote:`Cette page ne charge rien depuis d'autres sites et n'utilise ni traceurs ni cookies. Elle ne conserve que vos préférences d'affichage (langue, accessibilité) dans le localStorage de votre navigateur.`,
+cmpH:`Comparaison honnête`,cmpIntro:`Comment ERATA se situe face à LanguageTool, Grammarly, Harper et Microsoft Editor, y compris là où il perd.`,cmpCap:`ERATA comparé à d'autres correcteurs`,
+cmpHead:[`Critère`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Fonctionne hors ligne ; le texte reste sur l'appareil`,`Oui`,`Non par défaut : le texte part vers les serveurs de l'éditeur`,`Non : traitement dans le cloud (serveurs aux États-Unis)`,`Oui`,`Non : cloud Microsoft`],
+[`Compte nécessaire`,`Non`,`Flou : les sources se contredisent`,`Oui`,`Non`,`Compte Microsoft`],
+[`Roumain`,`Règles dédiées et restauration des diacritiques`,`Pris en charge, mais le projet le marque comme inactif`,`Bêta, corrections seulement`,`Non`,`Orthographe seulement`],
+[`Autres langues`,`en, fr, es, pt avec règles propres ; de et it minimaux ; hu interface seulement`,`Plus de 30 langues, avec bien plus de règles`,`Plusieurs langues ; l'anglais est le plus solide`,`Anglais seulement`,`Nombreuses langues, dont le hongrois`],
+[`Google Docs et applications`,`Pas de Google Docs, pas d'application mobile ou de bureau`,`Google Docs, applications de bureau et iOS`,`Google Docs, bureau et mobile`,`Navigateur, application macOS et éditeurs ; Google Docs non confirmé`,`Extension Chrome/Edge et Word`],
+[`Style et réécriture par IA`,`Conseils de style de base ; reformulation facultative avec votre propre modèle local`,`Paraphrase en Premium`,`Oui (limité dans l'offre gratuite)`,`Aucune, volontairement sans LLM`,`Les améliorations exigent Microsoft 365`],
+[`Open source`,`Oui (MIT)`,`Moteur oui, extension non`,`Non`,`Oui (Apache-2.0)`,`Non`],
+[`Coût`,`Gratuit`,`Offre gratuite limitée ; Premium payant`,`Offre gratuite ; Pro payant`,`Gratuit`,`Base gratuite ; Microsoft 365 pour aller plus loin`],
+[`Maturité`,`Nouveau : précision et rappel non publiés`,`Établi, large base d'utilisateurs`,`Établi, large base d'utilisateurs`,`Développement très actif`,`Établi`]],
+cmpNote:`D'après la comparaison contradictoire du projet (docs/COMPARISON.md, rédigée le 18 novembre 2026 à partir de pages produit publiques). Les produits concurrents évoluent vite et certains faits sont contestés entre sources : vérifiez avant de décider.`,
+winH:`Là où ERATA gagne`,wins:[`Confidentialité architecturale : aucun serveur. Parmi les outils de navigateur comparés, seul Harper l'égale, et Harper ne couvre que l'anglais.`,`Orthographe locale et règles propres pour le roumain, le français, l'espagnol, le portugais et l'anglais dans une seule extension.`,`Restauration des diacritiques pour ro, fr, es et pt, que nous n'avons pas vue annoncée par les autres produits examinés.`,`Extensible et gratuit : tout dictionnaire Hunspell, règles regex, licence MIT, sans abonnement.`],
+loseH:`Là où ERATA perd`,loses:[`Bien moins de règles de grammaire que les moteurs établis, surtout en anglais, en allemand et en italien.`,`Pas de couche statistique : les erreurs de mots réels (there/their) ne sont attrapées que par des motifs écrits à la main.`,`Le style et la réécriture par IA sont minimaux ; la reformulation facultative exige un modèle local à installer soi-même.`,`Pas d'intégration à Google Docs, au mobile ou au bureau ; Safari n'est pas testé.`,`Un projet tout neuf : pas de précision ni de rappel publiés, pas d'audit d'accessibilité externe, pas encore d'historique.`],
+instH:`Installation`,instIntro:`Installez depuis la page GitHub Releases, ou compilez vous-même. Les fiches sur les boutiques d'extensions ne sont pas encore documentées.`,
+inst:[
+[`Chrome, Edge et Opera`,`Téléchargez la version Chromium sur GitHub Releases et décompressez-la (ou compilez depuis les sources, ci-dessous).`,`Ouvrez chrome://extensions (edge://extensions dans Edge) et activez le mode développeur.`,`Choisissez « Charger l'extension non empaquetée » et sélectionnez le dossier décompressé.`,`Cliquez dans un champ de texte et commencez à écrire.`],
+[`Firefox`,`Récupérez la version Firefox sur GitHub Releases (ou compilez depuis les sources).`,`Ouvrez about:debugging#/runtime/this-firefox.`,`Choisissez « Charger un module temporaire » et sélectionnez manifest.json dans la version Firefox.`,`Les modules temporaires sont supprimés au redémarrage de Firefox.`],
+[`Safari (expérimental)`,`Nécessite macOS et Xcode. Cette voie n'est pas testée dans le projet.`,`Exécutez : xcrun safari-web-extension-converter dist/chrome`,`Compilez l'application générée dans Xcode, puis activez l'extension dans les réglages de Safari.`]],
+buildH:`Compiler depuis les sources (Node.js 24 ou plus récent)`,
+cleanH:`Clean-room`,clean:[`ERATA a été écrit de zéro. Il ne contient pas et ne dérive pas du code, des règles (XML/Java), des données ou des textes de messages de LanguageTool ni d'un autre correcteur, et aucun fichier source de ces projets n'a été ouvert, copié ou traduit.`,`Le moteur Hunspell est notre propre implémentation du format de fichier public. Les règles ont été rédigées à partir de connaissances générales de grammaire et de typographie et de références normatives ; la détection de langue et les suggestions utilisent nos propres algorithmes. Les dictionnaires inclus sont des projets Hunspell indépendants, avec leurs propres licences. Détails dans CLEANROOM.md du dépôt.`],
+limH:`Limites connues`,lims:[`Moins de règles de grammaire que les correcteurs établis : beaucoup d'erreurs passeront inaperçues.`,`Allemand et italien : règles minimales, et l'orthographe ne fonctionne qu'après import d'un dictionnaire.`,`Hongrois : interface seulement en 0.3.0, sans dictionnaire ni règles.`,`Pas de couche statistique pour les erreurs de mots réels, et pas encore de taux de faux positifs ou de rappel mesurés.`,`Pas de Google Docs (éditeur sur canvas), pas de mobile, pas d'intégration bureau ou Office.`,`Les tests automatisés ne tournent que sur Chromium ; la prise en charge de Safari n'est pas testée.`,`Les textes très longs sont tronqués : seuls les 80 000 premiers caractères environ sont vérifiés.`],
+licH:`Licence`,licText:`Le code d'ERATA est publié sous licence MIT. Les dictionnaires inclus conservent leurs propres licences, listées dans le dépôt (dict/LICENSES.md).`,
+supH:`Soutenir le projet`,supText:`ERATA est gratuit, sans publicité ni pistage. S'il vous aide, vous pouvez m'offrir un café.`,supBtn:`Offrez-moi un café`,
+foot:`gratuit, open source, clean-room.`,ftGh:`GitHub`,ftRel:`Versions (Releases)`,ftPriv:`Politique de confidentialité`,ftLic:`Licence`
+};
+
+T.it={
+title:`ERATA — correttore offline per il tuo browser`,
+desc:`ERATA è un correttore gratuito, open source e clean-room per Chrome, Edge, Firefox e Safari. Ortografia, grammatica, punteggiatura e tipografia controllate al 100% in locale.`,
+skip:`Vai al contenuto`,langLabel:`Lingua`,navLabel:`Sezioni`,
+nav:[`Funzioni`,`Lingue`,`Privacy`,`Confronto`,`Installazione`,`Limiti`,`Sostegno`],
+a11yBtn:`Impostazioni di accessibilità`,a_title:`Accessibilità`,a_size:`Dimensione del testo`,a_hc:`Contrasto elevato`,a_font:`Carattere leggibile`,a_space:`Spaziatura maggiore`,a_rm:`Riduci le animazioni`,a_reset:`Ripristina`,a_close:`Chiudi`,
+backTop:`Torna su`,
+badge:`Versione 0.3.0`,h1:`Una correzione che non esce mai dal tuo browser`,
+lead:`ERATA controlla ortografia, grammatica, punteggiatura e tipografia in qualsiasi campo di testo, interamente sul tuo dispositivo. Nessun account, nessun server, nessuna telemetria. È scritto da zero, in modalità clean-room, e rilasciato con licenza MIT.`,
+p1:`100% locale`,p2:`Clean-room`,p3:`Licenza MIT`,dl:`Scarica da GitHub Releases`,gh:`Codice sorgente su GitHub`,ctaDemo:`Prova la demo`,hnote:`Gratuito, senza account. Chrome, Edge, Opera, Firefox; Safari tramite convertitore.`,
+demoH:`Prova l'idea`,demoIntro:`Una piccola simulazione eseguita in questa pagina: seleziona una parola sottolineata per applicare il suggerimento, selezionala di nuovo per annullare.`,demoSample:`Lingua dell'esempio:`,demoNote:`Demo illustrativa con frasi fisse, non il motore reale.`,demoFix:`Correggi tutto`,demoReset:`Ripristina`,demoIssues:`Problemi rilevati`,demoApplied:`corretto`,demoCount:`corretti`,
+featH:`Cosa fa`,featIntro:`Un correttore che vive nell'estensione e funziona ovunque tu scriva.`,
+feats:[
+[`Controllo locale`,`Ortografia, grammatica, punteggiatura e tipografia sono controllate dentro l'estensione. Il tuo testo non viene inviato da nessuna parte.`],
+[`Rilevamento della lingua per paragrafo`,`Ogni paragrafo è identificato separatamente, così una citazione in un'altra lingua non genera falsi allarmi.`],
+[`Supporto approfondito per il rumeno`,`ș/ț con virgola sotto, «să/sa», «într-un», «între 5 și 10», virgola prima di «dar/însă», mesi in minuscolo, pleonasmi e altro.`],
+[`Ripristino dei segni diacritici`,`Per rumeno, francese, spagnolo e portoghese, applicato solo quando la correzione è inequivocabile.`],
+[`Funziona dove scrivi`,`Campi textarea, input e contenteditable. Le sottolineature sono disegnate su uno strato separato e non toccano mai il DOM della pagina.`],
+[`Segnalazioni accessibili`,`Sottolineature ondulate, continue, tratteggiate o puntinate, così il significato non dipende solo dal colore.`],
+[`Lo configuri tu`,`Dizionario personale, regole regex personalizzate, interruttore per sito, importazione ed esportazione delle impostazioni e importazione di qualsiasi dizionario Hunspell.`],
+[`Text Studio`,`Un editor a pagina intera con «Correggi tutto», un punteggio di leggibilità e una riformulazione facoltativa tramite un modello locale su localhost (disattivata per impostazione predefinita).`]],
+keys:`Scorciatoie: Alt+Maiusc+F corregge tutto nel campo attivo; Alt+Maiusc+E attiva o disattiva ERATA sul sito corrente.`,
+langH:`Lingue e profondità reale`,langIntro:`L'interfaccia è disponibile in otto lingue, ma la profondità del controllo varia molto da una lingua all'altra. Ecco il quadro onesto per la versione 0.3.0.`,
+langCap:`Supporto al controllo per lingua, versione 0.3.0`,th_lang:`Lingua`,th_spell:`Ortografia`,th_rules:`Regole di grammatica e stile`,
+spell:[`Dizionario incluso`,`Solo con un dizionario Hunspell che importi tu`,`Non ancora disponibile`],
+rules:[`Regole proprie`,`Regole proprie e ripristino dei segni diacritici`,`Pacchetto di regole minimo`,`Nessuna: l'interfaccia è solo tradotta`],
+langNote:`ERATA ha molte meno regole grammaticali dei correttori affermati da tempo. Il rumeno riceve più attenzione; tedesco e italiano sono minimi; l'ungherese è solo interfaccia nella 0.3.0, senza dizionario né regole.`,
+privH:`Privacy`,privIntro:`Qui la privacy è architetturale, non una promessa: non c'è nessun posto dove inviare il testo.`,
+privItems:[`Non esistono server ERATA, account, telemetria o analisi d'uso.`,`L'estensione non richiede alcun permesso di rete. L'unica eccezione è la «riformulazione con un modello locale», facoltativa e disattivata per impostazione predefinita, che può inviare una frase a un endpoint localhost o 127.0.0.1 scelto da te.`,`Impostazioni, dizionario personale e dizionari importati restano nell'archiviazione locale dell'estensione e in IndexedDB, solo su questo dispositivo.`,`I campi password, e-mail e carta, e qualsiasi campo contrassegnato data-erata="off", vengono ignorati.`],
+privNote:`Questa pagina non carica nulla da altri siti e non usa tracker né cookie. Salva solo le tue preferenze di visualizzazione (lingua, accessibilità) nel localStorage del browser.`,
+cmpH:`Confronto onesto`,cmpIntro:`Come si colloca ERATA rispetto a LanguageTool, Grammarly, Harper e Microsoft Editor, compreso dove perde.`,cmpCap:`ERATA a confronto con altri correttori`,
+cmpHead:[`Criterio`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Funziona offline; il testo resta sul dispositivo`,`Sì`,`No di default: il testo va ai server del fornitore`,`No: elaborazione nel cloud (server negli USA)`,`Sì`,`No: cloud Microsoft`],
+[`Account necessario`,`No`,`Poco chiaro: le fonti sono discordanti`,`Sì`,`No`,`Account Microsoft`],
+[`Rumeno`,`Regole dedicate e ripristino dei segni diacritici`,`Supportato, ma il progetto lo segna come inattivo`,`Beta, solo correzioni`,`No`,`Solo ortografia`],
+[`Altre lingue`,`en, fr, es, pt con regole proprie; de e it minime; hu solo interfaccia`,`Oltre 30 lingue, con molte più regole`,`Diverse lingue; l'inglese è la più solida`,`Solo inglese`,`Molte lingue, compreso l'ungherese`],
+[`Google Docs e app`,`Niente Google Docs, niente app mobile o desktop`,`Google Docs, app desktop e iOS`,`Google Docs, desktop e mobile`,`Browser, app macOS ed editor; Google Docs non confermato`,`Estensione Chrome/Edge e Word`],
+[`Stile e riscrittura con IA`,`Suggerimenti di stile di base; riformulazione facoltativa con un tuo modello locale`,`Parafrasi nella versione Premium`,`Sì (limitato nel piano gratuito)`,`Nessuna, volutamente senza LLM`,`I miglioramenti richiedono Microsoft 365`],
+[`Open source`,`Sì (MIT)`,`Motore sì, estensione no`,`No`,`Sì (Apache-2.0)`,`No`],
+[`Costo`,`Gratuito`,`Piano gratuito limitato; Premium a pagamento`,`Piano gratuito; Pro a pagamento`,`Gratuito`,`Base gratuita; Microsoft 365 per di più`],
+[`Maturità`,`Nuovo: precisione e recall non pubblicati`,`Affermato, ampia base di utenti`,`Affermato, ampia base di utenti`,`Sviluppo molto attivo`,`Affermato`]],
+cmpNote:`Basato sul confronto avversariale del progetto (docs/COMPARISON.md, redatto il 18 novembre 2026 a partire da pagine pubbliche dei prodotti). I prodotti concorrenti cambiano in fretta e alcuni fatti sono contestati tra le fonti: verifica prima di decidere.`,
+winH:`Dove vince ERATA`,wins:[`Privacy architetturale: nessun server. Tra gli strumenti per browser confrontati, solo Harper la eguaglia, e Harper copre solo l'inglese.`,`Ortografia locale più regole proprie per rumeno, francese, spagnolo, portoghese e inglese in una sola estensione.`,`Ripristino dei segni diacritici per ro, fr, es e pt, che non abbiamo trovato pubblicizzato dagli altri prodotti esaminati.`,`Estensibile e gratuito: qualsiasi dizionario Hunspell, regole regex, licenza MIT, nessun abbonamento.`],
+loseH:`Dove perde ERATA`,loses:[`Molte meno regole grammaticali dei motori affermati, soprattutto in inglese, tedesco e italiano.`,`Nessuno strato statistico: gli errori con parole reali (there/their) sono rilevati solo da schemi scritti a mano.`,`Stile e riscrittura con IA sono minimi; la riformulazione facoltativa richiede un modello locale da configurare da sé.`,`Nessuna integrazione con Google Docs, mobile o desktop; Safari non è testato.`,`Un progetto appena nato: nessuna precisione o recall pubblicati, nessun audit di accessibilità esterno, ancora nessuno storico.`],
+instH:`Installazione`,instIntro:`Installa dalla pagina GitHub Releases oppure compila da te. Le schede negli store di estensioni non sono ancora documentate.`,
+inst:[
+[`Chrome, Edge e Opera`,`Scarica la build Chromium da GitHub Releases e decomprimila (oppure compila dai sorgenti, qui sotto).`,`Apri chrome://extensions (edge://extensions in Edge) e attiva la modalità sviluppatore.`,`Scegli «Carica estensione non pacchettizzata» e seleziona la cartella decompressa.`,`Fai clic in un campo di testo e inizia a scrivere.`],
+[`Firefox`,`Prendi la build Firefox da GitHub Releases (oppure compila dai sorgenti).`,`Apri about:debugging#/runtime/this-firefox.`,`Scegli «Carica componente aggiuntivo temporaneo» e seleziona manifest.json dalla build Firefox.`,`I componenti temporanei vengono rimossi al riavvio di Firefox.`],
+[`Safari (sperimentale)`,`Richiede macOS e Xcode. Questo percorso non è testato nel progetto.`,`Esegui: xcrun safari-web-extension-converter dist/chrome`,`Compila l'app generata in Xcode, poi attiva l'estensione nelle impostazioni di Safari.`]],
+buildH:`Compilare dai sorgenti (Node.js 24 o successivo)`,
+cleanH:`Clean-room`,clean:[`ERATA è stato scritto da zero. Non contiene né deriva dal codice, dalle regole (XML/Java), dai dati o dai testi dei messaggi di LanguageTool o di altri correttori, e nessun file sorgente di quei progetti è stato aperto, copiato o tradotto.`,`Il motore Hunspell è la nostra implementazione del formato di file pubblico. Le regole sono state redatte a partire da conoscenze generali di grammatica e tipografia e da riferimenti normativi; il rilevamento della lingua e i suggerimenti usano algoritmi propri. I dizionari inclusi sono progetti Hunspell indipendenti, con licenze proprie. Dettagli in CLEANROOM.md nel repository.`],
+limH:`Limiti noti`,lims:[`Meno regole grammaticali dei correttori affermati: molti errori passeranno inosservati.`,`Tedesco e italiano: regole minime, e l'ortografia funziona solo dopo aver importato un dizionario.`,`Ungherese: solo interfaccia nella 0.3.0, senza dizionario né regole.`,`Nessuno strato statistico per gli errori con parole reali e ancora nessun tasso misurato di falsi positivi o di recall.`,`Niente Google Docs (editor su canvas), niente mobile, niente integrazione desktop o Office.`,`I test automatici girano solo su Chromium; il supporto a Safari non è testato.`,`I testi molto lunghi vengono troncati: si controllano solo i primi 80.000 caratteri circa.`],
+licH:`Licenza`,licText:`Il codice di ERATA è rilasciato con licenza MIT. I dizionari inclusi mantengono le proprie licenze, elencate nel repository (dict/LICENSES.md).`,
+supH:`Sostieni il progetto`,supText:`ERATA è gratuito, senza pubblicità e senza tracciamento. Se ti è utile, puoi offrirmi un caffè.`,supBtn:`Offrimi un caffè`,
+foot:`gratuito, open source, clean-room.`,ftGh:`GitHub`,ftRel:`Versioni (Releases)`,ftPriv:`Informativa sulla privacy`,ftLic:`Licenza`
+};
+
+T.es={
+title:`ERATA — corrector sin conexión para tu navegador`,
+desc:`ERATA es un corrector gratuito, de código abierto y clean-room para Chrome, Edge, Firefox y Safari. Ortografía, gramática, puntuación y tipografía comprobadas 100 % en local.`,
+skip:`Saltar al contenido`,langLabel:`Idioma`,navLabel:`Secciones`,
+nav:[`Funciones`,`Idiomas`,`Privacidad`,`Comparación`,`Instalación`,`Límites`,`Apoyo`],
+a11yBtn:`Ajustes de accesibilidad`,a_title:`Accesibilidad`,a_size:`Tamaño del texto`,a_hc:`Contraste alto`,a_font:`Fuente legible`,a_space:`Mayor espaciado`,a_rm:`Reducir animaciones`,a_reset:`Restablecer`,a_close:`Cerrar`,
+backTop:`Volver arriba`,
+badge:`Versión 0.3.0`,h1:`Una corrección que nunca sale de tu navegador`,
+lead:`ERATA comprueba la ortografía, la gramática, la puntuación y la tipografía en cualquier campo de texto, íntegramente en tu dispositivo. Sin cuenta, sin servidor, sin telemetría. Está escrito desde cero, en clean-room, y publicado bajo licencia MIT.`,
+p1:`100 % local`,p2:`Clean-room`,p3:`Licencia MIT`,dl:`Descargar desde GitHub Releases`,gh:`Código fuente en GitHub`,ctaDemo:`Probar la demo`,hnote:`Gratis, sin cuenta. Chrome, Edge, Opera, Firefox; Safari mediante un conversor.`,
+demoH:`Prueba la idea`,demoIntro:`Una pequeña simulación que se ejecuta en esta página: selecciona una palabra subrayada para aplicar la sugerencia y vuelve a seleccionarla para deshacerla.`,demoSample:`Idioma del ejemplo:`,demoNote:`Demo ilustrativa con frases fijas, no el motor real.`,demoFix:`Corregir todo`,demoReset:`Restablecer`,demoIssues:`Problemas detectados`,demoApplied:`corregido`,demoCount:`corregidos`,
+featH:`Qué hace`,featIntro:`Un corrector que vive en la extensión y funciona dondequiera que escribas.`,
+feats:[
+[`Comprobación local`,`La ortografía, la gramática, la puntuación y la tipografía se comprueban dentro de la extensión. Tu texto no se envía a ninguna parte.`],
+[`Detección de idioma por párrafo`,`Cada párrafo se identifica por separado, de modo que una cita en otro idioma no provoca falsas alarmas.`],
+[`Soporte profundo del rumano`,`ș/ț con coma, «să/sa», «într-un», «între 5 și 10», coma antes de «dar/însă», meses en minúscula, pleonasmos y más.`],
+[`Restauración de diacríticos`,`Para rumano, francés, español y portugués, aplicada solo cuando la corrección es inequívoca.`],
+[`Funciona donde escribes`,`Campos textarea, input y contenteditable. Los subrayados se dibujan en una capa aparte y nunca tocan el DOM de la página.`],
+[`Marcadores accesibles`,`Subrayados ondulados, continuos, discontinuos o punteados, para que el significado no dependa solo del color.`],
+[`A tu medida`,`Diccionario personal, reglas regex propias, interruptor por sitio, importación y exportación de ajustes e importación de cualquier diccionario Hunspell.`],
+[`Text Studio`,`Un editor a página completa con «Corregir todo», una puntuación de legibilidad y una reformulación opcional mediante un modelo local en localhost (desactivada por defecto).`]],
+keys:`Atajos: Alt+Mayús+F corrige todo en el campo activo; Alt+Mayús+E activa o desactiva ERATA en el sitio actual.`,
+langH:`Idiomas y profundidad real`,langIntro:`La interfaz está disponible en ocho idiomas, pero la profundidad de la comprobación varía mucho de un idioma a otro. Este es el panorama honesto de la versión 0.3.0.`,
+langCap:`Soporte de comprobación por idioma, versión 0.3.0`,th_lang:`Idioma`,th_spell:`Ortografía`,th_rules:`Reglas de gramática y estilo`,
+spell:[`Diccionario incluido`,`Solo con un diccionario Hunspell que importes tú`,`Aún no disponible`],
+rules:[`Reglas propias`,`Reglas propias y restauración de diacríticos`,`Paquete de reglas mínimo`,`Ninguna: solo la interfaz está traducida`],
+langNote:`ERATA tiene muchas menos reglas gramaticales que los correctores consolidados. El rumano recibe la mayor atención; el alemán y el italiano son mínimos; el húngaro es solo interfaz en la 0.3.0, sin diccionario ni reglas.`,
+privH:`Privacidad`,privIntro:`Aquí la privacidad es arquitectónica, no una promesa: no hay adónde enviar el texto.`,
+privItems:[`No hay servidor de ERATA, ni cuenta, ni telemetría ni analítica.`,`La extensión no solicita ningún permiso de red. La única excepción es la «reformulación con un modelo local», opcional y desactivada por defecto, que puede enviar una frase a un punto de conexión localhost o 127.0.0.1 que tú elijas.`,`Los ajustes, el diccionario personal y los diccionarios importados permanecen en el almacenamiento local de la extensión y en IndexedDB, solo en este dispositivo.`,`Se ignoran los campos de contraseña, correo y tarjeta, y cualquier campo marcado con data-erata="off".`],
+privNote:`Esta página no carga nada de otros sitios y no usa rastreadores ni cookies. Solo guarda tus preferencias de visualización (idioma, accesibilidad) en el localStorage de tu navegador.`,
+cmpH:`Comparación honesta`,cmpIntro:`Cómo se sitúa ERATA frente a LanguageTool, Grammarly, Harper y Microsoft Editor, incluido dónde pierde.`,cmpCap:`ERATA comparado con otros correctores`,
+cmpHead:[`Criterio`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Funciona sin conexión; el texto no sale del dispositivo`,`Sí`,`No por defecto: el texto va a los servidores del proveedor`,`No: procesamiento en la nube (servidores en EE. UU.)`,`Sí`,`No: nube de Microsoft`],
+[`Requiere cuenta`,`No`,`Poco claro: las fuentes discrepan`,`Sí`,`No`,`Cuenta de Microsoft`],
+[`Rumano`,`Reglas dedicadas y restauración de diacríticos`,`Compatible, pero el proyecto lo marca como inactivo`,`Beta, solo correcciones`,`No`,`Solo ortografía`],
+[`Otros idiomas`,`en, fr, es, pt con reglas propias; de e it mínimos; hu solo interfaz`,`Más de 30 idiomas, con muchas más reglas`,`Varios idiomas; el inglés es el más sólido`,`Solo inglés`,`Muchos idiomas, incluido el húngaro`],
+[`Google Docs y aplicaciones`,`Sin Google Docs, sin app móvil ni de escritorio`,`Google Docs, apps de escritorio y iOS`,`Google Docs, escritorio y móvil`,`Navegador, app de macOS y editores; Google Docs sin confirmar`,`Extensión de Chrome/Edge y Word`],
+[`Estilo y reescritura con IA`,`Sugerencias de estilo básicas; reformulación opcional con tu propio modelo local`,`Paráfrasis en Premium`,`Sí (limitado en el plan gratuito)`,`Ninguna, deliberadamente sin LLM`,`Las mejoras requieren Microsoft 365`],
+[`Código abierto`,`Sí (MIT)`,`Motor sí, extensión no`,`No`,`Sí (Apache-2.0)`,`No`],
+[`Coste`,`Gratis`,`Plan gratuito limitado; Premium de pago`,`Plan gratuito; Pro de pago`,`Gratis`,`Básico gratis; Microsoft 365 para más`],
+[`Madurez`,`Nuevo: sin precisión ni exhaustividad publicadas`,`Consolidado, gran base de usuarios`,`Consolidado, gran base de usuarios`,`Desarrollo muy activo`,`Consolidado`]],
+cmpNote:`Basado en la comparación adversarial del propio proyecto (docs/COMPARISON.md, elaborada el 18 de noviembre de 2026 a partir de páginas públicas de los productos). Los productos de la competencia cambian rápido y algunos datos son discutidos entre fuentes: verifica antes de decidir.`,
+winH:`Dónde gana ERATA`,wins:[`Privacidad arquitectónica: ningún servidor. Entre las herramientas de navegador comparadas, solo Harper la iguala, y Harper cubre únicamente el inglés.`,`Ortografía local y reglas propias para rumano, francés, español, portugués e inglés en una sola extensión.`,`Restauración de diacríticos para ro, fr, es y pt, que no hemos visto anunciada en los demás productos revisados.`,`Extensible y gratis: cualquier diccionario Hunspell, reglas regex, licencia MIT, sin suscripción.`],
+loseH:`Dónde pierde ERATA`,loses:[`Muchas menos reglas gramaticales que los motores consolidados, sobre todo en inglés, alemán e italiano.`,`Sin capa estadística: los errores con palabras reales (there/their) solo los detectan patrones escritos a mano.`,`El estilo y la reescritura con IA son mínimos; la reformulación opcional exige un modelo local que configuras tú mismo.`,`Sin integración con Google Docs, móvil o escritorio; Safari no está probado.`,`Un proyecto recién nacido: sin precisión ni exhaustividad publicadas, sin auditoría externa de accesibilidad, sin historial todavía.`],
+instH:`Instalación`,instIntro:`Instala desde la página de GitHub Releases o compílalo tú mismo. Las fichas en las tiendas de extensiones aún no están documentadas.`,
+inst:[
+[`Chrome, Edge y Opera`,`Descarga la versión para Chromium desde GitHub Releases y descomprímela (o compila desde el código fuente, más abajo).`,`Abre chrome://extensions (edge://extensions en Edge) y activa el modo de desarrollador.`,`Elige «Cargar descomprimida» y selecciona la carpeta descomprimida.`,`Haz clic en cualquier campo de texto y empieza a escribir.`],
+[`Firefox`,`Obtén la versión para Firefox desde GitHub Releases (o compila desde el código fuente).`,`Abre about:debugging#/runtime/this-firefox.`,`Elige «Cargar complemento temporal» y selecciona manifest.json de la versión para Firefox.`,`Los complementos temporales se eliminan al reiniciar Firefox.`],
+[`Safari (experimental)`,`Requiere macOS y Xcode. Este camino no está probado en el proyecto.`,`Ejecuta: xcrun safari-web-extension-converter dist/chrome`,`Compila la app generada en Xcode y activa la extensión en los ajustes de Safari.`]],
+buildH:`Compilar desde el código fuente (Node.js 24 o posterior)`,
+cleanH:`Clean-room`,clean:[`ERATA se escribió desde cero. No contiene ni deriva del código, las reglas (XML/Java), los datos ni los textos de mensajes de LanguageTool ni de ningún otro corrector, y no se abrió, copió ni tradujo ningún archivo fuente de esos proyectos.`,`El motor Hunspell es nuestra propia implementación del formato de archivo público. Las reglas se redactaron a partir de conocimientos generales de gramática y tipografía y de referencias normativas; la detección de idioma y las sugerencias usan algoritmos propios. Los diccionarios incluidos son proyectos Hunspell independientes, con licencias propias. Más detalles en CLEANROOM.md del repositorio.`],
+limH:`Límites conocidos`,lims:[`Menos reglas gramaticales que los correctores consolidados: muchos errores pasarán inadvertidos.`,`Alemán e italiano: reglas mínimas, y la ortografía solo funciona tras importar un diccionario.`,`Húngaro: solo interfaz en la 0.3.0, sin diccionario ni reglas.`,`Sin capa estadística para errores con palabras reales y sin tasas medidas de falsos positivos ni de exhaustividad.`,`Sin Google Docs (editor en canvas), sin móvil, sin integración de escritorio ni de Office.`,`Las pruebas automáticas solo se ejecutan en Chromium; el soporte de Safari no está probado.`,`Los textos muy largos se truncan: solo se comprueban unos 80 000 caracteres iniciales.`],
+licH:`Licencia`,licText:`El código de ERATA se publica bajo licencia MIT. Los diccionarios incluidos conservan sus propias licencias, listadas en el repositorio (dict/LICENSES.md).`,
+supH:`Apoya el proyecto`,supText:`ERATA es gratis, sin publicidad ni rastreo. Si te resulta útil, puedes invitarme a un café.`,supBtn:`Invítame a un café`,
+foot:`gratis, de código abierto, clean-room.`,ftGh:`GitHub`,ftRel:`Versiones (Releases)`,ftPriv:`Política de privacidad`,ftLic:`Licencia`
+};
+
+T.pt={
+title:`ERATA — corretor offline para o seu navegador`,
+desc:`O ERATA é um corretor gratuito, de código aberto e clean-room para Chrome, Edge, Firefox e Safari. Ortografia, gramática, pontuação e tipografia verificadas 100% localmente.`,
+skip:`Saltar para o conteúdo`,langLabel:`Idioma`,navLabel:`Secções`,
+nav:[`Funcionalidades`,`Idiomas`,`Privacidade`,`Comparação`,`Instalação`,`Limites`,`Apoio`],
+a11yBtn:`Definições de acessibilidade`,a_title:`Acessibilidade`,a_size:`Tamanho do texto`,a_hc:`Contraste elevado`,a_font:`Tipo de letra legível`,a_space:`Espaçamento maior`,a_rm:`Reduzir animações`,a_reset:`Repor`,a_close:`Fechar`,
+backTop:`Voltar ao topo`,
+badge:`Versão 0.3.0`,h1:`Uma correção que nunca sai do seu navegador`,
+lead:`O ERATA verifica a ortografia, a gramática, a pontuação e a tipografia em qualquer campo de texto, inteiramente no seu dispositivo. Sem conta, sem servidor, sem telemetria. Foi escrito de raiz, em clean-room, e é publicado sob a licença MIT.`,
+p1:`100% local`,p2:`Clean-room`,p3:`Licença MIT`,dl:`Transferir do GitHub Releases`,gh:`Código-fonte no GitHub`,ctaDemo:`Experimentar a demonstração`,hnote:`Gratuito, sem conta. Chrome, Edge, Opera, Firefox; Safari através de um conversor.`,
+demoH:`Experimente a ideia`,demoIntro:`Uma pequena simulação executada nesta página: selecione uma palavra sublinhada para aplicar a sugestão e selecione-a de novo para a desfazer.`,demoSample:`Idioma do exemplo:`,demoNote:`Demonstração ilustrativa com frases fixas, não o motor real.`,demoFix:`Corrigir tudo`,demoReset:`Repor`,demoIssues:`Problemas detetados`,demoApplied:`corrigido`,demoCount:`corrigidos`,
+featH:`O que faz`,featIntro:`Um corretor que vive na extensão e funciona onde quer que escreva.`,
+feats:[
+[`Verificação local`,`A ortografia, a gramática, a pontuação e a tipografia são verificadas dentro da extensão. O seu texto não é enviado para lado nenhum.`],
+[`Deteção do idioma por parágrafo`,`Cada parágrafo é identificado em separado, pelo que uma citação noutro idioma não gera falsos alarmes.`],
+[`Suporte aprofundado do romeno`,`ș/ț com vírgula, «să/sa», «într-un», «între 5 și 10», vírgula antes de «dar/însă», meses em minúsculas, pleonasmos e mais.`],
+[`Restauro de diacríticos`,`Para romeno, francês, espanhol e português, aplicado apenas quando a correção é inequívoca.`],
+[`Funciona onde escreve`,`Campos textarea, input e contenteditable. Os sublinhados são desenhados numa camada separada e nunca tocam no DOM da página.`],
+[`Marcadores acessíveis`,`Sublinhados ondulados, contínuos, tracejados ou pontilhados, para que o significado não dependa só da cor.`],
+[`Ajustável por si`,`Dicionário pessoal, regras regex personalizadas, interruptor por site, importação e exportação de definições e importação de qualquer dicionário Hunspell.`],
+[`Text Studio`,`Um editor de página inteira com «Corrigir tudo», uma pontuação de legibilidade e uma reformulação opcional através de um modelo local em localhost (desativada por predefinição).`]],
+keys:`Atalhos: Alt+Shift+F corrige tudo no campo ativo; Alt+Shift+E ativa ou desativa o ERATA no site atual.`,
+langH:`Idiomas e profundidade real`,langIntro:`A interface está disponível em oito idiomas, mas a profundidade da verificação varia muito de idioma para idioma. Eis o retrato honesto da versão 0.3.0.`,
+langCap:`Suporte de verificação por idioma, versão 0.3.0`,th_lang:`Idioma`,th_spell:`Ortografia`,th_rules:`Regras de gramática e estilo`,
+spell:[`Dicionário incluído`,`Só com um dicionário Hunspell que importe`,`Ainda não disponível`],
+rules:[`Regras próprias`,`Regras próprias e restauro de diacríticos`,`Pacote de regras mínimo`,`Nenhuma: só a interface está traduzida`],
+langNote:`O ERATA tem muito menos regras gramaticais do que os corretores consolidados. O romeno recebe mais atenção; o alemão e o italiano são mínimos; o húngaro é apenas interface na 0.3.0, sem dicionário nem regras.`,
+privH:`Privacidade`,privIntro:`Aqui a privacidade é arquitetural, não uma promessa: não há para onde enviar o texto.`,
+privItems:[`Não existe servidor do ERATA, nem conta, nem telemetria ou análises.`,`A extensão não pede nenhuma permissão de rede. A única exceção é a «reformulação com um modelo local», opcional e desativada por predefinição, que pode enviar uma frase para um ponto de acesso localhost ou 127.0.0.1 à sua escolha.`,`As definições, o dicionário pessoal e os dicionários importados ficam no armazenamento local da extensão e no IndexedDB, apenas neste dispositivo.`,`Os campos de palavra-passe, e-mail e cartão, e qualquer campo marcado com data-erata="off", são ignorados.`],
+privNote:`Esta página não carrega nada de outros sites e não usa rastreadores nem cookies. Guarda apenas as suas preferências de apresentação (idioma, acessibilidade) no localStorage do navegador.`,
+cmpH:`Comparação honesta`,cmpIntro:`Como o ERATA se posiciona face ao LanguageTool, ao Grammarly, ao Harper e ao Microsoft Editor, incluindo onde perde.`,cmpCap:`ERATA comparado com outros corretores`,
+cmpHead:[`Critério`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Funciona offline; o texto fica no dispositivo`,`Sim`,`Não por predefinição: o texto vai para os servidores do fornecedor`,`Não: processamento na nuvem (servidores nos EUA)`,`Sim`,`Não: nuvem da Microsoft`],
+[`Requer conta`,`Não`,`Pouco claro: as fontes divergem`,`Sim`,`Não`,`Conta Microsoft`],
+[`Romeno`,`Regras dedicadas e restauro de diacríticos`,`Suportado, mas o projeto marca-o como inativo`,`Beta, apenas correções`,`Não`,`Só ortografia`],
+[`Outros idiomas`,`en, fr, es, pt com regras próprias; de e it mínimos; hu só interface`,`Mais de 30 idiomas, com muito mais regras`,`Vários idiomas; o inglês é o mais sólido`,`Só inglês`,`Muitos idiomas, incluindo o húngaro`],
+[`Google Docs e aplicações`,`Sem Google Docs, sem app móvel nem de secretária`,`Google Docs, apps de secretária e iOS`,`Google Docs, secretária e telemóvel`,`Navegador, app macOS e editores; Google Docs por confirmar`,`Extensão Chrome/Edge e Word`],
+[`Estilo e reescrita com IA`,`Sugestões de estilo básicas; reformulação opcional com o seu próprio modelo local`,`Paráfrase no Premium`,`Sim (limitado no plano gratuito)`,`Nenhuma, deliberadamente sem LLM`,`Os refinamentos exigem Microsoft 365`],
+[`Código aberto`,`Sim (MIT)`,`Motor sim, extensão não`,`Não`,`Sim (Apache-2.0)`,`Não`],
+[`Custo`,`Gratuito`,`Plano gratuito limitado; Premium pago`,`Plano gratuito; Pro pago`,`Gratuito`,`Básico gratuito; Microsoft 365 para mais`],
+[`Maturidade`,`Novo: sem precisão nem recall publicados`,`Consolidado, grande base de utilizadores`,`Consolidado, grande base de utilizadores`,`Desenvolvimento muito ativo`,`Consolidado`]],
+cmpNote:`Com base na comparação adversarial do próprio projeto (docs/COMPARISON.md, elaborada em 18 de novembro de 2026 a partir de páginas públicas dos produtos). Os produtos concorrentes mudam depressa e alguns factos são contestados entre fontes: verifique antes de decidir.`,
+winH:`Onde o ERATA ganha`,wins:[`Privacidade arquitetural: nenhum servidor. Entre as ferramentas de navegador comparadas, só o Harper a iguala, e o Harper cobre apenas inglês.`,`Ortografia local e regras próprias para romeno, francês, espanhol, português e inglês numa só extensão.`,`Restauro de diacríticos para ro, fr, es e pt, que não encontrámos anunciado nos outros produtos analisados.`,`Extensível e gratuito: qualquer dicionário Hunspell, regras regex, licença MIT, sem subscrição.`],
+loseH:`Onde o ERATA perde`,loses:[`Muito menos regras gramaticais do que os motores consolidados, sobretudo em inglês, alemão e italiano.`,`Sem camada estatística: os erros com palavras reais (there/their) só são apanhados por padrões escritos à mão.`,`O estilo e a reescrita com IA são mínimos; a reformulação opcional exige um modelo local que tem de configurar.`,`Sem integração com Google Docs, telemóvel ou secretária; o Safari não foi testado.`,`Um projeto novíssimo: sem precisão nem recall publicados, sem auditoria externa de acessibilidade, sem historial ainda.`],
+instH:`Instalação`,instIntro:`Instale a partir da página GitHub Releases ou compile você mesmo. As fichas nas lojas de extensões ainda não estão documentadas.`,
+inst:[
+[`Chrome, Edge e Opera`,`Transfira a versão Chromium do GitHub Releases e descompacte-a (ou compile a partir do código-fonte, abaixo).`,`Abra chrome://extensions (edge://extensions no Edge) e ative o modo de programador.`,`Escolha «Carregar sem compactação» e selecione a pasta descompactada.`,`Clique em qualquer campo de texto e comece a escrever.`],
+[`Firefox`,`Obtenha a versão Firefox no GitHub Releases (ou compile a partir do código-fonte).`,`Abra about:debugging#/runtime/this-firefox.`,`Escolha «Carregar extensão temporária» e selecione o manifest.json da versão Firefox.`,`As extensões temporárias são removidas quando o Firefox reinicia.`],
+[`Safari (experimental)`,`Requer macOS e Xcode. Este caminho não foi testado no projeto.`,`Execute: xcrun safari-web-extension-converter dist/chrome`,`Compile a app gerada no Xcode e depois ative a extensão nas definições do Safari.`]],
+buildH:`Compilar a partir do código-fonte (Node.js 24 ou posterior)`,
+cleanH:`Clean-room`,clean:[`O ERATA foi escrito de raiz. Não contém nem deriva do código, das regras (XML/Java), dos dados ou dos textos de mensagens do LanguageTool nem de qualquer outro corretor, e nenhum ficheiro-fonte desses projetos foi aberto, copiado ou traduzido.`,`O motor Hunspell é a nossa própria implementação do formato de ficheiro público. As regras foram redigidas a partir de conhecimentos gerais de gramática e tipografia e de referências normativas; a deteção de idioma e as sugestões usam algoritmos próprios. Os dicionários incluídos são projetos Hunspell independentes, com licenças próprias. Mais detalhes em CLEANROOM.md no repositório.`],
+limH:`Limites conhecidos`,lims:[`Menos regras gramaticais do que os corretores consolidados: muitos erros passarão despercebidos.`,`Alemão e italiano: regras mínimas, e a ortografia só funciona depois de importar um dicionário.`,`Húngaro: apenas interface na 0.3.0, sem dicionário nem regras.`,`Sem camada estatística para erros com palavras reais e sem taxas medidas de falsos positivos ou de recall.`,`Sem Google Docs (editor em canvas), sem telemóvel, sem integração de secretária ou Office.`,`Os testes automáticos só correm no Chromium; o suporte do Safari não foi testado.`,`Os textos muito longos são truncados: só se verificam cerca de 80 000 caracteres iniciais.`],
+licH:`Licença`,licText:`O código do ERATA é publicado sob a licença MIT. Os dicionários incluídos mantêm as suas próprias licenças, listadas no repositório (dict/LICENSES.md).`,
+supH:`Apoie o projeto`,supText:`O ERATA é gratuito, sem anúncios nem rastreamento. Se lhe for útil, pode oferecer-me um café.`,supBtn:`Ofereça-me um café`,
+foot:`gratuito, de código aberto, clean-room.`,ftGh:`GitHub`,ftRel:`Versões (Releases)`,ftPriv:`Política de privacidade`,ftLic:`Licença`
+};
+
+T.de={
+title:`ERATA — Offline-Korrekturprogramm für Ihren Browser`,
+desc:`ERATA ist ein kostenloses, quelloffenes Clean-Room-Korrekturprogramm für Chrome, Edge, Firefox und Safari. Rechtschreibung, Grammatik, Zeichensetzung und Typografie werden zu 100 % lokal geprüft.`,
+skip:`Zum Inhalt springen`,langLabel:`Sprache`,navLabel:`Abschnitte`,
+nav:[`Funktionen`,`Sprachen`,`Datenschutz`,`Vergleich`,`Installation`,`Grenzen`,`Unterstützung`],
+a11yBtn:`Barrierefreiheit-Einstellungen`,a_title:`Barrierefreiheit`,a_size:`Textgröße`,a_hc:`Hoher Kontrast`,a_font:`Gut lesbare Schrift`,a_space:`Größerer Abstand`,a_rm:`Animationen reduzieren`,a_reset:`Zurücksetzen`,a_close:`Schließen`,
+backTop:`Nach oben`,
+badge:`Version 0.3.0`,h1:`Korrektur, die Ihren Browser nie verlässt`,
+lead:`ERATA prüft Rechtschreibung, Grammatik, Zeichensetzung und Typografie in jedem Textfeld, vollständig auf Ihrem Gerät. Kein Konto, kein Server, keine Telemetrie. Es wurde von Grund auf neu geschrieben, im Clean-Room-Verfahren, und steht unter der MIT-Lizenz.`,
+p1:`100 % lokal`,p2:`Clean-Room`,p3:`MIT-Lizenz`,dl:`Von GitHub Releases herunterladen`,gh:`Quellcode auf GitHub`,ctaDemo:`Demo ausprobieren`,hnote:`Kostenlos, ohne Konto. Chrome, Edge, Opera, Firefox; Safari über einen Konverter.`,
+demoH:`Die Idee ausprobieren`,demoIntro:`Eine kleine Simulation auf dieser Seite: Wählen Sie ein unterstrichenes Wort, um den Vorschlag zu übernehmen, und wählen Sie es erneut, um ihn rückgängig zu machen.`,demoSample:`Sprache des Beispiels:`,demoNote:`Anschauliche Demo mit festen Sätzen, nicht die echte Engine.`,demoFix:`Alles korrigieren`,demoReset:`Zurücksetzen`,demoIssues:`Gefundene Probleme`,demoApplied:`korrigiert`,demoCount:`korrigiert`,
+featH:`Was es kann`,featIntro:`Ein Korrekturprogramm, das in der Erweiterung lebt und überall funktioniert, wo Sie schreiben.`,
+feats:[
+[`Lokale Prüfung`,`Rechtschreibung, Grammatik, Zeichensetzung und Typografie werden in der Erweiterung geprüft. Ihr Text wird nirgendwohin gesendet.`],
+[`Spracherkennung pro Absatz`,`Jeder Absatz wird einzeln erkannt, sodass ein fremdsprachiges Zitat keinen Fehlalarm auslöst.`],
+[`Tiefe Unterstützung für Rumänisch`,`ș/ț mit Komma unten, „să/sa“, „într-un“, „între 5 și 10“, Komma vor „dar/însă“, kleingeschriebene Monate, Pleonasmen und mehr.`],
+[`Wiederherstellung von Diakritika`,`Für Rumänisch, Französisch, Spanisch und Portugiesisch, nur dort angewendet, wo die Korrektur eindeutig ist.`],
+[`Funktioniert, wo Sie schreiben`,`textarea-, input- und contenteditable-Felder. Unterstreichungen werden auf einer eigenen Ebene gezeichnet und berühren nie das DOM der Seite.`],
+[`Barrierefreie Markierungen`,`Wellige, durchgezogene, gestrichelte oder gepunktete Unterstreichungen, damit die Bedeutung nicht allein von der Farbe abhängt.`],
+[`Nach Ihren Wünschen anpassbar`,`Persönliches Wörterbuch, eigene Regex-Regeln, Schalter pro Website, Import und Export der Einstellungen sowie Import beliebiger Hunspell-Wörterbücher.`],
+[`Text Studio`,`Ein Vollseiten-Editor mit „Alles korrigieren“, Lesbarkeitswert und optionaler Umformulierung über ein lokales Modell auf localhost (standardmäßig aus).`]],
+keys:`Tastenkürzel: Alt+Umschalt+F korrigiert alles im aktiven Feld; Alt+Umschalt+E schaltet ERATA für die aktuelle Website ein oder aus.`,
+langH:`Sprachen und tatsächliche Tiefe`,langIntro:`Die Oberfläche gibt es in acht Sprachen, doch die Prüftiefe unterscheidet sich stark von Sprache zu Sprache. Hier das ehrliche Bild für Version 0.3.0.`,
+langCap:`Prüfunterstützung nach Sprache, Version 0.3.0`,th_lang:`Sprache`,th_spell:`Rechtschreibung`,th_rules:`Grammatik- und Stilregeln`,
+spell:[`Mitgeliefertes Wörterbuch`,`Nur mit einem von Ihnen importierten Hunspell-Wörterbuch`,`Noch nicht verfügbar`],
+rules:[`Eigene Regeln`,`Eigene Regeln und Wiederherstellung von Diakritika`,`Minimales Regelpaket`,`Keine: nur die Oberfläche ist übersetzt`],
+langNote:`ERATA hat deutlich weniger Grammatikregeln als langjährig etablierte Prüfprogramme. Rumänisch erhält die meiste Aufmerksamkeit; Deutsch und Italienisch sind minimal; Ungarisch ist in 0.3.0 nur Oberfläche, ohne Wörterbuch und ohne Regeln.`,
+privH:`Datenschutz`,privIntro:`Datenschutz ist hier Architektur, kein Versprechen: Es gibt nichts, wohin der Text gesendet werden könnte.`,
+privItems:[`Es gibt keinen ERATA-Server, kein Konto und keine Telemetrie oder Analyse.`,`Die Erweiterung verlangt keine Netzwerkberechtigung. Einzige Ausnahme ist die optionale, standardmäßig deaktivierte „Umformulierung mit lokalem Modell“, die einen Satz an einen von Ihnen gewählten localhost- oder 127.0.0.1-Endpunkt senden kann.`,`Einstellungen, persönliches Wörterbuch und importierte Wörterbücher bleiben im lokalen Speicher der Erweiterung und in IndexedDB, nur auf diesem Gerät.`,`Passwort-, E-Mail- und Kartenfelder sowie Felder mit data-erata="off" werden ignoriert.`],
+privNote:`Diese Seite lädt nichts von anderen Websites und verwendet weder Tracker noch Cookies. Sie speichert nur Ihre Anzeigeeinstellungen (Sprache, Barrierefreiheit) im localStorage Ihres Browsers.`,
+cmpH:`Ehrlicher Vergleich`,cmpIntro:`Wie ERATA im Vergleich zu LanguageTool, Grammarly, Harper und Microsoft Editor dasteht, einschließlich der Punkte, bei denen es unterliegt.`,cmpCap:`ERATA im Vergleich mit anderen Korrekturprogrammen`,
+cmpHead:[`Kriterium`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Läuft offline; Text bleibt auf dem Gerät`,`Ja`,`Standardmäßig nein: Text geht an Server des Anbieters`,`Nein: Verarbeitung in der Cloud (US-Server)`,`Ja`,`Nein: Microsoft-Cloud`],
+[`Konto erforderlich`,`Nein`,`Unklar: Quellen widersprechen sich`,`Ja`,`Nein`,`Microsoft-Konto`],
+[`Rumänisch`,`Eigene Regeln und Wiederherstellung von Diakritika`,`Unterstützt, vom Projekt aber als inaktiv markiert`,`Beta, nur Korrekturen`,`Nein`,`Nur Rechtschreibung`],
+[`Weitere Sprachen`,`en, fr, es, pt mit eigenen Regeln; de und it minimal; hu nur Oberfläche`,`Über 30 Sprachen, mit weit mehr Regeln`,`Mehrere Sprachen; Englisch ist am stärksten`,`Nur Englisch`,`Viele Sprachen, auch Ungarisch`],
+[`Google Docs und Apps`,`Kein Google Docs, keine mobile oder Desktop-App`,`Google Docs, Desktop- und iOS-Apps`,`Google Docs, Desktop und mobil`,`Browser, macOS-App und Editoren; Google Docs nicht bestätigt`,`Chrome-/Edge-Erweiterung und Word`],
+[`Stil und KI-Umschreibung`,`Einfache Stilhinweise; optionale Umformulierung mit Ihrem eigenen lokalen Modell`,`Paraphrasieren in Premium`,`Ja (im kostenlosen Tarif begrenzt)`,`Keine, bewusst ohne LLM`,`Verfeinerungen erfordern Microsoft 365`],
+[`Open Source`,`Ja (MIT)`,`Engine ja, Erweiterung nein`,`Nein`,`Ja (Apache-2.0)`,`Nein`],
+[`Kosten`,`Kostenlos`,`Begrenzter kostenloser Tarif; Premium kostenpflichtig`,`Kostenloser Tarif; Pro kostenpflichtig`,`Kostenlos`,`Basis kostenlos; mehr mit Microsoft 365`],
+[`Reife`,`Neu: keine veröffentlichte Präzision oder Trefferquote`,`Etabliert, große Nutzerbasis`,`Etabliert, große Nutzerbasis`,`Sehr aktive Entwicklung`,`Etabliert`]],
+cmpNote:`Beruht auf dem projekteigenen kritischen Vergleich (docs/COMPARISON.md, erstellt am 18. November 2026 aus öffentlichen Produktseiten). Konkurrenzprodukte ändern sich schnell und einige Fakten sind zwischen Quellen umstritten; prüfen Sie vor einer Entscheidung nach.`,
+winH:`Wo ERATA gewinnt`,wins:[`Datenschutz durch Architektur: gar kein Server. Unter den verglichenen Browser-Werkzeugen erreicht nur Harper das, und Harper deckt nur Englisch ab.`,`Lokale Rechtschreibung plus eigene Regeln für Rumänisch, Französisch, Spanisch, Portugiesisch und Englisch in einer einzigen Erweiterung.`,`Wiederherstellung von Diakritika für ro, fr, es und pt, die wir bei den anderen geprüften Produkten nicht beworben gefunden haben.`,`Erweiterbar und kostenlos: beliebige Hunspell-Wörterbücher, Regex-Regeln, MIT-Lizenz, kein Abonnement.`],
+loseH:`Wo ERATA unterliegt`,loses:[`Weit weniger Grammatikregeln als etablierte Engines, besonders bei Englisch, Deutsch und Italienisch.`,`Keine statistische Ebene: Fehler mit real existierenden Wörtern (there/their) fängt nur handgeschriebene Mustererkennung ab.`,`Stil und KI-Umschreibung sind minimal; die optionale Umformulierung erfordert ein lokales Modell, das Sie selbst einrichten.`,`Keine Integration für Google Docs, Mobilgeräte oder Desktop; Safari ist ungetestet.`,`Ein brandneues Projekt: keine veröffentlichte Präzision oder Trefferquote, kein externes Barrierefreiheits-Audit, noch keine Erfolgsbilanz.`],
+instH:`Installation`,instIntro:`Installieren Sie von der GitHub-Releases-Seite oder bauen Sie selbst. Einträge in Erweiterungs-Stores sind noch nicht dokumentiert.`,
+inst:[
+[`Chrome, Edge und Opera`,`Laden Sie den Chromium-Build von GitHub Releases herunter und entpacken Sie ihn (oder bauen Sie aus dem Quellcode, siehe unten).`,`Öffnen Sie chrome://extensions (edge://extensions in Edge) und aktivieren Sie den Entwicklermodus.`,`Wählen Sie „Entpackte Erweiterung laden“ und den entpackten Ordner.`,`Klicken Sie in ein beliebiges Textfeld und fangen Sie an zu schreiben.`],
+[`Firefox`,`Holen Sie sich den Firefox-Build von GitHub Releases (oder bauen Sie aus dem Quellcode).`,`Öffnen Sie about:debugging#/runtime/this-firefox.`,`Wählen Sie „Temporäres Add-on laden“ und die Datei manifest.json aus dem Firefox-Build.`,`Temporäre Add-ons werden beim Neustart von Firefox entfernt.`],
+[`Safari (experimentell)`,`Erfordert macOS und Xcode. Dieser Weg ist im Projekt ungetestet.`,`Ausführen: xcrun safari-web-extension-converter dist/chrome`,`Bauen Sie die erzeugte App in Xcode und aktivieren Sie die Erweiterung in den Safari-Einstellungen.`]],
+buildH:`Aus dem Quellcode bauen (Node.js 24 oder neuer)`,
+cleanH:`Clean-Room`,clean:[`ERATA wurde von Grund auf neu geschrieben. Es enthält weder Code, Regeln (XML/Java), Daten noch Meldungstexte von LanguageTool oder einem anderen Korrekturprogramm und leitet sich nicht davon ab; keine Quelldatei dieser Projekte wurde geöffnet, kopiert oder übersetzt.`,`Die Hunspell-Engine ist unsere eigene Implementierung des öffentlichen Dateiformats. Die Regeln wurden aus allgemeinem Grammatik- und Typografiewissen und aus normativen Nachschlagewerken verfasst; Spracherkennung und Vorschläge nutzen eigene Algorithmen. Die mitgelieferten Wörterbücher sind unabhängige Hunspell-Projekte mit eigenen Lizenzen. Einzelheiten stehen in CLEANROOM.md im Repository.`],
+limH:`Bekannte Grenzen`,lims:[`Weniger Grammatikregeln als etablierte Prüfprogramme: Viele Fehler bleiben unbemerkt.`,`Deutsch und Italienisch: minimale Regeln, und die Rechtschreibprüfung funktioniert erst nach dem Import eines Wörterbuchs.`,`Ungarisch: in 0.3.0 nur Oberfläche, ohne Wörterbuch und ohne Regeln.`,`Keine statistische Ebene für Fehler mit real existierenden Wörtern und noch keine gemessenen Raten für Fehlalarme oder Trefferquote.`,`Kein Google Docs (Canvas-Editor), kein Mobilgerät, keine Desktop- oder Office-Integration.`,`Automatisierte Tests laufen nur auf Chromium; Safari-Unterstützung ist ungetestet.`,`Sehr lange Texte werden gekürzt: Geprüft werden nur etwa die ersten 80.000 Zeichen.`],
+licH:`Lizenz`,licText:`Der Code von ERATA steht unter der MIT-Lizenz. Mitgelieferte Wörterbücher behalten ihre eigenen Lizenzen, die im Repository aufgeführt sind (dict/LICENSES.md).`,
+supH:`Das Projekt unterstützen`,supText:`ERATA ist kostenlos, ohne Werbung und ohne Tracking. Wenn es Ihnen hilft, können Sie mir einen Kaffee spendieren.`,supBtn:`Spendiere mir einen Kaffee`,
+foot:`kostenlos, quelloffen, Clean-Room.`,ftGh:`GitHub`,ftRel:`Versionen (Releases)`,ftPriv:`Datenschutzerklärung`,ftLic:`Lizenz`
+};
+
+T.hu={
+title:`ERATA — offline helyesírás-ellenőrző a böngészőjéhez`,
+desc:`Az ERATA ingyenes, nyílt forráskódú, clean-room helyesírás-ellenőrző Chrome, Edge, Firefox és Safari böngészőkhöz. Helyesírás, nyelvtan, központozás és tipográfia ellenőrzése 100%-ban helyben.`,
+skip:`Ugrás a tartalomhoz`,langLabel:`Nyelv`,navLabel:`Szakaszok`,
+nav:[`Funkciók`,`Nyelvek`,`Adatvédelem`,`Összehasonlítás`,`Telepítés`,`Korlátok`,`Támogatás`],
+a11yBtn:`Akadálymentesítési beállítások`,a_title:`Akadálymentesség`,a_size:`Szövegméret`,a_hc:`Nagy kontraszt`,a_font:`Jól olvasható betűtípus`,a_space:`Nagyobb térköz`,a_rm:`Animációk csökkentése`,a_reset:`Visszaállítás`,a_close:`Bezárás`,
+backTop:`Vissza a tetejére`,
+badge:`0.3.0 verzió`,h1:`Helyesírás-ellenőrzés, amely sosem hagyja el a böngészőjét`,
+lead:`Az ERATA bármely szövegmezőben ellenőrzi a helyesírást, a nyelvtant, a központozást és a tipográfiát, teljes egészében az Ön eszközén. Nincs fiók, nincs szerver, nincs telemetria. Az alapoktól íródott, clean-room módszerrel, és MIT-licenc alatt jelent meg.`,
+p1:`100%-ban helyi`,p2:`Clean-room`,p3:`MIT-licenc`,dl:`Letöltés a GitHub Releases oldalról`,gh:`Forráskód a GitHubon`,ctaDemo:`Demó kipróbálása`,hnote:`Ingyenes, fiók nélkül. Chrome, Edge, Opera, Firefox; Safari átalakítón keresztül.`,
+demoH:`Próbálja ki az ötletet`,demoIntro:`Egy kis szimuláció ezen az oldalon: válasszon ki egy aláhúzott szót a javaslat alkalmazásához, majd válassza ki újra a visszavonáshoz.`,demoSample:`A példa nyelve:`,demoNote:`Szemléltető demó rögzített mondatokkal, nem a valódi motor.`,demoFix:`Mind javítása`,demoReset:`Visszaállítás`,demoIssues:`Talált problémák`,demoApplied:`javítva`,demoCount:`javítva`,
+featH:`Mit tud`,featIntro:`Egy helyesírás-ellenőrző, amely a bővítményben él, és bárhol működik, ahol ír.`,
+feats:[
+[`Helyi ellenőrzés`,`A helyesírást, a nyelvtant, a központozást és a tipográfiát a bővítmény belül ellenőrzi. A szövegét sehova nem küldi el.`],
+[`Nyelvfelismerés bekezdésenként`,`Minden bekezdés külön kerül azonosításra, így egy idegen nyelvű idézet nem okoz téves riasztást.`],
+[`Mélyreható román támogatás`,`Vesszős ș/ț, „să/sa”, „într-un”, „între 5 și 10”, vessző a „dar/însă” előtt, kisbetűs hónapnevek, pleonazmusok és még sok más.`],
+[`Ékezetek visszaállítása`,`Románhoz, franciához, spanyolhoz és portugálhoz, csak ott, ahol a javítás egyértelmű.`],
+[`Ott működik, ahol ír`,`textarea, input és contenteditable mezők. Az aláhúzásokat külön réteg rajzolja, és soha nem érnek hozzá az oldal DOM-jához.`],
+[`Akadálymentes jelölők`,`Hullámos, folytonos, szaggatott vagy pontozott aláhúzás, hogy a jelentés ne csak a színtől függjön.`],
+[`Az Ön igényeire szabható`,`Személyes szótár, egyéni regex-szabályok, webhelyenkénti kapcsoló, a beállítások importja és exportja, valamint bármely Hunspell-szótár importja.`],
+[`Text Studio`,`Teljes oldalas szerkesztő „Mind javítása” funkcióval, olvashatósági pontszámmal és opcionális átfogalmazással egy helyi modellen keresztül a localhoston (alapból kikapcsolva).`]],
+keys:`Billentyűparancsok: az Alt+Shift+F mindent javít az aktív mezőben; az Alt+Shift+E be- vagy kikapcsolja az ERATA-t az aktuális webhelyen.`,
+langH:`Nyelvek és a valódi mélység`,langIntro:`A felület nyolc nyelven érhető el, de az ellenőrzés mélysége nyelvenként nagyon eltér. Itt az őszinte kép a 0.3.0 verzióról.`,
+langCap:`Ellenőrzési támogatás nyelvenként, 0.3.0 verzió`,th_lang:`Nyelv`,th_spell:`Helyesírás`,th_rules:`Nyelvtani és stílusszabályok`,
+spell:[`Mellékelt szótár`,`Csak az Ön által importált Hunspell-szótárral`,`Még nem érhető el`],
+rules:[`Saját szabályok`,`Saját szabályok és ékezetek visszaállítása`,`Minimális szabálycsomag`,`Nincs: csak a felület van lefordítva`],
+langNote:`Az ERATA-ban jóval kevesebb nyelvtani szabály van, mint a régóta bevált ellenőrzőkben. A román kapja a legtöbb figyelmet; a német és az olasz minimális; a magyar a 0.3.0-ban csak felület, szótár és szabályok nélkül.`,
+privH:`Adatvédelem`,privIntro:`Az adatvédelem itt a felépítésből adódik, nem ígéret: nincs hova elküldeni a szöveget.`,
+privItems:[`Nincs ERATA-szerver, fiók, telemetria vagy elemzés.`,`A bővítmény nem kér hálózati engedélyt. Az egyetlen kivétel az opcionális, alapból kikapcsolt „átfogalmazás helyi modellel”, amely egy mondatot küldhet az Ön által választott localhost vagy 127.0.0.1 végpontra.`,`A beállítások, a személyes szótár és az importált szótárak a bővítmény helyi tárolójában és az IndexedDB-ben maradnak, csak ezen az eszközön.`,`A jelszó-, e-mail- és kártyamezőket, valamint a data-erata="off" jelölésű mezőket figyelmen kívül hagyja.`],
+privNote:`Ez az oldal nem tölt be semmit más webhelyekről, és nem használ nyomkövetőket vagy sütiket. Csak a megjelenítési beállításait (nyelv, akadálymentesség) menti a böngésző localStorage-ába.`,
+cmpH:`Őszinte összehasonlítás`,cmpIntro:`Hogyan áll az ERATA a LanguageTool, a Grammarly, a Harper és a Microsoft Editor mellett, beleértve azt is, hol marad alul.`,cmpCap:`Az ERATA összehasonlítása más helyesírás-ellenőrzőkkel`,
+cmpHead:[`Szempont`,`ERATA`,`LanguageTool`,`Grammarly`,`Harper`,`Microsoft Editor`],
+cmpRows:[
+[`Offline fut; a szöveg az eszközön marad`,`Igen`,`Alapból nem: a szöveg a szolgáltató szervereire megy`,`Nem: felhőben dolgoz fel (amerikai szerverek)`,`Igen`,`Nem: Microsoft-felhő`],
+[`Fiók szükséges`,`Nem`,`Nem egyértelmű: a források ellentmondanak`,`Igen`,`Nem`,`Microsoft-fiók`],
+[`Román`,`Saját szabályok és ékezetek visszaállítása`,`Támogatott, de a projekt inaktívként jelöli`,`Béta, csak javítások`,`Nem`,`Csak helyesírás`],
+[`További nyelvek`,`en, fr, es, pt saját szabályokkal; de és it minimális; hu csak felület`,`30+ nyelv, sokkal több szabállyal`,`Több nyelv; az angol a legerősebb`,`Csak angol`,`Sok nyelv, a magyart is beleértve`],
+[`Google Docs és alkalmazások`,`Nincs Google Docs, nincs mobil- vagy asztali alkalmazás`,`Google Docs, asztali és iOS-alkalmazások`,`Google Docs, asztali és mobil`,`Böngésző, macOS-alkalmazás és szerkesztők; a Google Docs nem megerősített`,`Chrome/Edge-bővítmény és Word`],
+[`Stílus és MI-átírás`,`Alapvető stílustippek; opcionális átfogalmazás saját helyi modellel`,`Parafrazálás a Premiumban`,`Igen (az ingyenes csomagban korlátozott)`,`Nincs, szándékosan LLM nélkül`,`A finomítások Microsoft 365-öt igényelnek`],
+[`Nyílt forráskód`,`Igen (MIT)`,`A motor igen, a bővítmény nem`,`Nem`,`Igen (Apache-2.0)`,`Nem`],
+[`Költség`,`Ingyenes`,`Korlátozott ingyenes csomag; a Premium fizetős`,`Ingyenes csomag; a Pro fizetős`,`Ingyenes`,`Az alap ingyenes; többért Microsoft 365`],
+[`Érettség`,`Új: nincs közzétett pontosság vagy fedés`,`Bevált, nagy felhasználói bázis`,`Bevált, nagy felhasználói bázis`,`Nagyon aktív fejlesztés`,`Bevált`]],
+cmpNote:`A projekt saját, kritikus összehasonlítására épül (docs/COMPARISON.md, 2026. november 18-án készült nyilvános termékoldalak alapján). A versenytársak gyorsan változnak, és egyes tények ellentmondásosak a források között, ezért döntés előtt ellenőrizze őket.`,
+winH:`Hol nyer az ERATA`,wins:[`Felépítésből adódó adatvédelem: egyáltalán nincs szerver. Az összehasonlított böngészőeszközök közül csak a Harper egyenértékű ebben, de az csak angolt fed le.`,`Helyi helyesírás-ellenőrzés és saját szabályok románhoz, franciához, spanyolhoz, portugálhoz és angolhoz egyetlen bővítményben.`,`Ékezetek visszaállítása ro, fr, es és pt nyelven, amelyet a többi áttekintett terméknél nem találtunk meghirdetve.`,`Bővíthető és ingyenes: bármely Hunspell-szótár, regex-szabályok, MIT-licenc, előfizetés nélkül.`],
+loseH:`Hol marad alul az ERATA`,loses:[`Jóval kevesebb nyelvtani szabály, mint a bevált motoroknál, főleg angolban, németben és olaszban.`,`Nincs statisztikai réteg, ezért a valódi szavakkal elkövetett hibákat (there/their) csak kézzel írt minták fogják meg.`,`A stílus és az MI-átírás minimális; az opcionális átfogalmazáshoz saját magának kell helyi modellt beállítania.`,`Nincs Google Docs-, mobil- vagy asztali integráció; a Safari nincs tesztelve.`,`Vadonatúj projekt: nincs közzétett pontosság vagy fedés, nincs külső akadálymentességi audit, még nincs előélet.`],
+instH:`Telepítés`,instIntro:`Telepítse a GitHub Releases oldalról, vagy fordítsa le saját maga. A bővítményboltokban való megjelenés még nincs dokumentálva.`,
+inst:[
+[`Chrome, Edge és Opera`,`Töltse le a Chromium-változatot a GitHub Releases oldalról, és csomagolja ki (vagy fordítsa le forráskódból, lent).`,`Nyissa meg a chrome://extensions címet (Edge-ben edge://extensions), és kapcsolja be a fejlesztői módot.`,`Válassza a „Kicsomagolt bővítmény betöltése” lehetőséget, és jelölje ki a kicsomagolt mappát.`,`Kattintson bármely szövegmezőbe, és kezdjen el írni.`],
+[`Firefox`,`Szerezze be a Firefox-változatot a GitHub Releases oldalról (vagy fordítsa le forráskódból).`,`Nyissa meg az about:debugging#/runtime/this-firefox címet.`,`Válassza az „Ideiglenes kiegészítő betöltése” lehetőséget, és jelölje ki a Firefox-változat manifest.json fájlját.`,`Az ideiglenes kiegészítők a Firefox újraindításakor törlődnek.`],
+[`Safari (kísérleti)`,`macOS-t és Xcode-ot igényel. Ez az út a projektben nincs tesztelve.`,`Futtassa: xcrun safari-web-extension-converter dist/chrome`,`Fordítsa le a létrehozott alkalmazást Xcode-ban, majd engedélyezze a bővítményt a Safari beállításaiban.`]],
+buildH:`Fordítás forráskódból (Node.js 24 vagy újabb)`,
+cleanH:`Clean-room`,clean:[`Az ERATA az alapoktól íródott. Nem tartalmazza, és nem származtatja a LanguageTool vagy bármely más ellenőrző kódját, szabályait (XML/Java), adatait vagy üzenetszövegeit, és ezekből a projektekből egyetlen forrásfájlt sem nyitottak meg, másoltak vagy fordítottak le.`,`A Hunspell-motor a nyilvános fájlformátum saját megvalósításunk. A szabályokat általános nyelvtani és tipográfiai ismeretekből és normatív forrásokból fogalmaztuk meg; a nyelvfelismerés és a javaslatok saját algoritmusokat használnak. A mellékelt szótárak független Hunspell-projektek, saját licenccel. A részletek a tárolóban lévő CLEANROOM.md fájlban találhatók.`],
+limH:`Ismert korlátok`,lims:[`Kevesebb nyelvtani szabály, mint a bevált ellenőrzőkben: sok hiba fel sem tűnik majd.`,`Német és olasz: minimális szabályok, a helyesírás-ellenőrzés csak szótár importálása után működik.`,`Magyar: a 0.3.0-ban csak felület, szótár és szabályok nélkül.`,`Nincs statisztikai réteg a valódi szavakkal elkövetett hibákhoz, és még nincsenek mért téves riasztási vagy fedési arányok.`,`Nincs Google Docs (vászonalapú szerkesztő), nincs mobil, nincs asztali vagy Office-integráció.`,`Az automatizált tesztek csak Chromiumon futnak; a Safari-támogatás nincs tesztelve.`,`A nagyon hosszú szövegek csonkolódnak: csak az első körülbelül 80 000 karaktert ellenőrzi.`],
+licH:`Licenc`,licText:`Az ERATA kódja MIT-licenc alatt jelent meg. A mellékelt szótárak megtartják saját licencüket, amelyeket a tároló sorol fel (dict/LICENSES.md).`,
+supH:`Támogassa a projektet`,supText:`Az ERATA ingyenes, hirdetések és nyomkövetés nélkül. Ha hasznos Önnek, meghívhat egy kávéra.`,supBtn:`Hívjon meg egy kávéra`,
+foot:`ingyenes, nyílt forráskódú, clean-room.`,ftGh:`GitHub`,ftRel:`Kiadások (Releases)`,ftPriv:`Adatvédelmi tájékoztató`,ftLic:`Licenc`
+};
+
+/* demo samples */
+var DEMO={
+en:{lang:'en',segs:[{w:'Their',f:`They're`,n:'their / they’re'},' going to the ',{w:'libary',f:'library',n:'spelling'},' ',{w:'tomorow',f:'tomorrow',n:'spelling'},', and I ',{w:'seen',f:'saw',n:'verb form'},' it ',{w:'alot',f:'a lot',n:'two words'},'.']},
+ro:{lang:'ro',segs:['Locuiesc ',{w:'intr-un',f:'într-un',n:'diacritice'},' oraș mic și vreau ',{w:'sa',f:'să',n:'„să” conjunctiv'},' merg la ',{w:'şcoală dar',f:'școală, dar',n:'ș cu virgulă; virgulă înainte de „dar”'},' nu am timp.']},
+fr:{lang:'fr',segs:['Je suis allé ',{w:'a',f:'à',n:'accent'},' la ',{w:'bibliotheque',f:'bibliothèque',n:'accent'},' hier et j’ai ',{w:'vue',f:'vu',n:'participe passé'},' un film ',{w:'tres',f:'très',n:'accent'},' drôle.']},
+es:{lang:'es',segs:['Mañana voy a la biblioteca, pero no ',{w:'se',f:'sé',n:'tilde'},' si tengo tiempo. ',{w:'Tambien',f:'También',n:'tilde'},' quiero preguntar: ',{w:'cuanto cuesta?',f:'¿cuánto cuesta?',n:'signos y tilde'}]},
+pt:{lang:'pt',segs:['Amanhã vou ',{w:'a',f:'à',n:'crase'},' biblioteca, mas ',{w:'nao',f:'não',n:'til'},' sei se tenho tempo. ',{w:'Tambem',f:'Também',n:'acento'},' quero ver um filme.']}
+};
+
+var KEY='erata-site-prefs';
+var root=document.documentElement;
+var prefs={};
+function load(){try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s);if(o&&typeof o==='object')prefs=o;}}catch(e){prefs={};}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(e){}}
+function $(id){return document.getElementById(id);}
+function setText(el,t){el.textContent=t;}
+
+var cur='en';
+function pick(){
+ if(prefs.lang&&SUP.indexOf(prefs.lang)>-1)return prefs.lang;
+ var list=[];try{if(navigator.languages)list=list.concat(Array.prototype.slice.call(navigator.languages));}catch(e){}
+ if(navigator.language)list.unshift(navigator.language);
+ for(var i=0;i<list.length;i++){var c=String(list[i]).toLowerCase().split('-')[0];if(SUP.indexOf(c)>-1)return c;}
+ return 'en';
+}
+function S(k){var v=T[cur][k];return v===undefined?T.en[k]:v;}
+function el(tag,txt,cls){var e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e;}
+
+function fillList(id,arr){var ul=$(id);ul.textContent='';arr.forEach(function(t){ul.appendChild(el('li',t));});}
+
+function renderStatic(){
+ document.title=S('title');
+ var m=document.querySelector('meta[name=description]');if(m)m.setAttribute('content',S('desc'));
+ var nodes=document.querySelectorAll('[data-i18n]');
+ for(var i=0;i<nodes.length;i++){var k=nodes[i].getAttribute('data-i18n');var v=S(k);if(typeof v==='string')nodes[i].textContent=v;}
+ $('langlbl').textContent=S('langLabel');
+ $('a11ybtn').setAttribute('aria-label',S('a11yBtn'));
+ $('totop').setAttribute('aria-label',S('backTop'));
+ $('nav').setAttribute('aria-label',S('navLabel'));
+ // nav
+ var ids=['features','languages','privacy','compare','install','limits','support'];
+ var ul=$('nav').querySelector('ul');ul.textContent='';
+ S('nav').forEach(function(t,i){var li=document.createElement('li');var a=el('a',t);a.href='#'+ids[i];li.appendChild(a);ul.appendChild(li);});
+ // features
+ var fc=$('featCards');fc.textContent='';
+ S('feats').forEach(function(f){var c=el('div',undefined,'card');c.appendChild(el('h3',f[0]));c.appendChild(el('p',f[1]));fc.appendChild(c);});
+ // language table
+ setText($('langCap'),S('langCap'));
+ var th=$('langTable').querySelector('thead');th.textContent='';
+ var hr=document.createElement('tr');[S('th_lang'),S('th_spell'),S('th_rules')].forEach(function(t){var h=el('th',t);h.scope='col';hr.appendChild(h);});th.appendChild(hr);
+ var tb=$('langTable').querySelector('tbody');tb.textContent='';
+ var sp=S('spell'),ru=S('rules');
+ var rows=[['ro',0,1],['en',0,0],['fr',0,1],['es',0,1],['pt',0,1],['de',1,2],['it',1,2],['hu',2,3]];
+ rows.forEach(function(r){var tr=document.createElement('tr');var h=el('th',NAMES[r[0]]+' ('+r[0]+')');h.scope='row';h.setAttribute('lang',r[0]);tr.appendChild(h);tr.appendChild(el('td',sp[r[1]]));tr.appendChild(el('td',ru[r[2]]));tb.appendChild(tr);});
+ // privacy
+ fillList('privList',S('privItems'));
+ // compare
+ setText($('cmpCap'),S('cmpCap'));
+ var ch=$('cmpTable').querySelector('thead');ch.textContent='';
+ var cr=document.createElement('tr');S('cmpHead').forEach(function(t,i){var h=el('th',t);h.scope='col';if(i===1)h.className='er';cr.appendChild(h);});ch.appendChild(cr);
+ var cb=$('cmpTable').querySelector('tbody');cb.textContent='';
+ S('cmpRows').forEach(function(r){var tr=document.createElement('tr');r.forEach(function(t,i){if(i===0){var h=el('th',t);h.scope='row';tr.appendChild(h);}else{var d=el('td',t);if(i===1)d.className='er';tr.appendChild(d);}});cb.appendChild(tr);});
+ fillList('winList',S('wins'));fillList('loseList',S('loses'));
+ // install
+ var ic=$('instCards');ic.textContent='';
+ S('inst').forEach(function(b){var c=el('div',undefined,'card');c.appendChild(el('h3',b[0]));var ol=el('ol',undefined,'steps');for(var i=1;i<b.length;i++){ol.appendChild(el('li',b[i]));}c.appendChild(ol);ic.appendChild(c);});
+ // cleanroom
+ var ct=$('cleanText');ct.textContent='';S('clean').forEach(function(p){ct.appendChild(el('p',p));});
+ fillList('limList',S('lims'));
+ renderDemo();
+}
+
+/* demo */
+var demoState=[];
+function demoKey(){return DEMO[cur]?cur:'en';}
+function renderDemo(){
+ var d=DEMO[demoKey()];
+ var box=$('demoTxt');box.textContent='';box.setAttribute('lang',d.lang);
+ $('demoLangName').textContent=NAMES[d.lang];
+ demoState=[];
+ d.segs.forEach(function(s){
+  if(typeof s==='string'){box.appendChild(document.createTextNode(s));return;}
+  var idx=demoState.length;demoState.push(false);
+  var b=document.createElement('button');b.type='button';b.className='mk';b.textContent=s.w;
+  b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',s.w+' → '+s.f+' ('+s.n+')');
+  b.addEventListener('click',function(){setFix(idx,!demoState[idx]);});
+  b.setAttribute('data-i',idx);
+  box.appendChild(b);
+ });
+ renderDemoList();
+}
+function issues(){return DEMO[demoKey()].segs.filter(function(s){return typeof s!=='string';});}
+function setFix(i,on){
+ demoState[i]=on;var is=issues()[i];
+ var b=$('demoTxt').querySelector('button[data-i="'+i+'"]');
+ b.textContent=on?is.f:is.w;b.className=on?'mk fixed':'mk';b.setAttribute('aria-pressed',on?'true':'false');
+ renderDemoList();
+}
+function renderDemoList(){
+ var ul=$('demoList');ul.textContent='';var n=0;
+ issues().forEach(function(s,i){var li=document.createElement('li');li.setAttribute('lang',DEMO[demoKey()].lang);
+  var t=s.w+' → '+s.f+' — '+s.n;if(demoState[i]){t+=' ✓';n++;}
+  li.textContent=t;
+  if(demoState[i]){var sr=el('span',' ('+S('demoApplied')+')');sr.style.cssText='position:absolute;left:-9999px';li.appendChild(sr);}
+  ul.appendChild(li);});
+ $('demoCount').textContent=n+'/'+issues().length+' '+S('demoCount');
+}
+$('demoFix').addEventListener('click',function(){issues().forEach(function(_,i){setFix(i,true);});});
+$('demoReset').addEventListener('click',function(){issues().forEach(function(_,i){setFix(i,false);});});
+
+/* language */
+function setLang(l,persist){
+ cur=l;root.setAttribute('lang',l);$('langsel').value=l;
+ if(persist){prefs.lang=l;save();}
+ renderStatic();
+}
+$('langsel').addEventListener('change',function(){setLang(this.value,true);});
+
+/* accessibility */
+var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
+function applyA11y(){
+ var size=parseInt(prefs.size,10);if(!(size>=100&&size<=160))size=100;
+ root.style.setProperty('--scale',size);
+ root.classList.toggle('hc',!!prefs.hc);
+ root.classList.toggle('font',!!prefs.font);
+ root.classList.toggle('space',!!prefs.space);
+ var rm=(prefs.rm===undefined)?!!mq.matches:!!prefs.rm;
+ root.classList.toggle('rm',rm);
+ $('a_size').value=size;$('a_hc').checked=!!prefs.hc;$('a_font').checked=!!prefs.font;$('a_space').checked=!!prefs.space;$('a_rm').checked=rm;
+}
+$('a_size').addEventListener('input',function(){prefs.size=parseInt(this.value,10);save();applyA11y();});
+[['a_hc','hc'],['a_font','font'],['a_space','space'],['a_rm','rm']].forEach(function(p){
+ $(p[0]).addEventListener('change',function(){prefs[p[1]]=this.checked;save();applyA11y();});
+});
+$('a_reset').addEventListener('click',function(){delete prefs.size;delete prefs.hc;delete prefs.font;delete prefs.space;delete prefs.rm;save();applyA11y();});
+var panel=$('a11y'),btn=$('a11ybtn');
+function openPanel(){panel.hidden=false;btn.setAttribute('aria-expanded','true');$('a_size').focus();}
+function closePanel(ret){panel.hidden=true;btn.setAttribute('aria-expanded','false');if(ret)btn.focus();}
+btn.addEventListener('click',function(){if(panel.hidden)openPanel();else closePanel(true);});
+$('a_close').addEventListener('click',function(){closePanel(true);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden){closePanel(true);}});
+document.addEventListener('click',function(e){if(!panel.hidden&&!panel.contains(e.target)&&!btn.contains(e.target)){closePanel(false);}});
+
+/* back to top */
+var tt=$('totop');
+function onScroll(){tt.classList.toggle('show',(window.pageYOffset||root.scrollTop)>400);}
+window.addEventListener('scroll',onScroll,{passive:true});
+tt.addEventListener('click',function(){
+ var rm=root.classList.contains('rm');
+ try{window.scrollTo({top:0,behavior:rm?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}
+ document.body.focus({preventScroll:true});
+});
+
+load();applyA11y();setLang(pick(),false);onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Tokenizare, împărțire în paragrafe și propoziții. Implementare proprie.
 
 export const TOKEN_RE =
-  /(?<url>(?:https?:\/\/|ftp:\/\/|www\.)[^\s<>"')\]]+)|(?<email>[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+)|(?<tag>[@#][\p{L}\p{N}_]+)|(?<word>[\p{L}\p{M}\p{N}]+(?:['’ʼ\-][\p{L}\p{M}\p{N}]+)*)|(?<space>\s+)|(?<punct>[\s\S])/gu;
+  /(?<url>(?:https?:\/\/|ftp:\/\/|www\.)[^\s<>"')\]]+)|(?<email>(?<![\p{L}\p{N}._%+-])[\p{L}\p{N}._%+-]{1,64}@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+)|(?<tag>[@#][\p{L}\p{N}_]+)|(?<word>[\p{L}\p{M}\p{N}]+(?:['’ʼ\-][\p{L}\p{M}\p{N}]+)*)|(?<space>\s+)|(?<punct>[\s\S])/gu;
 
 /** @returns {{text:string,start:number,end:number,type:string}[]} */
 export function tokenize(text) {

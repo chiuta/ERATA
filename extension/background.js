@@ -23,17 +23,75 @@ export const DEFAULT_SETTINGS = {
 
 let settings = { ...DEFAULT_SETTINGS };
 const ready = (async () => {
-  const stored = await api.storage.local.get('settings');
-  settings = merge(DEFAULT_SETTINGS, stored.settings || {});
-  await refreshCustomLangs();
+  try {
+    const stored = await api.storage.local.get('settings');
+    settings = merge(DEFAULT_SETTINGS, stored.settings);
+  } catch {
+    settings = { ...DEFAULT_SETTINGS };
+  }
+  try {
+    await refreshCustomLangs();
+  } catch {}
 })();
 
+const isObj = (x) => x && typeof x === 'object' && !Array.isArray(x);
+const strArr = (x, max = 5000) => (Array.isArray(x) ? x.filter((v) => typeof v === 'string' && v.length < 200).slice(0, max) : null);
+/** Regex-uri cu cuantificatori imbricați sau prea lungi pot bloca motorul (ReDoS). */
+export function safePattern(p) {
+  if (typeof p !== 'string' || !p || p.length > 200) return false;
+  if (/\((?:[^()\\]|\\.)*[+*](?:[^()\\]|\\.)*\)[+*{]/.test(p)) return false;
+  try {
+    new RegExp(p, 'iu');
+  } catch {
+    return false;
+  }
+  return true;
+}
+/** Acceptă doar câmpuri cu tipul corect; restul revin la valorile implicite. */
+function sanitize(raw) {
+  const o = isObj(raw) ? raw : {};
+  const out = {};
+  for (const k of ['enabled', 'hideNative', 'badge']) if (typeof o[k] === 'boolean') out[k] = o[k];
+  for (const k of ['lang', 'defaultLang', 'enVariant', 'ui']) if (typeof o[k] === 'string' && o[k].length < 12) out[k] = o[k];
+  if (Number.isFinite(o.longSentence)) out.longSentence = Math.max(15, Math.min(120, o.longSentence));
+  for (const k of ['disabledRules', 'personal', 'disabledSites']) {
+    const a = strArr(o[k]);
+    if (a) out[k] = a;
+  }
+  if (isObj(o.categories)) {
+    out.categories = {};
+    for (const [k, v] of Object.entries(o.categories)) if (typeof v === 'boolean') out.categories[k] = v;
+  }
+  if (Array.isArray(o.userRules)) {
+    out.userRules = o.userRules
+      .filter((r) => isObj(r) && safePattern(r.pattern))
+      .slice(0, 200)
+      .map((r) => ({
+        id: String(r.id || 'USER_RULE').slice(0, 40),
+        pattern: r.pattern,
+        flags: typeof r.flags === 'string' ? r.flags.replace(/[^imsu]/g, '') + 'u' : 'iu',
+        replacement: typeof r.replacement === 'string' ? r.replacement.slice(0, 200) : undefined,
+        message: typeof r.message === 'string' ? r.message.slice(0, 200) : 'Regulă personalizată',
+        lang: typeof r.lang === 'string' ? r.lang.slice(0, 8) : 'all',
+        cat: ['grammar', 'spelling', 'punctuation', 'typography', 'style'].includes(r.cat) ? r.cat : undefined,
+      }));
+  }
+  if (isObj(o.llm)) {
+    out.llm = {};
+    if (typeof o.llm.enabled === 'boolean') out.llm.enabled = o.llm.enabled;
+    if (typeof o.llm.endpoint === 'string' && o.llm.endpoint.length < 300) out.llm.endpoint = o.llm.endpoint;
+    if (typeof o.llm.model === 'string' && o.llm.model.length < 100) out.llm.model = o.llm.model;
+  }
+  return out;
+}
+
 function merge(a, b) {
-  return { ...a, ...b, categories: { ...a.categories, ...(b.categories || {}) }, llm: { ...a.llm, ...(b.llm || {}) } };
+  const c = sanitize(b);
+  return { ...a, ...c, categories: { ...a.categories, ...(c.categories || {}) }, llm: { ...a.llm, ...(c.llm || {}) } };
 }
 
 api.storage.onChanged.addListener((ch, area) => {
-  if (area === 'local' && ch.settings) settings = merge(DEFAULT_SETTINGS, ch.settings.newValue || {});
+  if (area === 'local' && ch.settings) settings = merge(DEFAULT_SETTINGS, ch.settings.newValue);
 });
 
 // ---------- dicționare ----------
@@ -122,6 +180,7 @@ const handlers = {
   },
   async setSettings({ patch }) {
     settings = merge(settings, patch);
+    // câmpurile eliminate de sanitizare nu trebuie salvate corupte
     await api.storage.local.set({ settings });
     return { ok: true };
   },

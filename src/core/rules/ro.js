@@ -145,7 +145,7 @@ export const roRules = [
   }),
 
   rule('RO_VIRGULA_DAR', 'punctuation', (ctx) => {
-    scan(ctx, /(\p{L}+)( +)(dar|însă|insa)(?= +\p{L})/gu, (m) => {
+    scan(ctx, /(?<!\p{L})(\p{L}{1,64})( {1,8})(dar|însă|insa)(?= {1,8}\p{L})/gu, (m) => {
       if (/^(ba|și|si|nu|ci|iar|dar|însă|insa|deci|ca)$/iu.test(m[1])) return null;
       return {
         offset: m.index,

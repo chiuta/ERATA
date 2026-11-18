@@ -1,0 +1,8 @@
+{
+ "extName": {
+  "message": "ERATA — correttore offline"
+ },
+ "extDesc": {
+  "message": "Correttore ortografico, grammaticale e tipografico che funziona al 100% in locale: ro, en, fr, es, pt. Nessun account, il testo non viene inviato."
+ }
+}

@@ -24,6 +24,7 @@ jobs:
           python3 -m pip install --break-system-packages playwright
           python3 -m playwright install --with-deps chromium
           python3 test/e2e/e2e.py
+          python3 test/e2e/audit.py
       - run: npm run pack
       - uses: actions/upload-artifact@v4
         with:

@@ -179,7 +179,14 @@ function dictImport() {
     if (isAff) {
       const head = new TextDecoder('latin1').decode(buf.slice(0, 4000));
       const m = head.match(/^SET\s+(\S+)/m);
-      if (m) enc = m[1].toLowerCase().replace(/^iso8859-/, 'iso-8859-');
+      if (m) {
+        enc = m[1].toLowerCase().replace(/^iso8859-/, 'iso-8859-').replace(/^microsoft-cp/, 'windows-').replace(/^cp(125\d)$/, 'windows-$1');
+        try {
+          new TextDecoder(enc);
+        } catch {
+          enc = 'iso-8859-1'; // codare necunoscută: cea mai tolerantă variantă
+        }
+      }
     }
     return enc;
   };

@@ -25,3 +25,6 @@ Dicționarele din `dict/` sunt proiecte Hunspell independente (pachete npm `dict
 1. Scrieți regula din cunoștințele dvs. despre limbă, nu după un alt corector.
 2. Adăugați un test pozitiv și unul negativ (text corect care nu trebuie semnalat) în `test/`.
 3. Dacă ați consultat o gramatică sau un dicționar normativ, citați-l în mesajul commit-ului.
+
+---
+Version note (0.3.0, 2026-11-18): the methodology is unchanged. The `docs/COMPARISON.md` research used only public product pages, documentation and store listings; no LanguageTool source code or rule files were opened. The minimal de/it/pt rule packs and the interface translations were likewise written originally. German and Italian dictionaries are not bundled (GPL licensing); users may import their own.
