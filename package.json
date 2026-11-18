@@ -1,0 +1,28 @@
+{
+  "name": "erata",
+  "version": "0.2.0",
+  "description": "ERATA — corector gramatical și ortografic offline pentru browser, implementat clean-room.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "Alexio <alexio@trom.tf>",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dicts": "node scripts/fetch-dicts.mjs",
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "pack": "node scripts/build.mjs --zip",
+    "icons": "python3 scripts/make-icons.py"
+  },
+  "devDependencies": {
+    "dictionary-en": "^4.0.0",
+    "dictionary-en-gb": "^3.0.0",
+    "dictionary-es": "^4.0.0",
+    "dictionary-fr": "^3.0.0",
+    "dictionary-pt": "^4.0.0",
+    "dictionary-ro": "^3.0.0",
+    "esbuild": "^0.28.2"
+  }
+}

@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Verifică versiunea Node (>= 24)
+        run: node -e "if (+process.versions.node.split('.')[0] < 24) { console.error('Node prea vechi'); process.exit(1) }"
+      - run: npm ci
+      - run: npm run dicts
+      - run: npm test
+      - run: npm run build
+      - name: Lint manifest Firefox
+        run: npx --yes web-ext lint --source-dir dist/firefox --warnings-as-errors=false
+      - name: Teste end-to-end (Chromium)
+        run: |
+          python3 -m pip install --break-system-packages playwright
+          python3 -m playwright install --with-deps chromium
+          python3 test/e2e/e2e.py
+      - run: npm run pack
+      - uses: actions/upload-artifact@v4
+        with:
+          name: erata-extensions
+          path: dist/*.zip

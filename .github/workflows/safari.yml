@@ -1,0 +1,19 @@
+name: Safari (netestat)
+on:
+  workflow_dispatch:
+jobs:
+  safari:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - run: npm ci
+      - run: npm run dicts
+      - run: npm run build
+      - run: xcrun safari-web-extension-converter dist/safari --project-location build/safari --app-name ERATA --bundle-identifier tf.trom.erata --no-open --no-prompt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: erata-safari-xcode-project
+          path: build/safari

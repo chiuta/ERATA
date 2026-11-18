@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERATA — studio de text</title>
+<link rel="stylesheet" href="ui.css">
+<style>
+ .cols{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+ @media (max-width:760px){.cols{grid-template-columns:1fr}}
+ #issues{list-style:none;margin:0;padding:0;max-height:70vh;overflow:auto}
+ #issues li{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+ #issues mark{background:rgba(217,45,32,.18);color:inherit;border-radius:3px;padding:0 2px}
+ .sug{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<main class="wrap">
+ <div class="row" style="justify-content:space-between"><h1 id="title"></h1><span class="muted" id="stats" role="status"></span></div>
+ <p class="muted" id="hint"></p>
+ <div class="row" style="margin-bottom:8px">
+   <select id="lang" aria-label="language"></select>
+   <button id="fix"></button><button id="restore"></button><button id="copy">⧉</button>
+ </div>
+ <div class="cols">
+   <textarea id="txt" rows="18" spellcheck="false"></textarea>
+   <ul id="issues" aria-live="polite"></ul>
+ </div>
+</main>
+<script src="studio.js"></script>
+</body>
+</html>

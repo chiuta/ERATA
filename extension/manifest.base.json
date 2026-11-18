@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "ERATA — corector offline",
+  "short_name": "ERATA",
+  "version": "0.2.0",
+  "description": "Corector ortografic, gramatical și tipografic care rulează 100% local: ro, en, fr, es, pt. Fără cont, fără trimiterea textului.",
+  "author": "Alexio",
+  "homepage_url": "https://github.com/chiuta/erata",
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "action": {
+    "default_title": "ERATA",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/16.png", "32": "icons/32.png" }
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "all_frames": true,
+      "match_about_blank": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab"],
+  "commands": {
+    "fix-all": { "suggested_key": { "default": "Alt+Shift+F" }, "description": "Corectează tot în câmpul activ / Fix all in the active field" },
+    "toggle-site": { "suggested_key": { "default": "Alt+Shift+E" }, "description": "Activează/dezactivează pe acest site / Toggle on this site" }
+  }
+}
