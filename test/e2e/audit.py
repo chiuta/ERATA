@@ -119,6 +119,13 @@ async def sec_legacy(env):
     for yy in (r[2] - 12, (r[1] + r[2]) / 2 + 4, (r[1] + r[2]) / 2):
         if await card_near(page, r[0] + 2 + 60 + 20, yy):
             hit = True; break
+    if not hit:
+        await page.click('#pad'); await page.wait_for_timeout(1500)
+        png = await screenshot(page)
+        print('   DIAG pad: roșu', bbox_of(RED(pixels(png)), (0, r[1] - 10, 500, r[2] + 10)), 'chihlimbar', bbox_of(AMBER(pixels(png)), (0, r[1] - 10, 500, r[2] + 10)),
+              'valoare', json.dumps(await page.evaluate("document.getElementById('pad').value")),
+              'font', await page.evaluate("getComputedStyle(document.getElementById('pad')).fontFamily"),
+              'lățime cuvânt', await page.evaluate("(()=>{const c=document.createElement('canvas').getContext('2d');c.font='16px Arial';return c.measureText('scoala').width})()"))
     check('input cu padding mare: card pe cuvânt', hit, r)
 
     # 4. RTL contenteditable: nu stricăm DOM-ul, nu apar erori
