@@ -27,7 +27,6 @@ jobs:
           python3 -m pip install --break-system-packages playwright pillow numpy
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.* /etc/apt/sources.list.d/*microsoft*
           python3 -m playwright install --with-deps chromium || python3 -m playwright install chromium
-          python3 test/e2e/native_probe.py || true
           python3 test/e2e/e2e.py
       - name: Audit adversarial (Chromium)
         env:

@@ -113,7 +113,13 @@ async def sec_legacy(env):
 
     # 3. input cu padding mare: sublinierea trebuie să cadă pe cuvânt
     await page.click('#pad'); await page.keyboard.type('scoala', delay=3); await page.wait_for_timeout(1600)
-    check('input cu padding mare: card pe cuvânt', await card_near(page, 10 + 60 + 20, 300 + 8 + 10))
+    # Poziția se calculează din caseta reală a câmpului: înălțimea rândului depinde de fontul care ține locul lui Arial.
+    r = await page.evaluate("(()=>{const b=document.getElementById('pad').getBoundingClientRect();return [b.left,b.top,b.bottom]})()")
+    hit = False
+    for yy in (r[2] - 12, (r[1] + r[2]) / 2 + 4, (r[1] + r[2]) / 2):
+        if await card_near(page, r[0] + 2 + 60 + 20, yy):
+            hit = True; break
+    check('input cu padding mare: card pe cuvânt', hit, r)
 
     # 4. RTL contenteditable: nu stricăm DOM-ul, nu apar erori
     await page.click('#rtl'); await page.keyboard.type('שלום scoala', delay=3); await page.wait_for_timeout(1500)
