@@ -2,7 +2,7 @@
 
 # ERATA — izvanmrežni korektor za preglednik
 
-Verzija: 0.4.0 · Zadnje ažuriranje: 27. studenoga 2026.
+Verzija: 0.4.1 · Zadnje ažuriranje: 28. studenoga 2026.
 
 ERATA je proširenje za preglednik koje provjerava pravopis, gramatiku, interpunkciju i tipografiju **u cijelosti na vašem uređaju**. Nema računa, poslužitelja ni telemetrije: vaš tekst nikada ne napušta vaše računalo. Proširenje je napisano metodom clean-room (pogledajte [CLEANROOM.md](CLEANROOM.md)) i objavljeno pod licencijom MIT.
 
@@ -29,12 +29,12 @@ Prečaci: `Alt+Shift+F` ispravlja sve u aktivnom polju, `Alt+Shift+E` uključuje
 | Portugalski (pt) | uključeni rječnik | namjenski paket pravila (mali) |
 | Njemački (de) | **nije uključen** (GPL licenciranje); uvezite vlastiti Hunspell rječnik | minimalni paket pravila |
 | Talijanski (it) | **nije uključen** (GPL licenciranje); uvezite vlastiti Hunspell rječnik | minimalni paket pravila |
-| Mađarski (hu) | **nema u 0.4.0** | **nema**: preveden je samo sučelje; provjere pravopisa za mađarski još nema |
+| Mađarski (hu) | **nema u 0.4.1** | **nema**: preveden je samo sučelje; provjere pravopisa za mađarski još nema |
 
 Bilo koji drugi Hunspell rječnik (nl, …) može se uvesti, ali prepoznavanje jezika zna samo za gore navedene jezike.
 
 ## Prijevodi
-Sučelje, ovaj README i prezentacijska stranica postoje na 25 jezika. Osam njih (ro, en, fr, it, es, pt, de, hu) osnovni su jezici projekta; ostalih sedamnaest dodano je u 0.4.0. **Strojni prijevod koji još nije pregledao izvorni govornik. Ispravci su dobrodošli: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najmanja pouzdanost: rusinski, romski, krimskotatarski i jidiš. Prevođenje sučelja ne dodaje provjeru pravopisa za taj jezik: što se doista provjerava, pogledajte u tablici iznad.
+Sučelje, ovaj README i prezentacijska stranica postoje na 25 jezika. Osam njih (ro, en, fr, it, es, pt, de, hu) osnovni su jezici projekta; ostalih sedamnaest dodano je u 0.4.1. **Strojni prijevod koji još nije pregledao izvorni govornik. Ispravci su dobrodošli: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najmanja pouzdanost: rusinski, romski, krimskotatarski i jidiš. Prevođenje sučelja ne dodaje provjeru pravopisa za taj jezik: što se doista provjerava, pogledajte u tablici iznad.
 
 ## Privatnost
 Sva se provjera odvija unutar proširenja. Ne postoji ERATA poslužitelj, račun, telemetrija ni analitika, a proširenje ne traži nikakvo mrežno dopuštenje. Jedina je iznimka neobavezno preoblikovanje pomoću lokalnog modela, isključeno prema zadanim postavkama, koje može poslati jednu rečenicu na krajnju točku na `localhost`/`127.0.0.1` koju sami odaberete. Postavke, osobni rječnik i uvezeni rječnici ostaju u `storage.local` i u IndexedDB na vašem uređaju. Polja za zaporku, e-poštu i karticu te polja označena s `data-erata="off"` zanemaruju se. Pojedinosti: [PRIVACY.md](PRIVACY.md).

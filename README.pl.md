@@ -2,7 +2,7 @@
 
 # ERATA — korektor offline dla przeglądarki
 
-Wersja: 0.4.0 · Ostatnia aktualizacja: 27 listopada 2026
+Wersja: 0.4.1 · Ostatnia aktualizacja: 28 listopada 2026
 
 ERATA to rozszerzenie przeglądarki, które sprawdza pisownię, gramatykę, interpunkcję i typografię **w całości na urządzeniu użytkownika**. Bez konta, bez serwera, bez telemetrii: tekst nigdy nie opuszcza komputera. Powstała metodą clean-room (zob. [CLEANROOM.md](CLEANROOM.md)) i jest wydana na licencji MIT.
 
@@ -29,12 +29,12 @@ Skróty klawiszowe: `Alt+Shift+F` poprawia wszystko w aktywnym polu, `Alt+Shift+
 | portugalski (pt) | wbudowany słownik | osobny pakiet reguł (mały) |
 | niemiecki (de) | **nie jest dołączony** (ze względu na licencję GPL); zaimportuj własny słownik Hunspell | minimalny pakiet reguł |
 | włoski (it) | **nie jest dołączony** (ze względu na licencję GPL); zaimportuj własny słownik Hunspell | minimalny pakiet reguł |
-| węgierski (hu) | **brak w wersji 0.4.0** | **brak**: przetłumaczony jest tylko interfejs; sprawdzania pisowni dla węgierskiego jeszcze nie ma |
+| węgierski (hu) | **brak w wersji 0.4.1** | **brak**: przetłumaczony jest tylko interfejs; sprawdzania pisowni dla węgierskiego jeszcze nie ma |
 
 Każdy inny słownik Hunspell (nl, …) można zaimportować, ale detektor języka zna tylko języki wymienione powyżej.
 
 ## Tłumaczenia
-Interfejs, ten plik README i strona prezentacyjna istnieją w 25 językach. Osiem z nich (ro, en, fr, it, es, pt, de, hu) to języki podstawowe projektu; pozostałe siedemnaście dodano w wersji 0.4.0. **Tłumaczenie maszynowe, jeszcze niesprawdzone przez rodzimego użytkownika języka. Poprawki są mile widziane: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najmniejszą pewność mają tłumaczenia na rusiński, romski, krymskotatarski i jidysz. Przetłumaczenie interfejsu nie dodaje sprawdzania pisowni dla danego języka: to, co jest naprawdę sprawdzane, pokazuje tabela powyżej.
+Interfejs, ten plik README i strona prezentacyjna istnieją w 25 językach. Osiem z nich (ro, en, fr, it, es, pt, de, hu) to języki podstawowe projektu; pozostałe siedemnaście dodano w wersji 0.4.1. **Tłumaczenie maszynowe, jeszcze niesprawdzone przez rodzimego użytkownika języka. Poprawki są mile widziane: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najmniejszą pewność mają tłumaczenia na rusiński, romski, krymskotatarski i jidysz. Przetłumaczenie interfejsu nie dodaje sprawdzania pisowni dla danego języka: to, co jest naprawdę sprawdzane, pokazuje tabela powyżej.
 
 ## Prywatność
 Całe sprawdzanie odbywa się wewnątrz rozszerzenia. Nie ma serwera ERATA, konta, telemetrii ani analityki, a rozszerzenie nie żąda żadnych uprawnień sieciowych. Jedynym wyjątkiem jest opcjonalne lokalne przeredagowanie, domyślnie wyłączone, które może wysłać jedno zdanie do punktu końcowego pod adresem `localhost`/`127.0.0.1`, wskazanego przez użytkownika. Ustawienia, słownik osobisty i zaimportowane słowniki pozostają w `storage.local` i IndexedDB na urządzeniu użytkownika. Pola haseł, adresów e-mail i kart płatniczych oraz pola oznaczone `data-erata="off"` są pomijane. Szczegóły: [PRIVACY.md](PRIVACY.md).

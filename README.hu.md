@@ -2,11 +2,11 @@
 
 # ERATA — offline helyesírás- és nyelvhelyesség-ellenőrző böngészőhöz
 
-Verzió: 0.4.0 · Utolsó frissítés: 2026. november 27.
+Verzió: 0.4.1 · Utolsó frissítés: 2026. november 28.
 
 Az ERATA egy böngészőbővítmény, amely a helyesírást, a nyelvtant, az írásjelezést és a tipográfiát **teljes egészében az Ön eszközén** ellenőrzi. Nincs fiók, nincs szerver, nincs telemetria: a szövege soha nem hagyja el a számítógépét. „Clean-room” módszerrel készült (lásd: [CLEANROOM.md](CLEANROOM.md)), és MIT licenc alatt érhető el.
 
-> **Fontos, őszinte megjegyzés:** a 0.4.0 verzióban a magyar nyelvből csak a **felület** van lefordítva. **Magyar helyesírás-ellenőrzés még nincs**: nincs magyar szótár és nincsenek magyar szabályok. Magyar szöveget az ERATA egyelőre nem javít.
+> **Fontos, őszinte megjegyzés:** a 0.4.1 verzióban a magyar nyelvből csak a **felület** van lefordítva. **Magyar helyesírás-ellenőrzés még nincs**: nincs magyar szótár és nincsenek magyar szabályok. Magyar szöveget az ERATA egyelőre nem javít.
 
 ## Funkciók
 - Működik `textarea`, `input` és `contenteditable` mezőkben, a gazdag szövegszerkesztőkben is. Az aláhúzásokat külön réteg rajzolja, és **soha nem módosítják az oldal DOM-ját**.
@@ -31,12 +31,12 @@ Billentyűparancsok: az `Alt+Shift+F` mindent kijavít az aktív mezőben, az `A
 | Portugál (pt) | beépített szótár | saját szabálycsomag (kicsi) |
 | Német (de) | **nincs beépítve** (GPL-licencek miatt); saját Hunspell-szótár importálható | minimális szabálycsomag |
 | Olasz (it) | **nincs beépítve** (GPL-licencek miatt); saját Hunspell-szótár importálható | minimális szabálycsomag |
-| Magyar (hu) | **nincs a 0.4.0-ban** | **nincs**: csak a felület van lefordítva; magyar helyesírás-ellenőrzés még nincs |
+| Magyar (hu) | **nincs a 0.4.1-ban** | **nincs**: csak a felület van lefordítva; magyar helyesírás-ellenőrzés még nincs |
 
 Bármely más Hunspell-szótár (nl, …) importálható, de a nyelvfelismerő csak a fent felsorolt nyelveket ismeri.
 
 ## Fordítások
-A felület, ez a README és a bemutatóoldal 25 nyelven érhető el. Közülük nyolc (ro, en, fr, it, es, pt, de, hu) a projekt alapnyelve; a másik tizenhét a 0.4.0-ban került hozzá. **Csak a 17 új nyelv gépi fordítás, amelyet anyanyelvi beszélő még nem ellenőrzött. A javításokat szívesen fogadjuk: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Legkisebb a megbízhatóság: ruszin, romani, krími tatár és jiddis. A felület lefordítása nem ad helyesírás-ellenőrzést az adott nyelvhez: hogy az ERATA valójában mit ellenőriz, azt a fenti táblázat mutatja.
+A felület, ez a README és a bemutatóoldal 25 nyelven érhető el. Közülük nyolc (ro, en, fr, it, es, pt, de, hu) a projekt alapnyelve; a másik tizenhét a 0.4.1-ban került hozzá. **Csak a 17 új nyelv gépi fordítás, amelyet anyanyelvi beszélő még nem ellenőrzött. A javításokat szívesen fogadjuk: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Legkisebb a megbízhatóság: ruszin, romani, krími tatár és jiddis. A felület lefordítása nem ad helyesírás-ellenőrzést az adott nyelvhez: hogy az ERATA valójában mit ellenőriz, azt a fenti táblázat mutatja.
 
 ## Adatvédelem
 Az ellenőrzés teljes egészében a bővítményen belül zajlik. Nincs ERATA-szerver, fiók, telemetria vagy analitika, és a bővítmény nem kér hálózati engedélyt. Az egyetlen kivétel az opcionális, alapból kikapcsolt helyi átfogalmazás, amely egy mondatot küldhet az Ön által választott `localhost`/`127.0.0.1` végpontra. A beállítások, a személyes szótár és az importált szótárak a `storage.local` és az IndexedDB tárolóban maradnak, az Ön eszközén. A jelszó-, e-mail- és bankkártyamezőket, valamint a `data-erata="off"` jelölésű mezőket a bővítmény figyelmen kívül hagyja. Részletek: [PRIVACY.md](PRIVACY.md).

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 — 2026-11-28
+### Fixed
+- Underlines and the hover card were shifted by the field's padding in `<input>` elements on Chrome 159, which reports the content box (not the padding box) through `clientLeft`/`clientWidth` for inputs. The field box is now derived in a way that works with both behaviours. Found by running the Chromium audit on a newer browser in CI.
+- Test suite: sub-pixel (LCD) text anti-aliasing left reddish fringes that the pixel checks counted as underlines on the CI runner; the audit now disables it, and is blocking in CI again. Failure screenshots and geometry diagnostics are kept.
+
 ## 0.4.0 — 2026-11-27
 ### Added
 - Interface, README and presentation page in **25 languages**: the 8 core ones plus the national-minority languages of Romania (uk, tr, crh, ru, sr, sk, bg, hr, el, yi, cs, pl, hy, rue, sq, mk, rmy). The 17 new ones are machine translations not yet reviewed by native speakers (lowest confidence: rue, rmy, crh, yi; moderate: hy, sq). Store metadata (`_locales`) only for locales browsers' stores accept. Yiddish is laid out right-to-left.

@@ -2,7 +2,7 @@
 
 # ERATA — correcteur hors ligne pour le navigateur
 
-Version : 0.4.0 · Dernière mise à jour : 27 novembre 2026
+Version : 0.4.1 · Dernière mise à jour : 28 novembre 2026
 
 ERATA est une extension de navigateur qui vérifie l’orthographe, la grammaire, la ponctuation et la typographie **entièrement sur votre appareil**. Pas de compte, pas de serveur, pas de télémétrie : votre texte ne quitte jamais votre ordinateur. Elle est développée en « clean-room » (voir [CLEANROOM.md](CLEANROOM.md)) et publiée sous licence MIT.
 
@@ -29,12 +29,12 @@ Raccourcis : `Alt+Shift+F` corrige tout dans le champ actif, `Alt+Shift+E` activ
 | Portugais (pt) | dictionnaire inclus | jeu de règles dédié (réduit) |
 | Allemand (de) | **non inclus** (licences GPL) ; importez votre propre dictionnaire Hunspell | jeu de règles minimal |
 | Italien (it) | **non inclus** (licences GPL) ; importez votre propre dictionnaire Hunspell | jeu de règles minimal |
-| Hongrois (hu) | **aucune dans la 0.4.0** | **aucune** : seule l’interface est traduite ; il n’existe pas encore de vérification orthographique du hongrois |
+| Hongrois (hu) | **aucune dans la 0.4.1** | **aucune** : seule l’interface est traduite ; il n’existe pas encore de vérification orthographique du hongrois |
 
 Tout autre dictionnaire Hunspell (nl, …) peut être importé, mais le détecteur de langue ne connaît que les langues ci-dessus.
 
 ## Traductions
-L’interface, ce README et la page de présentation existent en 25 langues. Huit d’entre elles (ro, en, fr, it, es, pt, de, hu) sont les langues de base du projet ; les dix-sept autres ont été ajoutées dans la 0.4.0. **Seules les 17 nouvelles langues sont traduites automatiquement, et aucun locuteur natif ne les a encore relues. Les corrections sont les bienvenues : https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Confiance la plus faible : ruthène, romani, tatar de Crimée et yiddish. Traduire l’interface n’ajoute pas de vérification orthographique pour la langue concernée : voir le tableau ci-dessus pour ce qui est réellement vérifié.
+L’interface, ce README et la page de présentation existent en 25 langues. Huit d’entre elles (ro, en, fr, it, es, pt, de, hu) sont les langues de base du projet ; les dix-sept autres ont été ajoutées dans la 0.4.1. **Seules les 17 nouvelles langues sont traduites automatiquement, et aucun locuteur natif ne les a encore relues. Les corrections sont les bienvenues : https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Confiance la plus faible : ruthène, romani, tatar de Crimée et yiddish. Traduire l’interface n’ajoute pas de vérification orthographique pour la langue concernée : voir le tableau ci-dessus pour ce qui est réellement vérifié.
 
 ## Confidentialité
 Toute la vérification s’effectue à l’intérieur de l’extension. Il n’y a ni serveur ERATA, ni compte, ni télémétrie, ni outil d’analyse, et l’extension ne demande aucune permission réseau. La seule exception est la reformulation locale, facultative et désactivée par défaut, qui peut envoyer une phrase à un point d’accès `localhost`/`127.0.0.1` de votre choix. Les réglages, le dictionnaire personnel et les dictionnaires importés restent dans `storage.local` et IndexedDB, sur votre appareil. Les champs de mot de passe, d’e-mail et de carte bancaire, ainsi que ceux marqués `data-erata="off"`, sont ignorés. Détails : [PRIVACY.md](PRIVACY.md).

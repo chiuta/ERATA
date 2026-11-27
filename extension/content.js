@@ -819,17 +819,33 @@ function boot() {
 
   const MPROPS = ['fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'fontVariant', 'fontStretch', 'fontKerning', 'fontFeatureSettings', 'letterSpacing', 'wordSpacing', 'textTransform', 'textIndent', 'textAlign', 'lineHeight', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'tabSize', 'direction', 'writingMode', 'textOrientation', 'wordBreak', 'lineBreak', 'textRendering'];
   const isVertical = (cs) => /^(vertical|sideways)/.test(cs.writingMode || '');
+  /**
+   * Caseta de padding a câmpului: {bl, bt} = chenar (+ bara de derulare din stânga, la RTL), {cw, ch} = lățime/înălțime cu padding.
+   * În mod clasic asta raportează clientLeft/clientTop/clientWidth/clientHeight. Chrome 159 raportează însă, pentru <input>,
+   * caseta de CONȚINUT (clientLeft include padding-ul, clientWidth îl exclude), ceea ce deplasa sublinierile cu padding-ul.
+   * Semantica se recunoaște pe axa verticală (acolo nu există bară de derulare), altfel pe cea orizontală.
+   */
+  function padBox(el, cs) {
+    const n = (v) => parseFloat(v) || 0;
+    const pl = n(cs.paddingLeft), pr = n(cs.paddingRight), pt = n(cs.paddingTop), pb = n(cs.paddingBottom);
+    const near = (a, b) => Math.abs(a - b) < 0.75;
+    const content = pt > 0 ? near(el.clientTop, n(cs.borderTopWidth) + pt) : pl > 0 && near(el.clientLeft, n(cs.borderLeftWidth) + pl);
+    if (!content) return { bl: el.clientLeft || 0, bt: el.clientTop || 0, cw: el.clientWidth, ch: el.clientHeight };
+    return { bl: el.clientLeft - pl, bt: el.clientTop - pt, cw: el.clientWidth + pl + pr, ch: el.clientHeight + pt + pb };
+  }
+
   /** Geometria locală (în coordonatele casetei câmpului, înainte de transformări) pentru textarea/input. */
   function textGeo(st) {
     const el = st.el;
     const cs = getComputedStyle(el);
     calib();
-    const key = [cal.kx, cal.ky, el.clientWidth, el.clientHeight, el.clientLeft, st.text.length, st.matches.length, st.version, cs.fontSize, cs.fontFamily, cs.letterSpacing, cs.direction, cs.writingMode, cs.textAlign, cs.paddingLeft, cs.paddingTop, cs.lineHeight].join('|');
+    const key = [cal.kx, cal.ky, el.clientWidth, el.clientHeight, el.clientLeft, el.clientTop, cs.paddingRight, st.text.length, st.matches.length, st.version, cs.fontSize, cs.fontFamily, cs.letterSpacing, cs.direction, cs.writingMode, cs.textAlign, cs.paddingLeft, cs.paddingTop, cs.lineHeight].join('|');
     if (st.geo && st.geo.key === key) return st.geo;
     const vertical = isVertical(cs);
     const multi = el.matches('textarea');
     // „bl/bt” = chenarul + eventuala bară de derulare din stânga (RTL), așa cum o raportează clientLeft/clientTop
-    const geo = { key, items: [], yoff: 0, bl: el.clientLeft || 0, bt: el.clientTop || 0, vertical };
+    const pbx = padBox(el, cs);
+    const geo = { key, items: [], yoff: 0, bl: pbx.bl, bt: pbx.bt, vertical };
     st.geo = geo;
     if (!st.matches.length) return geo;
     mirror.style.cssText = 'position:fixed;left:-99999px;top:0;visibility:hidden;pointer-events:none;box-sizing:border-box;border:0;margin:0;overflow:visible;';
@@ -837,8 +853,8 @@ function boot() {
     mirror.style.whiteSpace = multi ? cs.whiteSpace : 'pre';
     mirror.style.overflowWrap = multi ? cs.overflowWrap : 'normal';
     // dimensiuni fixe: alinierea (center/right/RTL) și textul vertical se calculează ca în câmpul real
-    mirror.style.width = el.clientWidth + 'px';
-    mirror.style.height = vertical ? el.clientHeight + 'px' : 'auto';
+    mirror.style.width = pbx.cw + 'px';
+    mirror.style.height = vertical ? pbx.ch + 'px' : 'auto';
     mirror.textContent = '';
     let pos = 0;
     const spans = [];
@@ -858,7 +874,7 @@ function boot() {
       // oglinda e în același context ca gazda: dacă <html> are transform/zoom, dreptunghiurile ei sunt scalate → le readucem în unități locale
       rects: [...sp.getClientRects()].map((r) => ({ x: (r.left - mr.left) / cal.kx, y: (r.top - mr.top) / cal.ky, w: r.width / cal.kx, h: r.height / cal.ky })),
     }));
-    if (!multi && !vertical) geo.yoff = Math.max(0, (el.clientHeight - mr.height / cal.ky) / 2); // linia unică e centrată vertical
+    if (!multi && !vertical) geo.yoff = Math.max(0, (pbx.ch - mr.height / cal.ky) / 2); // linia unică e centrată vertical
     mirror.textContent = '';
     return geo;
   }

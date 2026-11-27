@@ -43,7 +43,7 @@ for (const l of langs) {
     const rows = s => s.split('\n').filter(x => x.startsWith('|')).length;
     assert.equal(rows(md), rows(en), 'rânduri de tabel');
     assert.deepEqual(urls(md).filter(u => /^https?:/.test(u)), urls(en).filter(u => /^https?:/.test(u)), 'URL-uri');
-    assert.match(md, /0\.4\.0/, 'versiunea');
+    assert.match(md, /0\.4\.1/, 'versiunea');
     assert.match(md, /2026/, 'data');
     assert.doesNotMatch(md, /patreon|CNRED/i);
     assert.match(md, /buymeacoffee\.com\/echo\.of\.the\.strings/);
@@ -55,7 +55,7 @@ for (const l of langs) {
     assert.equal(JSON.stringify(shape(t)), JSON.stringify(shape(en)));
     const flat = (v, o = []) => (typeof v === 'string' ? o.push(v) : Object.values(v).forEach(x => flat(x, o)), o);
     for (const s of flat(t)) assert.ok(s.trim().length, 'șir gol');
-    assert.match(JSON.stringify(t), /0\.4\.0/);
+    assert.match(JSON.stringify(t), /0\.4\.1/);
     assert.doesNotMatch(JSON.stringify(t), /patreon|CNRED/i);
   });
 }

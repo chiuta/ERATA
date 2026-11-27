@@ -2,7 +2,7 @@
 
 # ERATA — korrektues pa internet për shfletuesin
 
-Versioni: 0.4.0 · Përditësuar së fundi: 27 nëntor 2026
+Versioni: 0.4.1 · Përditësuar së fundi: 28 nëntor 2026
 
 ERATA është një shtesë shfletuesi që kontrollon drejtshkrimin, gramatikën, pikësimin dhe tipografinë **tërësisht në pajisjen tuaj**. Nuk ka llogari, server apo telemetri: teksti juaj nuk e lë kurrë kompjuterin tuaj. Është shkruar sipas metodës clean-room (shih [CLEANROOM.md](CLEANROOM.md)) dhe publikohet nën licencën MIT.
 
@@ -29,12 +29,12 @@ Shkurtore: `Alt+Shift+F` korrigjon gjithçka në fushën aktive, `Alt+Shift+E` a
 | Portugalisht (pt) | fjalor i përfshirë | paketë rregullash e dedikuar (e vogël) |
 | Gjermanisht (de) | **nuk përfshihet** (licencim GPL); importoni fjalorin tuaj Hunspell | paketë minimale rregullash |
 | Italisht (it) | **nuk përfshihet** (licencim GPL); importoni fjalorin tuaj Hunspell | paketë minimale rregullash |
-| Hungarisht (hu) | **asnjë në 0.4.0** | **asnjë**: vetëm ndërfaqja është e përkthyer; për hungarishten ende nuk ka kontroll drejtshkrimi |
+| Hungarisht (hu) | **asnjë në 0.4.1** | **asnjë**: vetëm ndërfaqja është e përkthyer; për hungarishten ende nuk ka kontroll drejtshkrimi |
 
 Çdo fjalor tjetër Hunspell (nl, …) mund të importohet, por zbuluesi i gjuhës i njeh vetëm gjuhët e mësipërme.
 
 ## Përkthime
-Ndërfaqja, ky README dhe faqja e prezantimit ekzistojnë në 25 gjuhë. Tetë prej tyre (ro, en, fr, it, es, pt, de, hu) janë gjuhët bazë të projektit; shtatëmbëdhjetë të tjerat u shtuan në 0.4.0. **Përkthim automatik, ende i pashqyrtuar nga një folës amtar. Korrigjimet mirëpriten: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Besueshmëria më e ulët: rusinisht, romani, tatarishte e Krimesë dhe jidish. Përkthimi i ndërfaqes nuk shton kontroll drejtshkrimi për atë gjuhë: shihni tabelën më sipër për atë që kontrollohet realisht.
+Ndërfaqja, ky README dhe faqja e prezantimit ekzistojnë në 25 gjuhë. Tetë prej tyre (ro, en, fr, it, es, pt, de, hu) janë gjuhët bazë të projektit; shtatëmbëdhjetë të tjerat u shtuan në 0.4.1. **Përkthim automatik, ende i pashqyrtuar nga një folës amtar. Korrigjimet mirëpriten: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Besueshmëria më e ulët: rusinisht, romani, tatarishte e Krimesë dhe jidish. Përkthimi i ndërfaqes nuk shton kontroll drejtshkrimi për atë gjuhë: shihni tabelën më sipër për atë që kontrollohet realisht.
 
 ## Privatësia
 I gjithë kontrolli bëhet brenda shtesës. Nuk ka server ERATA, llogari, telemetri apo analitikë, dhe shtesa nuk kërkon leje rrjeti. I vetmi përjashtim është rishkrimi lokal opsional, i çaktivizuar si parazgjedhje, i cili mund të dërgojë një fjali te një pikë fundore në `localhost`/`127.0.0.1` që e zgjidhni ju. Cilësimet, fjalori personal dhe fjalorët e importuar mbeten në `storage.local` dhe IndexedDB në pajisjen tuaj. Fushat e fjalëkalimit, të e-mailit dhe të kartës, si dhe fushat e shënuara me `data-erata="off"`, shpërfillen. Detaje: [PRIVACY.md](PRIVACY.md).

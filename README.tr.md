@@ -2,7 +2,7 @@
 
 # ERATA — tarayıcı için çevrimdışı yazım ve dil denetimi
 
-Sürüm: 0.4.0 · Son güncelleme: 27 Kasım 2026
+Sürüm: 0.4.1 · Son güncelleme: 28 Kasım 2026
 
 ERATA, yazımı, dil bilgisini, noktalamayı ve tipografiyi **tamamen cihazınızda** denetleyen bir tarayıcı eklentisidir. Hesap, sunucu ya da telemetri yoktur: metniniz bilgisayarınızdan asla çıkmaz. Sıfırdan, clean-room yöntemiyle yazılmıştır ([CLEANROOM.md](CLEANROOM.md) dosyasına bakın) ve MIT lisansıyla yayımlanmıştır.
 
@@ -29,12 +29,12 @@ Kısayollar: `Alt+Shift+F` etkin alandaki her şeyi düzeltir, `Alt+Shift+E` ERA
 | Portekizce (pt) | yerleşik sözlük | özel kural paketi (küçük) |
 | Almanca (de) | **yerleşik değil** (GPL lisansı nedeniyle); kendi Hunspell sözlüğünüzü içe aktarın | asgari kural paketi |
 | İtalyanca (it) | **yerleşik değil** (GPL lisansı nedeniyle); kendi Hunspell sözlüğünüzü içe aktarın | asgari kural paketi |
-| Macarca (hu) | **0.4.0 sürümünde yok** | **yok**: yalnızca arayüz çevrilmiştir; Macarca için henüz yazım denetimi yoktur |
+| Macarca (hu) | **0.4.1 sürümünde yok** | **yok**: yalnızca arayüz çevrilmiştir; Macarca için henüz yazım denetimi yoktur |
 
 Başka herhangi bir Hunspell sözlüğü (nl, …) de içe aktarılabilir, ancak dil algılayıcı yalnızca yukarıdaki dilleri tanır.
 
 ## Çeviriler
-Arayüz, bu README ve tanıtım sayfası 25 dilde mevcuttur. Bunlardan sekizi (ro, en, fr, it, es, pt, de, hu) projenin çekirdek dilleridir; diğer on yedisi 0.4.0 sürümünde eklenmiştir. **Makine çevirisidir, henüz anadili konuşan biri tarafından gözden geçirilmemiştir. Düzeltmeler memnuniyetle karşılanır: https://github.com/chiuta/ERATA/issues** (*Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues*) En düşük güven: Rusin dili, Romani dili, Kırım Tatarcası ve Yidiş. Arayüzün çevrilmesi o dil için yazım denetimi eklemez: gerçekte nelerin denetlendiği için yukarıdaki tabloya bakın.
+Arayüz, bu README ve tanıtım sayfası 25 dilde mevcuttur. Bunlardan sekizi (ro, en, fr, it, es, pt, de, hu) projenin çekirdek dilleridir; diğer on yedisi 0.4.1 sürümünde eklenmiştir. **Makine çevirisidir, henüz anadili konuşan biri tarafından gözden geçirilmemiştir. Düzeltmeler memnuniyetle karşılanır: https://github.com/chiuta/ERATA/issues** (*Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues*) En düşük güven: Rusin dili, Romani dili, Kırım Tatarcası ve Yidiş. Arayüzün çevrilmesi o dil için yazım denetimi eklemez: gerçekte nelerin denetlendiği için yukarıdaki tabloya bakın.
 
 ## Gizlilik
 Tüm denetim eklentinin içinde gerçekleşir. ERATA sunucusu, hesap, telemetri ya da analitik yoktur ve eklenti hiçbir ağ izni istemez. Tek istisna, isteğe bağlı ve varsayılan olarak kapalı olan yerel yeniden yazma özelliğidir; bu özellik, sizin seçtiğiniz bir `localhost`/`127.0.0.1` uç noktasına tek bir cümle gönderebilir. Ayarlar, kişisel sözlük ve içe aktarılan sözlükler cihazınızdaki `storage.local` ve IndexedDB içinde kalır. Parola, e-posta ve kart alanları ile `data-erata="off"` olarak işaretlenmiş alanlar yok sayılır. Ayrıntılar: [PRIVACY.md](PRIVACY.md).

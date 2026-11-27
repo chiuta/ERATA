@@ -2,7 +2,7 @@
 
 # ERATA — brauzer içün oflayn yazı tekşericisi
 
-Versiya: 0.4.0 · Soñki yañartuv: 27 noyabr 2026
+Versiya: 0.4.1 · Soñki yañartuv: 28 noyabr 2026
 
 ERATA — imlâni, grammatikanı, punktuatsiyanı ve tipografiyanı **tamamen cihazıñızda** tekşergen brauzer keñeytmesidir. Hesap, server ve telemetriya yoq: metniñiz kompyuteriñizden asla çıqmaz. ERATA sıfırdan, clean-room usulında yazılğandır ([CLEANROOM.md](CLEANROOM.md) faylına baqıñız) ve MIT litsenziyasınen neşir etilgen.
 
@@ -29,12 +29,12 @@ Qısqa tuşlar: `Alt+Shift+F` aktiv sahadaki er şeyni tüzetir, `Alt+Shift+E` E
 | Portugal tili (pt) | birge berilgen luğat | ayrı qaide paketi (kiçik) |
 | Alman tili (de) | **birge berilmegen** (GPL litsenziyası sebebinden); öz Hunspell luğatıñıznı import etiñiz | minimal qaide paketi |
 | İtalyan tili (it) | **birge berilmegen** (GPL litsenziyası sebebinden); öz Hunspell luğatıñıznı import etiñiz | minimal qaide paketi |
-| Macar tili (hu) | **0.4.0 versiyasında yoq** | **yoq**: yalıñız interfeys tercime etilgen; macar tili içün imlâ tekşerüvi daa yoq |
+| Macar tili (hu) | **0.4.1 versiyasında yoq** | **yoq**: yalıñız interfeys tercime etilgen; macar tili içün imlâ tekşerüvi daa yoq |
 
 Başqa er bir Hunspell luğatını (nl, …) da import etmek mümkün, amma til añıqlayıcı yalıñız yuqarıdaki tillerni biler.
 
 ## Tercimeler
-İnterfeys, bu README ve tanıştırma saifesi 25 tilde bar. Olarnıñ sekizi (ro, en, fr, it, es, pt, de, hu) proyektniñ asıl tilleridir; qalğan on yedisi 0.4.0 versiyasında ilâve etildi. **Maşina tercimesi, ana tilini soylegen kişi tarafından daa tekşerilmegen. Tüzetmeler memnuniyetnen qabul etilir: https://github.com/chiuta/ERATA/issues** (*Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues*) Eñ aşağı añıqlıq: rusin tili, romani tili, qırımtatarca ve yidiş. İnterfeysniñ tercime etilmesi o til içün imlâ tekşerüvi ilâve etmez: aqiqatta ne tekşerilgenini yuqarıdaki cedvelde baqıñız.
+İnterfeys, bu README ve tanıştırma saifesi 25 tilde bar. Olarnıñ sekizi (ro, en, fr, it, es, pt, de, hu) proyektniñ asıl tilleridir; qalğan on yedisi 0.4.1 versiyasında ilâve etildi. **Maşina tercimesi, ana tilini soylegen kişi tarafından daa tekşerilmegen. Tüzetmeler memnuniyetnen qabul etilir: https://github.com/chiuta/ERATA/issues** (*Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues*) Eñ aşağı añıqlıq: rusin tili, romani tili, qırımtatarca ve yidiş. İnterfeysniñ tercime etilmesi o til içün imlâ tekşerüvi ilâve etmez: aqiqatta ne tekşerilgenini yuqarıdaki cedvelde baqıñız.
 
 ## Mahremiyet
 Bütün tekşerüv keñeytmeniñ içinde keçer. ERATA serveri, hesap, telemetriya yaki analitika yoq, keñeytme hiç bir şebeke icazetini de istemez. Tek istisna — ihtiyariy, ilkin ayarında qapalı mahalliy qayta yazuvdır: o, siz saylağan `localhost`/`127.0.0.1` endpoint'ine bir cümle yiberip bile. Ayarlar, şahsiy luğat ve import etilgen luğatlar cihazıñızdaki `storage.local` ve IndexedDB içinde qalır. Parol, e-poçta ve kart sahaları, şeyle de `data-erata="off"` ile işaretlengen sahalar nazarğa alınmaz. Tafsilât: [PRIVACY.md](PRIVACY.md).

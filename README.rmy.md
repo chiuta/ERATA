@@ -2,7 +2,7 @@
 
 # ERATA — korektor offline vaš browser
 
-Versia: 0.4.0 · Agorutni aktualizacia: 27 noemvri 2026
+Versia: 0.4.1 · Agorutni aktualizacia: 28 noemvri 2026
 
 ERATA si jekh extensia pe browser so kontrolisarel e ortografia, e gramatika, e punktuacia thaj e tipografia **kompletno pe tumaro aparato**. Nane konto, nane server thaj nane telemetria: tumaro tekst ni kana džal avri katar tumaro kompjuteri. Si skrisardi clean-room (dikh [CLEANROOM.md](CLEANROOM.md)) thaj si dini avri tel e licenca MIT.
 
@@ -29,12 +29,12 @@ Skurtaturi: `Alt+Shift+F` korektisarel sa ando kimpo aktivo, `Alt+Shift+E` aktiv
 | Portugalikani (pt) | lavustik inkludisardo | pachet dedikato vaš reguli (cikno) |
 | Germanikani (de) | **na inkludisardo** (licenca GPL); importisaren tumaro korkoro lavustik Hunspell | pachet minimalo vaš reguli |
 | Italikani (it) | **na inkludisardo** (licenca GPL); importisaren tumaro korkoro lavustik Hunspell | pachet minimalo vaš reguli |
-| Ungrikani (hu) | **nane ande 0.4.0** | **nane**: si tradusisardo numaj o interfejs; dži akana nane kontrola ortografiko vaš e ungrikani čhib |
+| Ungrikani (hu) | **nane ande 0.4.1** | **nane**: si tradusisardo numaj o interfejs; dži akana nane kontrola ortografiko vaš e ungrikani čhib |
 
 Sako aver lavustik Hunspell (nl, …) šaj importisaren, numaj e čhiba opre si prindžarde katar o detektor e čhib.
 
 ## Traducii
-O interfejs, kado README thaj e pagina de prezentare si ande 25 čhiba. Oxto katar on (ro, en, fr, it, es, pt, de, hu) si e čhiba principale vaš o proiekto; e aver deš thaj efta si ćhivde ande 0.4.0. **Mašinaki traducia, dži akana bi kontrola katar jekh manuš savo rakirel e čhib sar dakiri čhib. Kamas e korekturi: https://github.com/chiuta/ERATA/issues**
+O interfejs, kado README thaj e pagina de prezentare si ande 25 čhiba. Oxto katar on (ro, en, fr, it, es, pt, de, hu) si e čhiba principale vaš o proiekto; e aver deš thaj efta si ćhivde ande 0.4.1. **Mašinaki traducia, dži akana bi kontrola katar jekh manuš savo rakirel e čhib sar dakiri čhib. Kamas e korekturi: https://github.com/chiuta/ERATA/issues**
 (Original ande anglikani čhib: **Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues**)
 Maj nesigurno: rusinikani, romani, krimeako-tatarikani thaj idiš. Kana o interfejs si tradusisardo, kodoja čhib ni lel vi kontrola ortografiko: dikh e tabela opre vaš so si kontrolisardo čačes.
 Terminura tehnice: *lavustik* = dicționar (dictionary); *kimpo* = câmp (text field); *skurtaturi* = shortcuts; *browser*, *extensia*, *sajt*, *endpoint* si terminura internacionale.

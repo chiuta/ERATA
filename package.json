@@ -1,6 +1,6 @@
 {
   "name": "erata",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "ERATA — corector gramatical și ortografic offline pentru browser, implementat clean-room.",
   "private": true,
   "type": "module",

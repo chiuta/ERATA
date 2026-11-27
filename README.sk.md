@@ -2,7 +2,7 @@
 
 # ERATA — offline korektor pre prehliadač
 
-Verzia: 0.4.0 · Posledná aktualizácia: 27. novembra 2026
+Verzia: 0.4.1 · Posledná aktualizácia: 28. novembra 2026
 
 ERATA je rozšírenie prehliadača, ktoré kontroluje pravopis, gramatiku, interpunkciu a typografiu **výlučne na vašom zariadení**. Žiadny účet, žiadny server, žiadna telemetria: váš text nikdy neopustí váš počítač. Je napísaná metódou clean-room (pozri [CLEANROOM.md](CLEANROOM.md)) a vydaná pod licenciou MIT.
 
@@ -29,12 +29,12 @@ Skratky: `Alt+Shift+F` opraví všetko v aktívnom poli, `Alt+Shift+E` zapne ale
 | Portugalčina (pt) | vstavaný slovník | samostatná sada pravidiel (malá) |
 | Nemčina (de) | **nie je súčasťou balíka** (licencovanie GPL); importujte vlastný slovník Hunspell | minimálna sada pravidiel |
 | Taliančina (it) | **nie je súčasťou balíka** (licencovanie GPL); importujte vlastný slovník Hunspell | minimálna sada pravidiel |
-| Maďarčina (hu) | **žiadny vo verzii 0.4.0** | **žiadne**: preložené je iba rozhranie; kontrola pravopisu pre maďarčinu zatiaľ neexistuje |
+| Maďarčina (hu) | **žiadny vo verzii 0.4.1** | **žiadne**: preložené je iba rozhranie; kontrola pravopisu pre maďarčinu zatiaľ neexistuje |
 
 Importovať možno aj ľubovoľný iný slovník Hunspell (nl, …), ale detektor jazyka pozná len vyššie uvedené jazyky.
 
 ## Preklady
-Rozhranie, tento README a prezentačná stránka existujú v 25 jazykoch. Osem z nich (ro, en, fr, it, es, pt, de, hu) sú základné jazyky projektu; ďalších sedemnásť pribudlo vo verzii 0.4.0. **Strojový preklad, ktorý ešte neskontroloval rodený hovorca. Opravy sú vítané: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najnižšia istota: rusínčina, rómčina, krymská tatárčina a jidiš. Preklad rozhrania nepridáva kontrolu pravopisu pre daný jazyk: čo sa naozaj kontroluje, vidno v tabuľke vyššie.
+Rozhranie, tento README a prezentačná stránka existujú v 25 jazykoch. Osem z nich (ro, en, fr, it, es, pt, de, hu) sú základné jazyky projektu; ďalších sedemnásť pribudlo vo verzii 0.4.1. **Strojový preklad, ktorý ešte neskontroloval rodený hovorca. Opravy sú vítané: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Najnižšia istota: rusínčina, rómčina, krymská tatárčina a jidiš. Preklad rozhrania nepridáva kontrolu pravopisu pre daný jazyk: čo sa naozaj kontroluje, vidno v tabuľke vyššie.
 
 ## Súkromie
 Všetka kontrola prebieha vo vnútri rozšírenia. Neexistuje žiadny server ERATA, účet, telemetria ani analytika a rozšírenie nežiada o povolenie na prístup k sieti. Jedinou výnimkou je voliteľné lokálne prepisovanie, predvolene vypnuté, ktoré môže odoslať jednu vetu na koncový bod na `localhost`/`127.0.0.1`, ktorý si sami zvolíte. Nastavenia, osobný slovník a importované slovníky zostávajú v `storage.local` a IndexedDB na vašom zariadení. Polia s heslami, e-mailovými adresami a číslami kariet, ako aj polia označené `data-erata="off"`, sa ignorujú. Podrobnosti: [PRIVACY.md](PRIVACY.md).

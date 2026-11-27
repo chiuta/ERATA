@@ -2,7 +2,7 @@
 
 # ERATA — correttore offline per il browser
 
-Versione: 0.4.0 · Ultimo aggiornamento: 27 novembre 2026
+Versione: 0.4.1 · Ultimo aggiornamento: 28 novembre 2026
 
 ERATA è un’estensione per il browser che controlla ortografia, grammatica, punteggiatura e tipografia **interamente sul tuo dispositivo**. Nessun account, nessun server, nessuna telemetria: il testo non lascia mai il tuo computer. È sviluppata in modalità clean-room (vedi [CLEANROOM.md](CLEANROOM.md)) e rilasciata con licenza MIT.
 
@@ -29,12 +29,12 @@ Scorciatoie: `Alt+Shift+F` corregge tutto nel campo attivo, `Alt+Shift+E` attiva
 | Portoghese (pt) | dizionario incluso | pacchetto dedicato (ridotto) |
 | Tedesco (de) | **non incluso** (licenze GPL); importa il tuo dizionario Hunspell | pacchetto minimo |
 | Italiano (it) | **non incluso** (licenze GPL); importa il tuo dizionario Hunspell | pacchetto minimo |
-| Ungherese (hu) | **nessuno nella 0.4.0** | **nessuna**: è tradotta solo l’interfaccia; il controllo ortografico dell’ungherese non esiste ancora |
+| Ungherese (hu) | **nessuno nella 0.4.1** | **nessuna**: è tradotta solo l’interfaccia; il controllo ortografico dell’ungherese non esiste ancora |
 
 Qualsiasi altro dizionario Hunspell (nl, …) può essere importato, ma il rilevatore di lingua conosce solo quelle elencate sopra.
 
 ## Traduzioni
-L’interfaccia, questo README e la pagina di presentazione esistono in 25 lingue. Otto di esse (ro, en, fr, it, es, pt, de, hu) sono le lingue di base del progetto; le altre diciassette sono state aggiunte nella 0.4.0. **Solo le 17 lingue nuove sono tradotte automaticamente e nessun madrelingua le ha ancora riviste. Le correzioni sono benvenute: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Affidabilità minima: ruteno, romaní, tataro di Crimea e yiddish. Tradurre l’interfaccia non aggiunge il controllo ortografico per quella lingua: vedi la tabella qui sopra per ciò che viene effettivamente controllato.
+L’interfaccia, questo README e la pagina di presentazione esistono in 25 lingue. Otto di esse (ro, en, fr, it, es, pt, de, hu) sono le lingue di base del progetto; le altre diciassette sono state aggiunte nella 0.4.1. **Solo le 17 lingue nuove sono tradotte automaticamente e nessun madrelingua le ha ancora riviste. Le correzioni sono benvenute: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Affidabilità minima: ruteno, romaní, tataro di Crimea e yiddish. Tradurre l’interfaccia non aggiunge il controllo ortografico per quella lingua: vedi la tabella qui sopra per ciò che viene effettivamente controllato.
 
 ## Privacy
 Tutto il controllo avviene all’interno dell’estensione. Non esistono server ERATA, account, telemetria né strumenti di analisi, e l’estensione non richiede permessi di rete. L’unica eccezione è la riformulazione locale, facoltativa e disattivata per impostazione predefinita, che può inviare una frase a un endpoint su `localhost`/`127.0.0.1` scelto da te. Impostazioni, dizionario personale e dizionari importati restano in `storage.local` e IndexedDB, sul tuo dispositivo. I campi password, e-mail e carta, e quelli contrassegnati con `data-erata="off"`, vengono ignorati. Dettagli: [PRIVACY.md](PRIVACY.md).
