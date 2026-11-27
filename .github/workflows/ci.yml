@@ -32,6 +32,13 @@ jobs:
         env:
           ERATA_LAT_MS: '1500'
         run: python3 test/e2e/audit.py
+      - name: Capturi ale eșecurilor din audit
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-shots
+          path: /tmp/erata-audit-shots
+          if-no-files-found: ignore
       - run: npm run pack
       - uses: actions/upload-artifact@v4
         with:

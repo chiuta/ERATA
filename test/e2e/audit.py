@@ -503,6 +503,12 @@ async def geom_case(env, name, text, *, ce=False, mode='axis', page_name=None, q
         ok = bool(box) and box[4] >= 15 and (box[3] - box[1]) >= 0.5 * (truth[3] - truth[1]) and box[0] >= truth[2] - 14 and box[2] <= truth[2] + 8
     else:
         ok = underline_matches(box, truth, mode)
+    if not (ok and total <= (box[4] if box else 0) + 30):
+        save_shot(f'geom-{name}', png)
+        try:
+            print('   DIAG', json.dumps(await env.sw.evaluate("async()=>{const s=(await chrome.storage.local.get('settings')).settings||{};return {lang:s.lang,ui:s.ui,badge:s.badge,hideNative:s.hideNative,enabled:s.enabled}}")), 'text=', json.dumps(text))
+        except Exception as e:
+            print('   DIAG err', e)
     check(f'geom: {name} — sublinierea cade pe cuvânt', ok and total <= (box[4] if box else 0) + 30, (box, [round(v) for v in truth], total))
     if hover and ok:
         cx = (truth[0] + truth[2]) / 2
@@ -944,6 +950,19 @@ NAMES_SKIP = [('username', ''), ('email', ''), ('user_email', ''), ('password', 
 LAT_MS = float(os.environ.get('ERATA_LAT_MS', '400'))
 
 
+SHOTS = os.environ.get('ERATA_SHOTS', '/tmp/erata-audit-shots')
+_shots = [0]
+
+
+def save_shot(name, png):
+    # Capturi pentru eșecuri (cel mult 12), ca să poată fi cercetate când mediul diferă de cel de dezvoltare.
+    if _shots[0] >= 12: return
+    _shots[0] += 1
+    os.makedirs(SHOTS, exist_ok=True)
+    with open(os.path.join(SHOTS, re.sub(r'[^A-Za-z0-9_.-]+', '_', name)[:60] + '.png'), 'wb') as f:
+        f.write(png)
+
+
 async def sec_names(env):
     await set_settings(env.sw, ui='ro', badge=False)
     page, errs = await open_page(env, 'blank')
@@ -967,6 +986,7 @@ async def sec_names(env):
         if ok and not got:
             bad_ok.append(n)
         if not ok and got:
+            if not bad_skip: save_shot(f'names-{n}', await screenshot(page))
             bad_skip.append(n)
         await page.evaluate("(s)=>{document.querySelector(s).blur()}", loc)
     check('nume: câmpuri legitime (user_bio, email_body, discard_reason, classname, …) SUNT verificate', not bad_ok, bad_ok)
