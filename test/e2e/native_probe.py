@@ -8,6 +8,7 @@ VARIANTS = {
     'implicit': ([], None),
     'preferinte': ([], {'browser': {'enable_spellcheck': False}, 'spellcheck': {'dictionaries': [], 'use_spelling_service': False}}),
     'fara-retea': (['--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost'], None),
+    'fara-lcd': (['--disable-lcd-text', '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost'], None),
     'disable-features': (['--disable-features=Spellcheck,SpellcheckService,WinUseBrowserSpellChecker'], None),
 }
 

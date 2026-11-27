@@ -1157,14 +1157,14 @@ async def launch(env, tag):
     env.netlogs = getattr(env, 'netlogs', []) + [env.netlog]
     if os.path.exists(env.netlog):
         os.remove(env.netlog)
-    # Verificatorul nativ al browserului desenează propriile sublinieri roșii (acolo unde are dicționar),
-    # iar testele numără pixeli roșii: îl oprim din preferințele profilului, ca să măsurăm doar ERATA.
+    # Testele numără pixeli roșii. Două surse străine de roșu trebuie oprite: netezirea subpixel (LCD) a textului,
+    # care lasă franjuri colorate pe marginea literelor (--disable-lcd-text), și verificatorul nativ al browserului.
     os.makedirs(os.path.join(prof, 'Default'), exist_ok=True)
     with open(os.path.join(prof, 'Default', 'Preferences'), 'w') as f:
         json.dump({'browser': {'enable_spellcheck': False}, 'spellcheck': {'dictionaries': [], 'use_spelling_service': False}}, f)
     env.ctx = await env.p.chromium.launch_persistent_context(
         prof, headless=False, locale='ro-RO',
-        args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox',
+        args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox', '--disable-lcd-text',
               f'--log-net-log={env.netlog}', '--net-log-capture-mode=Everything',
               '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost'],
         viewport={'width': 900, 'height': 700})
