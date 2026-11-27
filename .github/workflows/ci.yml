@@ -30,7 +30,7 @@ jobs:
           python3 test/e2e/e2e.py
       - name: Audit adversarial (Chromium)
         env:
-          ERATA_LAT_MS: '1500'
+          ERATA_LAT_MS: '3000'
         run: python3 test/e2e/audit.py
       - name: Capturi ale eșecurilor din audit
         if: failure()

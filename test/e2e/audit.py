@@ -125,6 +125,8 @@ async def sec_legacy(env):
         print('   DIAG pad: roșu', bbox_of(RED(pixels(png)), (0, r[1] - 10, 500, r[2] + 10)), 'chihlimbar', bbox_of(AMBER(pixels(png)), (0, r[1] - 10, 500, r[2] + 10)),
               'valoare', json.dumps(await page.evaluate("document.getElementById('pad').value")),
               'font', await page.evaluate("getComputedStyle(document.getElementById('pad')).fontFamily"),
+              'geom', await page.evaluate("(()=>{const e=document.getElementById('pad'),c=getComputedStyle(e);return {sl:e.scrollLeft,sw:e.scrollWidth,cl:e.clientLeft,cw:e.clientWidth,pl:c.paddingLeft,ti:c.textIndent,ta:c.textAlign,bs:c.boxSizing,ua:navigator.userAgent.match(/Chrome\\/[0-9.]+/)[0]}})()"),
+              'coloane roșii', [int(x) for x in __import__('numpy').where(RED(pixels(png))[int(r[1]):int(r[2]), :480].any(axis=0))[0][[0, -1]]] if RED(pixels(png))[int(r[1]):int(r[2]), :480].any() else None,
               'lățime cuvânt', await page.evaluate("(()=>{const c=document.createElement('canvas').getContext('2d');c.font='16px Arial';return c.measureText('scoala').width})()"))
     check('input cu padding mare: card pe cuvânt', hit, r)
 
