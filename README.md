@@ -1,8 +1,8 @@
-**English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
+**English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md) · [Українська](README.uk.md) · [Türkçe](README.tr.md) · [Qırımtatarca](README.crh.md) · [Русский](README.ru.md) · [Српски](README.sr.md) · [Slovenčina](README.sk.md) · [Български](README.bg.md) · [Hrvatski](README.hr.md) · [Ελληνικά](README.el.md) · [ייִדיש](README.yi.md) · [Čeština](README.cs.md) · [Polski](README.pl.md) · [Հայերեն](README.hy.md) · [Русиньскый](README.rue.md) · [Shqip](README.sq.md) · [Македонски](README.mk.md) · [Romani](README.rmy.md)
 
 # ERATA — offline proofreader for the browser
 
-Version: 0.3.0 · Last updated: 18 November 2026
+Version: 0.4.0 · Last updated: 27 November 2026
 
 ERATA is a browser extension that checks spelling, grammar, punctuation and typography **entirely on your device**. There is no account, no server and no telemetry: your text never leaves your computer. It is written clean-room (see [CLEANROOM.md](CLEANROOM.md)) and released under the MIT licence.
 
@@ -15,9 +15,9 @@ ERATA is a browser extension that checks spelling, grammar, punctuation and typo
 - Personal dictionary, custom regex rules, per-site switch, import/export of settings, import of any Hunspell dictionary.
 - Text Studio page, “Fix all”, readability score, two style checks (very long sentences, close repetitions).
 - Optional rewrite through a **local** model (OpenAI-compatible endpoint on `localhost` only), off by default.
-- Interface in 8 languages: Romanian, English, French, Italian, Spanish, Portuguese, German, Hungarian.
+- Interface in 25 languages: Romanian, English, French, Italian, Spanish, Portuguese, German, Hungarian plus the other national-minority languages of Romania (Ukrainian, Turkish, Crimean Tatar, Russian, Serbian, Slovak, Bulgarian, Croatian, Greek, Yiddish, Czech, Polish, Armenian, Rusyn, Albanian, Macedonian, Romani). The interface language is independent of the language being checked.
 
-Shortcuts: `Alt+Shift+F` fixes everything in the active field, `Alt+Shift+E` toggles ERATA on the current site.
+Shortcuts: `Alt+Shift+F` fixes everything in the active field, `Alt+Shift+E` toggles ERATA on the current site. Keyboard: Alt+Shift+Space suggestions · Alt+Shift+M menu · Esc close.
 
 ## Supported languages — what is really there
 | Language | Spelling | Rules |
@@ -29,9 +29,12 @@ Shortcuts: `Alt+Shift+F` fixes everything in the active field, `Alt+Shift+E` tog
 | Portuguese (pt) | bundled dictionary | dedicated rule pack (small) |
 | German (de) | **not bundled** (GPL licensing); import your own Hunspell dictionary | minimal rule pack |
 | Italian (it) | **not bundled** (GPL licensing); import your own Hunspell dictionary | minimal rule pack |
-| Hungarian (hu) | **none in 0.3.0** | **none**: only the interface is translated; there is no spell checking for Hungarian yet |
+| Hungarian (hu) | **none in 0.4.0** | **none**: only the interface is translated; there is no spell checking for Hungarian yet |
 
 Any other Hunspell dictionary (nl, …) can be imported, but only the languages above are known to the language detector.
+
+## Translations
+The interface, this README and the presentation page exist in 25 languages. Eight of them (ro, en, fr, it, es, pt, de, hu) are the project's core languages; the other seventeen were added in 0.4.0. **Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues** Lowest confidence: Rusyn, Romani, Crimean Tatar and Yiddish. Translating the interface does not add spell checking for that language: see the table above for what is actually checked.
 
 ## Privacy
 All checking happens inside the extension. There is no ERATA server, account, telemetry or analytics, and the extension requests no network permission. The single exception is the optional, off-by-default local rewrite, which can send one sentence to an endpoint on `localhost`/`127.0.0.1` that you choose. Settings, the personal dictionary and imported dictionaries stay in `storage.local` and IndexedDB on your device. Password, e-mail and card fields, and fields marked `data-erata="off"`, are ignored. Details: [PRIVACY.md](PRIVACY.md).

@@ -45,14 +45,15 @@ export const commonRules = [
       return {
         offset: m.index,
         length: 1,
-        rep: [m[1] + ' '],
+        // în franceză „; ! ?” cer și spațiu fin înainte: le reparăm odată, ca a doua trecere să nu mai găsească nimic
+        rep: [(ctx.lang === 'fr' && m[1] !== ',' ? NNBSP : '') + m[1] + ' '],
         msg: M('Lipsește spațiul după semnul de punctuație', 'Missing space after punctuation', {
           fr: 'Espace manquante après la ponctuation',
           es: 'Falta un espacio tras el signo de puntuación',
         }),
       };
     });
-    scan(ctx, /(?<=\p{L}{2})([.:])(?=\p{Lu}\p{Ll}{2})/gu, (m) => {
+    scan(ctx, /(?<=\p{L}{2})([.:])(?=\p{Lu}\p{Ll})/gu, (m) => {
       if (ctx.protectedAt(m.index)) return null;
       const before = ctx.text.slice(Math.max(0, m.index - 12), m.index);
       if (/[\p{L}\p{N}]\.[\p{L}\p{N}]*$/u.test(before)) return null; // e.g., foo.bar.Baz
@@ -72,7 +73,8 @@ export const commonRules = [
     scan(ctx, /,{2,}|;{2,}|(?<![.…])\.\.(?![.…])|,\./g, (m) => ({
       offset: m.index,
       length: m[0].length,
-      rep: [m[0][0] === ',' && m[0] === ',.' ? '.' : m[0][0]],
+      // în franceză „;” primește spațiu fin înainte (altfel o a doua trecere ar mai avea de reparat)
+      rep: [m[0] === ',.' ? '.' : ctx.lang === 'fr' && m[0][0] === ';' && /[\p{L}\p{N})»”]/u.test(ctx.text[m.index - 1] || '') ? NNBSP + ';' : m[0][0]],
       msg: M('Semn de punctuație dublat', 'Repeated punctuation', { fr: 'Ponctuation répétée', es: 'Puntuación repetida' }),
     }));
   }),
@@ -98,7 +100,7 @@ export const commonRules = [
 
   rule('SENTENCE_CAPITAL', 'grammar', (ctx) => {
     const abbr = ctx.pack?.abbr || new Set();
-    scan(ctx, /(?<!\p{L})(\p{L}{3,64})\.( {1,8})(\p{Ll}{2,64})/gu, (m) => {
+    scan(ctx, /(?<!\p{L})(\p{L}{3,64})\.( {1,8})(\p{Ll}{2,64}|\p{Ll}(?=[ '’]))/gu, (m) => {
       const prev = m[1].toLowerCase();
       if (abbr.has(prev) || ctx.protectedAt(m.index)) return null;
       const lead = ctx.text.slice(Math.max(0, m.index - 2), m.index);

@@ -1,0 +1,20 @@
+{
+ "extName": {
+  "message": "ERATA — korektor offline"
+ },
+ "extDesc": {
+  "message": "Sprawdzanie pisowni, gramatyki i typografii w 100% lokalnie: ro, en, fr, es, pt. Bez konta, tekst nie jest nigdzie wysyłany."
+ },
+ "cmdFixAll": {
+  "message": "Popraw wszystko w aktywnym polu"
+ },
+ "cmdToggleSite": {
+  "message": "Włącz/wyłącz na tej witrynie"
+ },
+ "cmdSuggest": {
+  "message": "Otwórz sugestie dla problemu przy kursorze"
+ },
+ "cmdMenu": {
+  "message": "Otwórz menu ERATA aktywnego pola"
+ }
+}

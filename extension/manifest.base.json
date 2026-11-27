@@ -2,30 +2,73 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "ERATA",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "__MSG_extDesc__",
   "default_locale": "en",
   "author": "Alexio",
   "homepage_url": "https://github.com/chiuta/erata",
-  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
   "action": {
     "default_title": "ERATA",
     "default_popup": "popup.html",
-    "default_icon": { "16": "icons/16.png", "32": "icons/32.png" }
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png"
+    }
   },
-  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
       "all_frames": true,
       "match_about_blank": true,
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["storage", "activeTab"],
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
   "commands": {
-    "fix-all": { "suggested_key": { "default": "Alt+Shift+F" }, "description": "Corectează tot în câmpul activ / Fix all in the active field" },
-    "toggle-site": { "suggested_key": { "default": "Alt+Shift+E" }, "description": "Activează/dezactivează pe acest site / Toggle on this site" }
+    "fix-all": {
+      "suggested_key": {
+        "default": "Alt+Shift+F"
+      },
+      "description": "__MSG_cmdFixAll__"
+    },
+    "toggle-site": {
+      "suggested_key": {
+        "default": "Alt+Shift+E"
+      },
+      "description": "__MSG_cmdToggleSite__"
+    },
+    "open-suggestions": {
+      "suggested_key": {
+        "default": "Alt+Shift+Space"
+      },
+      "description": "__MSG_cmdSuggest__"
+    },
+    "open-menu": {
+      "suggested_key": {
+        "default": "Alt+Shift+M"
+      },
+      "description": "__MSG_cmdMenu__"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:* http://localhost:*"
   }
 }

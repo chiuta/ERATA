@@ -31,22 +31,37 @@ export function splitParagraphs(text) {
 }
 
 const CLOSERS = '"”»’)\\]\'';
+const WORD_OR_DOT = /[\p{L}\p{N}.]/u;
+
+/** Ultimul „cuvânt” (litere, cifre, puncte) care se termină la `idx`; căutare înapoi, limitată la 64 de caractere. */
+function lastWordBefore(text, idx, lo) {
+  const floor = Math.max(lo, idx - 64);
+  let i = idx;
+  while (i > floor) {
+    let j = i - 1;
+    const c = text.charCodeAt(j);
+    if (c >= 0xdc00 && c <= 0xdfff && j > floor) j--; // pereche surogat
+    if (!WORD_OR_DOT.test(text.slice(j, i))) break;
+    i = j;
+  }
+  return text.slice(i, idx);
+}
 
 /**
  * Împarte un paragraf în propoziții. Abrevierile (set de cuvinte fără punct) nu
- * încheie propoziția.
+ * încheie propoziția. Timp liniar: nu se mai reia niciodată textul de la începutul propoziției.
  * @returns {{start:number,end:number}[]}
  */
 export function splitSentences(text, abbr = new Set()) {
   const out = [];
   let start = 0;
-  const re = new RegExp(`([.!?…]+)([${CLOSERS}]*)(\\s+)`, 'gu');
+  // lookbehind-ul împiedică reluarea căutării din interiorul unui șir lung de semne (altfel ar fi pătratic)
+  const re = new RegExp(`(?<![.!?…])([.!?…]+)([${CLOSERS}]*)(\\s+)`, 'gu');
   for (const m of text.matchAll(re)) {
     const punctEnd = m.index + m[1].length + m[2].length;
     const after = text[m.index + m[0].length];
     if (m[1] === '.' || m[1] === '…') {
-      const before = text.slice(start, m.index);
-      const lastWord = (before.match(/([\p{L}\p{N}.]+)$/u) || [])[1] || '';
+      const lastWord = lastWordBefore(text, m.index, start);
       const lw = lastWord.toLowerCase();
       if (abbr.has(lw) || /^\p{Lu}$/u.test(lastWord) || /^\d+$/.test(lastWord)) continue;
       if (/\p{L}\.\p{L}$/u.test(lastWord)) continue; // e.g., i.e.
@@ -56,6 +71,45 @@ export function splitSentences(text, abbr = new Set()) {
     start = m.index + m[0].length;
   }
   if (start < text.length && text.slice(start).trim()) out.push({ start, end: text.length });
+  return out;
+}
+
+/**
+ * Împarte un paragraf foarte lung în bucăți de cel mult `max` caractere, de preferință la sfârșit de
+ * propoziție, apoi la un spațiu, în ultimă instanță la limită (fără a rupe o pereche surogat).
+ * Fiecare bucată se verifică separat: timpul rămâne liniar chiar și pentru texte de ordinul megaocteților.
+ * @returns {{start:number,end:number}[]}
+ */
+export function chunkRanges(text, max = 20000) {
+  const out = [];
+  let s = 0;
+  const n = text.length;
+  const back = Math.min(1500, max >> 1);
+  while (n - s > max) {
+    const limit = s + max;
+    let cut = -1;
+    let ws = -1;
+    for (let i = limit; i > limit - back; i--) {
+      const c = text.charCodeAt(i - 1);
+      const isWs = c === 32 || c === 10 || c === 9 || c === 13 || c === 0xa0 || c === 0x202f || (c >= 0x2000 && c <= 0x200a) || c === 0x3000;
+      if (!isWs) continue;
+      if (ws < 0) ws = i;
+      const p = i >= 2 ? text.charCodeAt(i - 2) : 0;
+      if (p === 46 || p === 33 || p === 63 || p === 0x2026) {
+        cut = i;
+        break;
+      }
+    }
+    if (cut < 0) cut = ws;
+    if (cut < 0) {
+      cut = limit;
+      const c = text.charCodeAt(cut - 1);
+      if (c >= 0xd800 && c <= 0xdbff) cut--;
+    }
+    out.push({ start: s, end: cut });
+    s = cut;
+  }
+  out.push({ start: s, end: n });
   return out;
 }
 

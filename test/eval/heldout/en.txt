@@ -1,0 +1,18 @@
+=== news ===
+The city council voted on Tuesday to extend the opening hours of the public library, after a petition signed by more than two thousand residents. Under the new schedule, the main branch will stay open until nine in the evening on weekdays and until five on Saturdays. Council members said the change would cost about forty thousand dollars a year, which will be covered by the existing culture budget. Several students told reporters that they often struggle to find quiet places to study at night, and that the longer hours would make a real difference. The library director welcomed the decision and promised to hire two additional part-time employees before the start of the autumn term.
+=== legal ===
+The tenant shall pay the monthly rent on or before the first day of each calendar month, without any deduction or set-off. If any payment is more than ten days late, the landlord may charge interest at the rate of one percent per month on the unpaid amount. The tenant must keep the premises in good condition and shall not make structural alterations without the prior written consent of the landlord. Either party may terminate this agreement by giving sixty days' written notice. Any dispute arising out of this agreement shall be governed by the laws of the state in which the property is located.
+=== tech ===
+To install the package, open a terminal and run the command shown below. The installer downloads the required libraries, creates a configuration file in your home directory, and starts the background service. If the service fails to start, check the log file for error messages and make sure that port 8080 is not already in use by another program. You can change the default port by editing the settings file and restarting the service. For security reasons, the server accepts connections only from the local machine unless you explicitly enable remote access. Remember to back up your data before upgrading to a new version.
+=== narrative ===
+The old lighthouse keeper climbed the spiral staircase every evening, counting the steps under his breath as he had done for forty years. At the top, the wind pushed against the glass and the sea stretched out below him, grey and endless. He lit the lamp, checked the weather instruments, and wrote a few lines in his logbook with a pencil that was almost too short to hold. Somewhere far away a ship sounded its horn, and he smiled, because it meant that someone was out there, trusting the light he kept. Then he poured himself a cup of tea and settled down to wait for the night to pass.
+=== dialogue ===
+“Did you remember to call the plumber?” asked Helen, setting her bag on the kitchen table.
+“I did,” said Mark. “He says he can come on Thursday morning, if that suits you.”
+“Thursday is perfect. I’m working from home that day anyway.”
+“Good. By the way, the neighbours are having a party on Saturday, and they invited us.”
+“Oh, that’s kind of them. Should we bring something?”
+“I thought a cake would be nice. Maybe the lemon one you made last month.”
+“Fine, I’ll bake it on Friday evening.”
+=== hard ===
+On 14 March 2024, Dr. O’Connor and Ms. Nguyen met with representatives of Müller & Söhne GmbH in Düsseldorf to discuss the 2.5 GHz modules, which cost $1,250.50 per unit including VAT. The shipment, weighing 3.5 tons, travels via Rotterdam and arrives at the Newark terminal by 6 p.m. Under ISO 9001 and the GDPR, personal data stays on a server in Frankfurt, while nightly backups run with rsync rather than FTP. Mr. Kowalski, who joined from McDonald’s in 2019, said the café’s wi-fi was down again.

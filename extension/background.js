@@ -1,6 +1,7 @@
 // Fundalul extensiei: găzduiește motorul ERATA (local, fără rețea) și răspunde mesajelor.
 import { Erata, LANGUAGES, DEFAULT_OPTS } from '../src/core/engine.js';
-import { guessUiLang } from './ui-strings.js';
+import { t, guessUiLang } from './ui-strings.js';
+import { isSafePattern } from '../src/core/userrules.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 
@@ -36,17 +37,6 @@ const ready = (async () => {
 
 const isObj = (x) => x && typeof x === 'object' && !Array.isArray(x);
 const strArr = (x, max = 5000) => (Array.isArray(x) ? x.filter((v) => typeof v === 'string' && v.length < 200).slice(0, max) : null);
-/** Regex-uri cu cuantificatori imbricați sau prea lungi pot bloca motorul (ReDoS). */
-export function safePattern(p) {
-  if (typeof p !== 'string' || !p || p.length > 200) return false;
-  if (/\((?:[^()\\]|\\.)*[+*](?:[^()\\]|\\.)*\)[+*{]/.test(p)) return false;
-  try {
-    new RegExp(p, 'iu');
-  } catch {
-    return false;
-  }
-  return true;
-}
 /** Acceptă doar câmpuri cu tipul corect; restul revin la valorile implicite. */
 function sanitize(raw) {
   const o = isObj(raw) ? raw : {};
@@ -63,15 +53,16 @@ function sanitize(raw) {
     for (const [k, v] of Object.entries(o.categories)) if (typeof v === 'boolean') out.categories[k] = v;
   }
   if (Array.isArray(o.userRules)) {
+    const uiL = out.ui || guessUiLang(); // mesajul implicit al regulilor proprii în limba interfeței
     out.userRules = o.userRules
-      .filter((r) => isObj(r) && safePattern(r.pattern))
+      .filter((r) => isObj(r) && isSafePattern(r.pattern)) // aceeași validare anti-ReDoS ca în motor (nu o variantă mai slabă)
       .slice(0, 200)
       .map((r) => ({
         id: String(r.id || 'USER_RULE').slice(0, 40),
         pattern: r.pattern,
-        flags: typeof r.flags === 'string' ? r.flags.replace(/[^imsu]/g, '') + 'u' : 'iu',
+        flags: typeof r.flags === 'string' ? [...new Set(r.flags.replace(/[^ims]/g, ''))].join('') + 'u' : 'iu',
         replacement: typeof r.replacement === 'string' ? r.replacement.slice(0, 200) : undefined,
-        message: typeof r.message === 'string' ? r.message.slice(0, 200) : 'Regulă personalizată',
+        message: typeof r.message === 'string' && r.message ? r.message.slice(0, 200) : t(uiL, 'custom_rule'),
         lang: typeof r.lang === 'string' ? r.lang.slice(0, 8) : 'all',
         cat: ['grammar', 'spelling', 'punctuation', 'typography', 'style'].includes(r.cat) ? r.cat : undefined,
       }));
@@ -241,7 +232,10 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 api.commands?.onCommand.addListener(async (cmd) => {
   const [tab] = await api.tabs.query({ active: true, currentWindow: true });
-  if (tab?.id != null) api.tabs.sendMessage(tab.id, { t: 'command', cmd }).catch(() => {});
+  if (tab?.id == null) return;
+  // „toggle-site” doar în cadrul principal: altfel fiecare iframe ar inversa din nou setarea site-ului
+  const opts = cmd === 'toggle-site' ? { frameId: 0 } : undefined;
+  api.tabs.sendMessage(tab.id, { t: 'command', cmd }, opts).catch(() => {});
 });
 
 api.runtime.onInstalled.addListener((d) => {

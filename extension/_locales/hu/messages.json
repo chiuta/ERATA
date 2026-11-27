@@ -3,6 +3,18 @@
   "message": "ERATA — offline helyesírás-ellenőrző"
  },
  "extDesc": {
-  "message": "Helyesírás-, nyelvtan- és tipográfiai ellenőrző, amely 100%-ban helyben fut: ro, en, fr, es, pt. Fiók nélkül, a szöveg nem kerül elküldésre."
+  "message": "Helyesírás-, nyelvtan- és tipográfia-ellenőrző, 100%-ban helyben: ro, en, fr, es, pt. Fiók nélkül, a szöveget nem küldi el."
+ },
+ "cmdFixAll": {
+  "message": "Mind javítása az aktív mezőben"
+ },
+ "cmdToggleSite": {
+  "message": "Be-/kikapcsolás ezen az oldalon"
+ },
+ "cmdSuggest": {
+  "message": "A kurzornál lévő hiba javaslatainak megnyitása"
+ },
+ "cmdMenu": {
+  "message": "Az aktív mező ERATA menüjének megnyitása"
  }
 }

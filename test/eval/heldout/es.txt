@@ -1,0 +1,18 @@
+=== news ===
+El Ayuntamiento anunció ayer que la plaza mayor permanecerá cerrada al tráfico durante todo el fin de semana con motivo de la feria del libro. Según los organizadores, más de sesenta editoriales presentarán sus novedades y habrá encuentros con autores, talleres para niños y una exposición sobre la historia de la imprenta. Los vecinos podrán aparcar sus coches en el recinto deportivo, desde donde partirá un autobús gratuito cada diez minutos. El concejal de cultura se mostró satisfecho con la acogida del proyecto y aseguró que el año próximo se ampliará el programa con conciertos y proyecciones al aire libre.
+=== legal ===
+El arrendatario se obliga a pagar la renta mensual por adelantado, dentro de los cinco primeros días de cada mes, mediante transferencia a la cuenta que designe el arrendador. El incumplimiento de esta obligación durante dos meses consecutivos será causa de resolución del contrato. El arrendatario no podrá subarrendar la vivienda ni ceder el contrato sin el consentimiento expreso y por escrito del propietario. Al finalizar el arrendamiento, el inmueble deberá devolverse en el mismo estado en que fue entregado, salvo el desgaste derivado de un uso normal. Las partes se someten a los juzgados y tribunales de la ciudad en que se encuentre situada la vivienda.
+=== tech ===
+Para instalar la aplicación, descargue el archivo desde la página oficial y ejecútelo con permisos de administrador. El programa le pedirá que elija una carpeta de destino y que acepte las condiciones de uso. Una vez terminada la instalación, se creará un acceso directo en el escritorio. Al abrirla por primera vez, la aplicación buscará actualizaciones y le mostrará una breve guía con las funciones principales. Si encuentra algún problema, puede consultar el registro de errores en el menú de ayuda o ponerse en contacto con el servicio técnico a través del formulario incluido en la misma ventana.
+=== narrative ===
+Mi abuelo solía sentarse en el banco de madera que había junto a la puerta, con el sombrero echado hacia atrás y la mirada perdida en el camino. Desde allí veía pasar a los vecinos, a los niños que volvían de la escuela y a las mujeres que bajaban al río con grandes cestas de ropa. A veces me llamaba y me contaba historias de cuando era joven y trabajaba en el puerto, historias que yo escuchaba con los ojos muy abiertos. Hoy, cada vez que paso por esa casa, todavía me parece ver su figura tranquila, esperando a alguien que nunca llega.
+=== dialogue ===
+—¿Has visto mis llaves? —preguntó Carmen mientras revolvía el bolso.
+—Creo que las dejaste encima de la mesa del salón —respondió Luis.
+—Vaya, tienes razón. No sé qué haría sin ti.
+—Seguramente llegarías tarde, como siempre.
+—No seas malo. Oye, ¿vienes conmigo al mercado?
+—Ahora no puedo, tengo que terminar este informe antes de las doce. Pero esta tarde sí te acompaño.
+—Perfecto, entonces te espero a las cinco.
+=== hard ===
+El 14 de marzo de 2024, el Sr. Gómez y la Dra. Fernández se reunieron con los representantes de Müller & Söhne en Düsseldorf para hablar de los módulos de 2,5 GHz, que cuestan 1.250,50 € por unidad con IVA incluido. El envío, de 3,5 t, pasa por Róterdam y llega a Valencia hacia las 18 h. Según la norma ISO 9001 y el RGPD, los datos permanecen en un servidor de Fráncfort, mientras que las copias nocturnas se hacen con rsync y no con FTP. El profesor Iglesias, que llegó de Bogotá en 2019, comentó que el wifi del café volvía a fallar.

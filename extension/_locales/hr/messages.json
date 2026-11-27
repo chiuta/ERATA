@@ -1,0 +1,20 @@
+{
+ "extName": {
+  "message": "ERATA — izvanmrežni korektor"
+ },
+ "extDesc": {
+  "message": "Provjera pravopisa, gramatike i tipografije, 100% lokalno: ro, en, fr, es, pt. Bez računa, vaš se tekst nikamo ne šalje."
+ },
+ "cmdFixAll": {
+  "message": "Ispravi sve u aktivnom polju"
+ },
+ "cmdToggleSite": {
+  "message": "Uključi/isključi na ovom web-mjestu"
+ },
+ "cmdSuggest": {
+  "message": "Otvori prijedloge za problem kod pokazivača"
+ },
+ "cmdMenu": {
+  "message": "Otvori izbornik ERATA za aktivno polje"
+ }
+}

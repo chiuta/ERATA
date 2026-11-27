@@ -1,8 +1,8 @@
-[English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
+[English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md) · [Українська](README.uk.md) · [Türkçe](README.tr.md) · [Qırımtatarca](README.crh.md) · [Русский](README.ru.md) · [Српски](README.sr.md) · [Slovenčina](README.sk.md) · [Български](README.bg.md) · [Hrvatski](README.hr.md) · [Ελληνικά](README.el.md) · [ייִדיש](README.yi.md) · [Čeština](README.cs.md) · [Polski](README.pl.md) · [Հայերեն](README.hy.md) · [Русиньскый](README.rue.md) · [Shqip](README.sq.md) · [Македонски](README.mk.md) · [Romani](README.rmy.md)
 
 # ERATA — corrector sin conexión para el navegador
 
-Versión: 0.3.0 · Última actualización: 18 de noviembre de 2026
+Versión: 0.4.0 · Última actualización: 27 de noviembre de 2026
 
 ERATA es una extensión de navegador que revisa ortografía, gramática, puntuación y tipografía **por completo en tu dispositivo**. Sin cuenta, sin servidor, sin telemetría: tu texto nunca sale de tu ordenador. Está desarrollada en modo «clean-room» (véase [CLEANROOM.md](CLEANROOM.md)) y publicada bajo licencia MIT.
 
@@ -15,9 +15,9 @@ ERATA es una extensión de navegador que revisa ortografía, gramática, puntuac
 - Diccionario personal, reglas propias (regex), interruptor por sitio, importación y exportación de ajustes, importación de cualquier diccionario Hunspell.
 - Página Estudio de texto, «Corregir todo», índice de legibilidad, dos comprobaciones de estilo (oraciones muy largas, repeticiones cercanas).
 - Reformulación opcional con un modelo **local** (punto de acceso compatible con OpenAI, solo en `localhost`), desactivada por defecto.
-- Interfaz en 8 idiomas: rumano, inglés, francés, italiano, español, portugués, alemán, húngaro.
+- Interfaz en 25 idiomas: rumano, inglés, francés, italiano, español, portugués, alemán, húngaro, además de los demás idiomas de las minorías nacionales de Rumanía (ucraniano, turco, tártaro de Crimea, ruso, serbio, eslovaco, búlgaro, croata, griego, yidis, checo, polaco, armenio, rusino, albanés, macedonio, romaní). El idioma de la interfaz es independiente del idioma que se comprueba.
 
-Atajos: `Alt+Shift+F` corrige todo en el campo activo, `Alt+Shift+E` activa o desactiva ERATA en el sitio actual.
+Atajos: `Alt+Shift+F` corrige todo en el campo activo, `Alt+Shift+E` activa o desactiva ERATA en el sitio actual. Teclado: Alt+Mayús+Espacio sugerencias · Alt+Mayús+M menú · Esc cerrar.
 
 ## Idiomas admitidos: lo que realmente hay
 | Idioma | Ortografía | Reglas |
@@ -29,9 +29,12 @@ Atajos: `Alt+Shift+F` corrige todo en el campo activo, `Alt+Shift+E` activa o de
 | Portugués (pt) | diccionario incluido | paquete propio (reducido) |
 | Alemán (de) | **no incluido** (licencias GPL); importa tu propio diccionario Hunspell | paquete mínimo |
 | Italiano (it) | **no incluido** (licencias GPL); importa tu propio diccionario Hunspell | paquete mínimo |
-| Húngaro (hu) | **ninguna en la 0.3.0** | **ninguna**: solo la interfaz está traducida; todavía no hay corrección ortográfica del húngaro |
+| Húngaro (hu) | **ninguna en la 0.4.0** | **ninguna**: solo la interfaz está traducida; todavía no hay corrección ortográfica del húngaro |
 
 Se puede importar cualquier otro diccionario Hunspell (nl, …), pero el detector de idioma solo conoce los anteriores.
+
+## Traducciones
+La interfaz, este README y la página de presentación existen en 25 idiomas. Ocho de ellos (ro, en, fr, it, es, pt, de, hu) son los idiomas base del proyecto; los otros diecisiete se añadieron en la 0.4.0. **Solo los 17 idiomas nuevos son traducciones automáticas, y ningún hablante nativo las ha revisado todavía. Las correcciones son bienvenidas: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Menor confianza: rusino, romaní, tártaro de Crimea y yidis. Traducir la interfaz no añade corrección ortográfica para ese idioma: consulta la tabla anterior para ver qué se comprueba realmente.
 
 ## Privacidad
 Toda la revisión se hace dentro de la extensión. No existe servidor de ERATA, cuenta, telemetría ni analítica, y la extensión no pide permisos de red. La única excepción es la reformulación local, opcional y desactivada por defecto, que puede enviar una oración a un punto de acceso `localhost`/`127.0.0.1` que tú elijas. Los ajustes, el diccionario personal y los diccionarios importados permanecen en `storage.local` e IndexedDB, en tu dispositivo. Se ignoran los campos de contraseña, correo electrónico y tarjeta, y los marcados con `data-erata="off"`. Detalles: [PRIVACY.md](PRIVACY.md).
@@ -70,7 +73,7 @@ Versión completa, con fuentes y salvedades: [docs/COMPARISON.md](docs/COMPARISO
 Requiere Node.js >= 24.
 ```bash
 npm i            # instala las dependencias
-npm run dicts    # copia los diccionarios Hunspell a dict/
+npm run dicts    # copia los diccionarios Hunspell en dict/
 npm test         # pruebas unitarias
 npm run build    # genera dist/chrome y dist/firefox
 ```

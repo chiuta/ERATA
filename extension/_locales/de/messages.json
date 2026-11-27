@@ -4,5 +4,17 @@
  },
  "extDesc": {
   "message": "Rechtschreib-, Grammatik- und Typografieprüfung, die zu 100 % lokal läuft: ro, en, fr, es, pt. Kein Konto, kein Textversand."
+ },
+ "cmdFixAll": {
+  "message": "Alles im aktiven Feld korrigieren"
+ },
+ "cmdToggleSite": {
+  "message": "Auf dieser Website ein-/ausschalten"
+ },
+ "cmdSuggest": {
+  "message": "Vorschläge zum Problem am Cursor öffnen"
+ },
+ "cmdMenu": {
+  "message": "ERATA-Menü des aktiven Felds öffnen"
  }
 }

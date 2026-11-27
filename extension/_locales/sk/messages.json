@@ -1,0 +1,20 @@
+{
+ "extName": {
+  "message": "ERATA — offline korektor"
+ },
+ "extDesc": {
+  "message": "Kontrola pravopisu, gramatiky a typografie na 100 % lokálne: ro, en, fr, es, pt. Bez účtu, váš text sa nikam neodosiela."
+ },
+ "cmdFixAll": {
+  "message": "Opraviť všetko v aktívnom poli"
+ },
+ "cmdToggleSite": {
+  "message": "Zapnúť/vypnúť na tomto webe"
+ },
+ "cmdSuggest": {
+  "message": "Otvoriť návrhy pre problém pri kurzore"
+ },
+ "cmdMenu": {
+  "message": "Otvoriť ponuku ERATA aktívneho poľa"
+ }
+}

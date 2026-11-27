@@ -1,0 +1,19 @@
+=== news ===
+Primăria orașului a anunțat că podul de peste râu va fi închis circulației timp de trei luni, începând de luni dimineața. Lucrările de consolidare, a căror valoare depășește șase milioane de lei, vor fi făcute în două etape, astfel încât pietonii să poată trece în continuare pe una dintre laturi. Autoritățile recomandă șoferilor să folosească ruta ocolitoare prin partea de sud a localității, unde au fost montate indicatoare noi. Reprezentanții transportului public au precizat că autobuzele vor circula pe alt traseu, iar stațiile din apropierea podului vor fi mutate temporar. Locuitorii au primit și o veste bună, pentru că, după terminarea lucrărilor, limita de tonaj va crește de la șapte la douăzeci de tone.
+=== legal ===
+Prezentul contract se încheie între vânzător și cumpărător, în condițiile prevăzute de lege și de clauzele următoare. Vânzătorul se obligă să transmită cumpărătorului dreptul de proprietate asupra bunului descris la articolul 2, liber de orice sarcini, iar cumpărătorul se obligă să plătească prețul în termen de cinci zile lucrătoare de la data semnării. În cazul în care plata nu este făcută la termen, cumpărătorul datorează penalități de întârziere în cuantum de 0,1% pe zi din suma neachitată. Orice modificare a contractului se face numai prin act adițional, încheiat în formă scrisă și semnat de ambele părți. Litigiile care nu pot fi soluționate pe cale amiabilă se supun instanței competente de la sediul vânzătorului.
+=== tech ===
+Aplicația salvează automat modificările la fiecare treizeci de secunde și păstrează o copie locală, pentru cazul în care conexiunea la internet se întrerupe. La repornire, programul compară versiunea locală cu cea de pe server și, dacă găsește diferențe, afișează o fereastră în care utilizatorul alege varianta pe care o dorește. Setările se află în meniul principal, sub opțiunea Preferințe, iar acolo se poate schimba și limba interfeței. Pentru a exporta un document, apăsați butonul din colțul din dreapta sus și alegeți formatul dorit. Dacă fișierul este foarte mare, exportul poate dura câteva minute, așa că nu închideți fereastra până la apariția mesajului de confirmare.
+=== narrative ===
+Bunica deschise ușa încet, ca să nu trezească pe nimeni, și intră în bucătărie cu pași mărunți. Dimineața era încă rece, iar pe geam se așezase un abur subțire. Puse apă la fiert, scoase din dulap ceașca ei preferată, cu marginea ștearsă de atâția ani, și se așeză la masă. De afară se auzea cum cântă un cocoș, undeva departe, dincolo de gardul vecinilor. Se gândi la vara aceea îndepărtată, când copiii alergau desculți prin curte, iar grădina era plină de flori. Nu simți tristețe, ci doar o liniște blândă, ca atunci când ai terminat o muncă lungă și știi că ai făcut-o bine.
+=== dialogue ===
+— Ai găsit biletele? întrebă Andrei, uitându-se la ceas.
+— Încă nu, răspunse Ioana. Cred că le-am lăsat pe birou, lângă laptop.
+— Atunci caută repede, că trenul pleacă peste douăzeci de minute.
+— Stai puțin, nu te grăbi atât. Uite-le, erau în geantă, sub umbrelă.
+— Slavă Domnului! Hai, ia valiza și haide să mergem.
+— Nu uita să încui ușa, spuse ea râzând.
+— Am încuiat-o deja. Dar tu ai luat telefonul?
+— Da, îl am în buzunar. Acum chiar putem pleca.
+=== hard ===
+Ședința din 14 martie 2024 a avut loc la sediul S.C. Transilvania Logistic S.R.L. din Cluj-Napoca, strada Memorandumului nr. 12, bl. B2, ap. 7. Au participat dl. Popescu, dna Ionescu, prof. dr. Marinescu și ing. Dumitrescu. Prețul de 1.250,50 lei (TVA inclus) a fost confirmat prin e-mail, iar transportul se face cu un camion de 3,5 t, pe ruta București–Pitești, pe autostrada A1. Conform ISO 9001 și GDPR, datele sunt păstrate pe un server din Frankfurt, iar copiile de rezervă se fac prin rsync, nu prin FTP. Domnul Șerban, venit de la Timișoara în 2019, a spus că wifi-ul din cafenea nu mai funcționa.

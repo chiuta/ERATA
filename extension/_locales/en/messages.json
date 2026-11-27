@@ -4,5 +4,17 @@
  },
  "extDesc": {
   "message": "Spelling, grammar and typography checker that runs 100% locally: ro, en, fr, es, pt. No account, your text is never sent anywhere."
+ },
+ "cmdFixAll": {
+  "message": "Fix all in the active field"
+ },
+ "cmdToggleSite": {
+  "message": "Turn on/off on this site"
+ },
+ "cmdSuggest": {
+  "message": "Open suggestions for the issue at the cursor"
+ },
+ "cmdMenu": {
+  "message": "Open the ERATA menu of the active field"
  }
 }

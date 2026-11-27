@@ -1,5 +1,6 @@
-import { t, UI_LANGS, guessUiLang } from './ui-strings.js';
+import { t, UI_LANGS, UI_MACHINE, guessUiLang, uiDir } from './ui-strings.js';
 import { Hunspell } from '../src/core/hunspell.js';
+import { analyzePattern } from '../src/core/userrules.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const send = (m) => api.runtime.sendMessage(m);
@@ -26,12 +27,13 @@ async function save(patch) {
   flash();
 }
 let flashTimer;
-function flash() {
+function flash(msg, bad = false) {
   const el = document.getElementById('flash');
   if (!el) return;
-  el.textContent = '✓ ' + t(ui, 'saved');
+  el.setAttribute('role', bad ? 'alert' : 'status');
+  el.textContent = msg ?? '✓ ' + t(ui, 'saved');
   clearTimeout(flashTimer);
-  flashTimer = setTimeout(() => (el.textContent = ''), 1500);
+  flashTimer = setTimeout(() => (el.textContent = ''), bad ? 6000 : 1500);
 }
 
 const check = (label, key, get = () => S[key], set = (v) => save({ [key]: v })) => {
@@ -44,6 +46,8 @@ const check = (label, key, get = () => S[key], set = (v) => save({ [key]: v })) 
 function render() {
   ui = S.ui || ui;
   document.documentElement.lang = ui;
+  document.documentElement.dir = uiDir(ui);
+  document.title = 'ERATA — ' + t(ui, 'settings');
   root.replaceChildren();
   root.append(h('div', { class: 'row', style: 'justify-content:space-between' }, h('h1', {}, 'ERATA'), h('span', { id: 'flash', class: 'muted', role: 'status' })));
   root.append(h('p', { class: 'muted' }, t(ui, 'tagline') + '. ' + t(ui, 'privacy')));
@@ -64,6 +68,7 @@ function render() {
     h('h2', {}, t(ui, 'general')),
     check(t(ui, 'enabled'), 'enabled'),
     h('div', { class: 'grid' }, t(ui, 'ui_lang'), uiSel, t(ui, 'default_lang'), defSel, t(ui, 'en_variant'), enSel, t(ui, 'long_sentence'), long),
+    ...(UI_MACHINE.includes(ui) ? [h('p', { class: 'note', lang: 'en', dir: 'ltr' }, 'Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues')] : []),
     check(t(ui, 'badge'), 'badge'),
     check(t(ui, 'hide_native'), 'hideNative')
   );
@@ -84,14 +89,14 @@ function render() {
   // Reguli dezactivate
   const dis = h('div', { class: 'row' });
   for (const id of S.disabledRules) {
-    dis.append(h('button', { class: 'danger', title: t(ui, 'remove'), onclick: () => save({ disabledRules: S.disabledRules.filter((x) => x !== id) }).then(render) }, id + ' ✕'));
+    dis.append(h('button', { class: 'danger', title: t(ui, 'remove'), 'aria-label': `${t(ui, 'remove')}: ${id}`, onclick: () => save({ disabledRules: S.disabledRules.filter((x) => x !== id) }).then(render) }, id + ' ✕'));
   }
   if (!S.disabledRules.length) dis.append(h('span', { class: 'muted' }, t(ui, 'empty')));
   root.append(h('h2', {}, t(ui, 'disabled_rules')), dis);
 
   // Site-uri dezactivate
   const sites = h('div', { class: 'row' });
-  for (const s of S.disabledSites) sites.append(h('button', { class: 'danger', onclick: () => save({ disabledSites: S.disabledSites.filter((x) => x !== s) }).then(render) }, s + ' ✕'));
+  for (const s of S.disabledSites) sites.append(h('button', { class: 'danger', title: t(ui, 'remove'), 'aria-label': `${t(ui, 'remove')}: ${s}`, onclick: () => save({ disabledSites: S.disabledSites.filter((x) => x !== s) }).then(render) }, s + ' ✕'));
   if (!S.disabledSites.length) sites.append(h('span', { class: 'muted' }, t(ui, 'empty')));
   root.append(h('h2', {}, t(ui, 'disabled_sites')), sites);
 
@@ -106,12 +111,22 @@ function render() {
 
   // Export / import
   const file = h('input', { type: 'file', accept: '.json', hidden: true });
+  file.setAttribute('aria-label', t(ui, 'import'));
   file.addEventListener('change', async () => {
     try {
-      const patch = JSON.parse(await file.files[0].text());
-      await save(patch);
+      const raw = JSON.parse(await file.files[0].text());
+      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('shape');
+      // doar chei cunoscute; fundalul validează tipurile, iar noi reîncărcăm starea validată (nu cea brută)
+      const patch = Object.fromEntries(Object.entries(raw).filter(([k]) => k !== '__proto__' && Object.hasOwn(S, k)));
+      if (!Object.keys(patch).length) throw new Error('empty');
+      await send({ t: 'setSettings', patch });
+      S = (await send({ t: 'getSettings' })).settings;
       render();
-    } catch {}
+      flash();
+    } catch {
+      flash(t(ui, 'import_invalid'), true);
+    }
+    file.value = '';
   });
   root.append(
     h('h2', {}, t(ui, 'advanced')),
@@ -136,7 +151,7 @@ function customRules() {
     S.userRules.forEach((r, i) =>
       tbl.append(
         h('tr', {}, h('td', {}, h('code', {}, r.pattern)), h('td', {}, r.replacement ?? ''), h('td', {}, r.message ?? ''), h('td', {}, r.lang || 'all'),
-          h('td', {}, h('button', { class: 'danger', onclick: () => save({ userRules: S.userRules.filter((_, j) => j !== i) }).then(draw) }, '✕')))
+          h('td', {}, h('button', { class: 'danger', title: t(ui, 'remove'), 'aria-label': `${t(ui, 'remove')}: ${r.pattern}`, onclick: () => save({ userRules: S.userRules.filter((_, j) => j !== i) }).then(draw) }, '✕')))
       )
     );
   };
@@ -144,19 +159,18 @@ function customRules() {
   const p = h('input', { type: 'text', placeholder: '\\bteh\\b', 'aria-label': t(ui, 'pattern') });
   const rp = h('input', { type: 'text', placeholder: 'the', 'aria-label': t(ui, 'replacement') });
   const ms = h('input', { type: 'text', placeholder: '…', 'aria-label': t(ui, 'message') });
-  const lg = h('select', {}, h('option', { value: 'all' }, '*'), ...langs.map((l) => h('option', { value: l.code }, l.code)));
+  const lg = h('select', { 'aria-label': t(ui, 'language') }, h('option', { value: 'all' }, '*'), ...langs.map((l) => h('option', { value: l.code }, l.code)));
   const err = h('span', { class: 'muted', role: 'alert' });
   const add = h('button', {
     onclick: async () => {
-      try {
-        new RegExp(p.value, 'giu');
-      } catch (e) {
-        err.textContent = String(e.message);
+      if (!p.value) return;
+      // aceeași analiză statică ca în fundal și în motor: nu acceptăm în tăcere un tipar care va fi aruncat
+      if (!analyzePattern(p.value).ok) {
+        err.textContent = t(ui, 'pattern_unsafe');
         return;
       }
-      if (!p.value) return;
       err.textContent = '';
-      await save({ userRules: [...S.userRules, { id: 'USER_' + Date.now().toString(36), pattern: p.value, flags: 'giu', replacement: rp.value, message: ms.value || 'Regulă personalizată', lang: lg.value }] });
+      await save({ userRules: [...S.userRules, { id: 'USER_' + Date.now().toString(36), pattern: p.value, flags: 'giu', replacement: rp.value, message: ms.value || t(ui, 'custom_rule'), lang: lg.value }] });
       p.value = rp.value = ms.value = '';
       draw();
     },
@@ -169,13 +183,18 @@ function dictImport() {
   const wrap = h('div');
   const list = h('div', { class: 'row' });
   const code = h('input', { type: 'text', placeholder: t(ui, 'dict_code'), size: 8, 'aria-label': t(ui, 'dict_code') });
-  const aff = h('input', { type: 'file', accept: '.aff' });
-  const dic = h('input', { type: 'file', accept: '.dic' });
+  const aff = h('input', { type: 'file', accept: '.aff', 'aria-label': t(ui, 'dict_aff') });
+  const dic = h('input', { type: 'file', accept: '.dic', 'aria-label': t(ui, 'dict_dic') });
   const msg = h('span', { class: 'muted', role: 'status' });
+  const say = (text, bad = false) => {
+    msg.setAttribute('role', bad ? 'alert' : 'status');
+    msg.textContent = text;
+  };
 
   const decode = async (file, isAff) => {
     const buf = await file.arrayBuffer();
     let enc = 'utf-8';
+    let fallback = false;
     if (isAff) {
       const head = new TextDecoder('latin1').decode(buf.slice(0, 4000));
       const m = head.match(/^SET\s+(\S+)/m);
@@ -185,20 +204,21 @@ function dictImport() {
           new TextDecoder(enc);
         } catch {
           enc = 'iso-8859-1'; // codare necunoscută: cea mai tolerantă variantă
+          fallback = true;
         }
       }
     }
-    return enc;
+    return { enc, fallback };
   };
   const go = h('button', {
     onclick: async () => {
       const c = code.value.trim().toLowerCase();
       if (!/^[a-z]{2,3}(-[a-z0-9]+)?$/i.test(c) || !aff.files[0] || !dic.files[0]) {
-        msg.textContent = '!';
+        say(t(ui, 'import_invalid'), true);
         return;
       }
       try {
-        const enc = await decode(aff.files[0], true);
+        const { enc, fallback } = await decode(aff.files[0], true);
         const dec = new TextDecoder(enc);
         const affT = dec.decode(await aff.files[0].arrayBuffer());
         const dicT = dec.decode(await dic.files[0].arrayBuffer());
@@ -216,10 +236,10 @@ function dictImport() {
           tx.onerror = () => rej(tx.error);
         });
         await send({ t: 'reloadDicts' });
-        msg.textContent = `✓ ${c}: ${hs.dict.size}`;
+        say(`${t(ui, 'import_done', { code: c, n: hs.dict.size })}${fallback ? ' ⚠ ' + t(ui, 'import_encoding') : ''}`, fallback);
         await refresh();
-      } catch (e) {
-        msg.textContent = String(e.message || e);
+      } catch {
+        say(t(ui, 'import_invalid'), true);
       }
     },
   }, t(ui, 'import'));

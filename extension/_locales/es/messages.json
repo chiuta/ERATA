@@ -4,5 +4,17 @@
  },
  "extDesc": {
   "message": "Corrector ortográfico, gramatical y tipográfico que funciona 100 % en local: ro, en, fr, es, pt. Sin cuenta, el texto no se envía."
+ },
+ "cmdFixAll": {
+  "message": "Corregir todo en el campo activo"
+ },
+ "cmdToggleSite": {
+  "message": "Activar/desactivar en este sitio"
+ },
+ "cmdSuggest": {
+  "message": "Abrir las sugerencias del problema en el cursor"
+ },
+ "cmdMenu": {
+  "message": "Abrir el menú de ERATA del campo activo"
  }
 }

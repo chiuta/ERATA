@@ -33,14 +33,39 @@ export function matchCase(orig, repl) {
 
 export const lc = (s) => s.toLowerCase();
 
-/** Cuvântul precedent/următor (tokeni de tip word) față de poziția dată. */
+/** Cuvântul precedent/următor (tokeni de tip word) față de poziția dată. Căutare binară: O(log n). */
 export function wordBefore(ctx, pos) {
-  for (let i = ctx.words.length - 1; i >= 0; i--) if (ctx.words[i].end <= pos) return ctx.words[i];
-  return null;
+  const w = ctx.words;
+  let lo = 0;
+  let hi = w.length - 1;
+  let ans = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (w[mid].end <= pos) {
+      ans = mid;
+      lo = mid + 1;
+    } else hi = mid - 1;
+  }
+  return ans >= 0 ? w[ans] : null;
 }
 export function wordAfter(ctx, pos) {
-  for (const w of ctx.words) if (w.start >= pos) return w;
-  return null;
+  const w = ctx.words;
+  let lo = 0;
+  let hi = w.length - 1;
+  let ans = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (w[mid].start >= pos) {
+      ans = mid;
+      hi = mid - 1;
+    } else lo = mid + 1;
+  }
+  return ans >= 0 ? w[ans] : null;
+}
+
+/** Textul de dinaintea lui `pos`, fără spațiile finale, limitat la `max` caractere (evită felierea pătratică a textului întreg). */
+export function textBefore(text, pos, max = 64) {
+  return text.slice(Math.max(0, pos - max), pos).trimEnd();
 }
 
 /** Tabel de substituții simple, insensibil la majuscule: [[regex, replacement, message, id?]] */
@@ -52,7 +77,7 @@ export function tableRule(id, cat, table) {
         offset: m.index,
         length: m[0].length,
         id: subId || id,
-        rep: [typeof repl === 'function' ? repl(m) : matchCase(m[0], m[0].replace(local, repl))],
+        rep: [matchCase(m[0], typeof repl === 'function' ? repl(m) : m[0].replace(local, repl))],
         msg,
       }));
     }

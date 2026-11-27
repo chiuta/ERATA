@@ -11,3 +11,5 @@ Your text never leaves your computer. No account, no telemetry, no network permi
 
 ---
 Version note (0.3.0, 2026-11-18): nothing changed in data handling. Checking is still fully local, the extension still requests no network permission, and the only optional exception remains the off-by-default rewrite to a `localhost` endpoint. The 8-language interface and the new documentation add no data collection.
+
+Version note (0.4.0, 2026-11-27): nothing changed in data handling. A network-log audit in Chromium recorded no external requests from the extension. Fields that were ever of type `password` stay excluded even after a "show password" toggle. The 25-language interface adds no data collection.

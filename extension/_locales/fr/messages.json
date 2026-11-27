@@ -4,5 +4,17 @@
  },
  "extDesc": {
   "message": "Correcteur d’orthographe, de grammaire et de typographie 100 % local : ro, en, fr, es, pt. Sans compte, sans envoi du texte."
+ },
+ "cmdFixAll": {
+  "message": "Tout corriger dans le champ actif"
+ },
+ "cmdToggleSite": {
+  "message": "Activer/désactiver sur ce site"
+ },
+ "cmdSuggest": {
+  "message": "Ouvrir les suggestions du problème au curseur"
+ },
+ "cmdMenu": {
+  "message": "Ouvrir le menu ERATA du champ actif"
  }
 }

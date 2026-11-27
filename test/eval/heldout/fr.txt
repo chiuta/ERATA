@@ -1,0 +1,18 @@
+=== news ===
+Le conseil municipal a décidé lundi soir de réduire la vitesse maximale à trente kilomètres par heure dans tout le centre-ville, à partir du mois de janvier. Selon le maire, cette mesure doit améliorer la sécurité des piétons et des cyclistes, qui sont de plus en plus nombreux à circuler dans les rues étroites du vieux quartier. Les commerçants se montrent plutôt favorables, mais ils demandent que des places de stationnement supplémentaires soient créées à proximité de la gare. Une réunion publique aura lieu le mois prochain pour présenter le projet aux habitants et recueillir leurs remarques avant le vote définitif.
+=== legal ===
+Le locataire s’engage à payer le loyer et les charges au plus tard le cinq de chaque mois, par virement bancaire. En cas de retard, le bailleur pourra exiger des intérêts calculés au taux légal, sans qu’une mise en demeure soit nécessaire. Le locataire doit user paisiblement des locaux loués et ne peut y exercer aucune activité commerciale sans l’accord écrit du propriétaire. Chacune des parties peut mettre fin au contrat en respectant un préavis de trois mois, notifié par lettre recommandée avec accusé de réception. Tout litige relatif à l’exécution du présent contrat relève de la compétence des tribunaux du lieu de situation de l’immeuble.
+=== tech ===
+Pour configurer la synchronisation, ouvrez d’abord le menu des paramètres, puis sélectionnez l’onglet « Comptes ». Saisissez votre adresse électronique et votre mot de passe, et choisissez les dossiers que vous souhaitez copier sur l’appareil. L’application vérifie la connexion, télécharge les messages les plus récents et affiche une barre de progression. Si l’opération échoue, assurez-vous que le pare-feu n’empêche pas l’accès au serveur et que la date de votre ordinateur est correcte. Vous pouvez à tout moment suspendre la synchronisation depuis la même fenêtre, sans perdre les données déjà reçues.
+=== narrative ===
+Elle marchait depuis une heure le long du canal quand la pluie s’est mise à tomber, fine et régulière, comme un rideau tendu entre elle et le reste du monde. Les péniches dormaient, amarrées les unes aux autres, et une vieille femme étendait son linge sur le pont d’un bateau bleu. Louise remonta son col et pressa le pas. Elle pensait à la lettre qu’elle avait glissée dans sa poche le matin même, sans oser la relire. Au bout du chemin, la petite boulangerie était encore ouverte, et l’odeur du pain chaud lui donna soudain envie de sourire.
+=== dialogue ===
+— Tu viens dîner chez nous samedi ? demanda Paul.
+— Avec plaisir, répondit Claire. À quelle heure ?
+— Vers huit heures, si cela te convient. Les enfants auront déjà mangé.
+— Parfait. Je peux apporter le dessert, si tu veux.
+— Ce serait gentil. Mais ne prends pas trop de peine, nous avons déjà des fruits.
+— D’accord, j’apporterai une tarte. Et Julien, il sera là ?
+— Oui, il rentre vendredi soir, un peu fatigué, mais content.
+=== hard ===
+Le 14 mars 2024, M. Dupont et Mme Lefèvre ont rencontré les représentants de la société Müller & Söhne à Düsseldorf pour discuter des modules de 2,5 GHz, facturés 1 250,50 € l’unité (TVA comprise). L’envoi, d’un poids de 3,5 t, passe par Rotterdam et arrive à Marseille vers 18 h. Conformément à la norme ISO 9001 et au RGPD, les données restent sur un serveur situé à Francfort, tandis que les sauvegardes nocturnes utilisent rsync plutôt que FTP. Le professeur Bouchard, arrivé de Québec en 2019, a signalé que le wifi du café était de nouveau en panne.

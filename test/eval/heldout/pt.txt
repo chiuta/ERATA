@@ -1,0 +1,18 @@
+=== news ===
+A Câmara Municipal aprovou ontem um plano para renovar os jardins do centro da cidade, que inclui a plantação de duzentas árvores e a instalação de novos bancos e fontes. Segundo o presidente, as obras começam em março e devem estar concluídas dentro de oito meses, com um custo estimado de novecentos mil euros. Os moradores da zona mostraram-se satisfeitos, mas pediram que o ruído das máquinas seja limitado aos dias úteis e que os acessos para pessoas com mobilidade reduzida fiquem sempre livres. Está também prevista uma sessão de esclarecimento na biblioteca municipal, aberta a todos os interessados.
+=== legal ===
+O arrendatário obriga-se a pagar a renda até ao oitavo dia do mês anterior àquele a que disser respeito, por transferência bancária para a conta indicada pelo senhorio. A falta de pagamento por período superior a sessenta dias confere ao senhorio o direito de resolver o contrato. O arrendatário não pode sublocar, total ou parcialmente, o imóvel, nem ceder a sua posição contratual, sem autorização escrita do senhorio. Findo o contrato, o locado deve ser restituído no estado em que foi entregue, ressalvadas as deteriorações inerentes a uma prudente utilização. Para resolver qualquer litígio emergente deste contrato, as partes escolhem o foro da comarca de Lisboa.
+=== tech ===
+Para ativar a sincronização, abra as definições da aplicação e escolha a opção «Conta». Introduza o seu endereço de correio eletrónico e a palavra-passe e selecione as pastas que pretende guardar no dispositivo. O programa verifica a ligação, transfere os ficheiros mais recentes e mostra uma barra de progresso. Se a operação falhar, confirme que a firewall não bloqueia o acesso ao servidor e que a data do computador está certa. É possível interromper a sincronização a qualquer momento na mesma janela, sem perder os dados que já foram recebidos.
+=== narrative ===
+O velho pescador acordou antes do amanhecer, como fazia todos os dias desde que se lembrava. Preparou o café, vestiu o casaco grosso e desceu devagar até ao cais, onde o barco o esperava, balançando na água escura. O mar estava calmo e o céu começava a ficar cor-de-rosa por cima das colinas. Enquanto soltava as cordas, pensou no neto, que prometera visitá-lo no verão, e sorriu sem dar por isso. Havia dias em que a solidão pesava, mas naquela manhã sentia apenas uma alegria simples, a de quem ainda tem o mar à sua frente.
+=== dialogue ===
+— Já compraste os bilhetes para o concerto? — perguntou a Marta.
+— Ainda não — respondeu o Pedro. — Estava à espera de saber se podias ir.
+— Claro que posso! Ando a falar disso há semanas.
+— Então compro hoje à noite, pela internet.
+— Vê se arranjas lugares perto do palco.
+— Vou fazer o possível, mas não prometo nada. Os melhores esgotam depressa.
+— Está bem. Se não conseguires, vamos na mesma, nem que seja lá ao fundo.
+=== hard ===
+Em 14 de março de 2024, o Sr. Almeida e a Dra. Fonseca reuniram-se com os representantes da Müller & Söhne em Düsseldorf para discutir os módulos de 2,5 GHz, que custam 1250,50 € por unidade, com IVA incluído. A expedição, de 3,5 t, passa por Roterdão e chega a Setúbal por volta das 18 h. De acordo com a norma ISO 9001 e o RGPD, os dados ficam num servidor em Frankfurt, enquanto as cópias noturnas usam rsync e não FTP. O professor Cavaco, que chegou de Maputo em 2019, disse que o wi-fi do café voltou a falhar.

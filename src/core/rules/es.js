@@ -1,12 +1,25 @@
 // Reglas para español, redactadas de forma original para ERATA.
-import { M, rule, scan, matchCase, tableRule } from './util.js';
+import { M, rule, scan, matchCase, tableRule, textBefore } from './util.js';
 import { splitSentences } from '../text.js';
 
 const L = (s) => new Set(s.split(/\s+/).filter(Boolean));
 
+const ES_CLITIC = /(?:(?:me|te|se|nos|os|le|les)(?:lo|la|los|las)|nos|les|los|las|me|te|se|lo|la|le|os)$/iu;
+const deaccent = (s) => s.normalize('NFD').replace(/[\u0301]/g, '').normalize('NFC');
+
 export const esPack = {
   abbr: L('sr sra srta dr dra etc pág av núm ud uds art ej vs tel no'),
   repeatOk: L('que ya muy poco mucho'),
+  /** Verbo + pronombre enclítico: «extráigalo», «dámelo», «hacerlo», «diciéndoselo». */
+  altSpell(w, spell) {
+    const m = ES_CLITIC.exec(w);
+    if (!m || m.index < 2) return false;
+    const base = w.slice(0, m.index);
+    const accented = /[áéíóú]/iu.test(w);
+    const verbal = accented || /(?:r|ndo)$/iu.test(base);
+    if (!verbal) return false;
+    return spell(base) || spell(deaccent(base));
+  },
 };
 
 const MONTHS = 'enero febrero marzo abril mayo junio julio agosto septiembre setiembre octubre noviembre diciembre'.split(' ');
@@ -16,12 +29,29 @@ const MASC_MA = 'problema tema sistema programa idioma poema día mapa planeta c
 
 export const esRules = [
   rule('ES_SIGNOS_INVERTIDOS', 'punctuation', (ctx) => {
+    // „Hola.Cómo estás?”: tratăm și „.C” (fără spațiu) ca limită de propoziție, ca rezultatul să nu se schimbe
+    // după ce SPACE_AFTER_PUNCT inserează spațiul lipsă (idempotență)
+    const sentences = [];
     for (const s of splitSentences(ctx.text, esPack.abbr)) {
+      const seg = ctx.text.slice(s.start, s.end);
+      let from = s.start;
+      for (const m of seg.matchAll(/(\p{L}{1,14})([.!?…]+)(?=\p{Lu}\p{Ll})/gu)) {
+        if (m[2] === '.' && esPack.abbr.has(m[1].toLowerCase())) continue;
+        const cut = s.start + m.index + m[0].length;
+        sentences.push({ start: from, end: cut });
+        from = cut;
+      }
+      sentences.push({ start: from, end: s.end });
+    }
+    for (const s of sentences) {
       const seg = ctx.text.slice(s.start, s.end);
       for (const [close, open, name] of [['?', '¿', 'interrogación'], ['!', '¡', 'exclamación']]) {
         if (!seg.trimEnd().endsWith(close) || seg.includes(open)) continue;
         // Se omiten secuencias como «?!» emparejadas con signos abiertos antes
-        const lead = seg.match(/^\s*/)[0].length;
+        let lead = seg.match(/^\s*/)[0].length;
+        // Vocativo o muletilla inicial («Pedro, ¿vienes?», «Hola, ¿qué tal?»): el signo abre tras la coma
+        const pre = /^(\p{L}+(?:\s\p{L}+)?),[ \u00a0]+(?=\p{L}+\s+\p{L})/u.exec(seg.slice(lead));
+        if (pre && pre[0].length < 28) lead += pre[0].length;
         ctx.add({
           offset: s.start + lead,
           length: 0,
@@ -49,8 +79,13 @@ export const esRules = [
     for (const w of ctx.words) {
       const lower = w.text.toLowerCase();
       if (!LOWER.has(lower) || w.text === lower || w.text === w.text.toUpperCase()) continue;
-      const before = ctx.text.slice(0, w.start).trimEnd();
+      const before = textBefore(ctx.text, w.start);
       if (!before || /[.!?:«“"—–\-(\[¿¡]$/u.test(before)) continue;
+      // Nombres propios: «Julio Cortázar», «Santo Domingo», «a Julio», «Viernes Santo»
+      const after = ctx.text.slice(w.end, w.end + 3);
+      if (/^[ \u00a0]\p{Lu}/u.test(after) && !/^[ \u00a0]\p{Lu}{2}/u.test(after)) continue;
+      if (/^(?:julio|domingo|mayo|abril|marzo)$/.test(lower) && /(?:^|\s)(?:santo|san|don|doña|señor|señora|sr|sra|dr|dra|doctor|doctora)$/iu.test(before)) continue;
+      if (/^(?:julio|domingo)$/.test(lower) && /(?:^|\s)(?:a|con|dijo|llamó|para|y|que)$/iu.test(before)) continue;
       ctx.add({ offset: w.start, length: w.text.length, rep: [lower], msg: M('Los meses y los días se escriben en minúscula', 'Months and weekdays are lowercase', { es: 'Los meses y los días se escriben en minúscula' }), autofix: true });
     }
   }),

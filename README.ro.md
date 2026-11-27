@@ -1,8 +1,8 @@
-[English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
+[English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md) · [Українська](README.uk.md) · [Türkçe](README.tr.md) · [Qırımtatarca](README.crh.md) · [Русский](README.ru.md) · [Српски](README.sr.md) · [Slovenčina](README.sk.md) · [Български](README.bg.md) · [Hrvatski](README.hr.md) · [Ελληνικά](README.el.md) · [ייִדיש](README.yi.md) · [Čeština](README.cs.md) · [Polski](README.pl.md) · [Հայերեն](README.hy.md) · [Русиньскый](README.rue.md) · [Shqip](README.sq.md) · [Македонски](README.mk.md) · [Romani](README.rmy.md)
 
 # ERATA — corector offline pentru browser
 
-Versiune: 0.3.0 · Ultima actualizare: 18 noiembrie 2026
+Versiune: 0.4.0 · Ultima actualizare: 27 noiembrie 2026
 
 ERATA este o extensie de browser care verifică ortografia, gramatica, punctuația și tipografia **integral pe dispozitivul dvs.** Fără cont, fără server, fără telemetrie: textul nu părăsește niciodată calculatorul. Este scrisă clean-room (vezi [CLEANROOM.md](CLEANROOM.md)) și publicată sub licență MIT.
 
@@ -15,9 +15,9 @@ ERATA este o extensie de browser care verifică ortografia, gramatica, punctuaț
 - Dicționar personal, reguli proprii (regex), activare pe site, import/export de setări, import de orice dicționar Hunspell.
 - Pagina Studio de text, „Corectează tot”, indice de lizibilitate, două verificări de stil (propoziții foarte lungi, repetiții apropiate).
 - Reformulare opțională cu un model **local** (endpoint compatibil OpenAI, doar pe `localhost`), dezactivată implicit.
-- Interfață în 8 limbi: română, engleză, franceză, italiană, spaniolă, portugheză, germană, maghiară.
+- Interfață în 25 de limbi: română, engleză, franceză, italiană, spaniolă, portugheză, germană, maghiară, plus celelalte limbi ale minorităților naționale din România (ucraineană, turcă, tătară crimeeană, rusă, sârbă, slovacă, bulgară, croată, greacă, idiș, cehă, poloneză, armeană, rusină, albaneză, macedoneană, romani). Limba interfeței este independentă de limba verificată.
 
-Scurtături: `Alt+Shift+F` corectează tot în câmpul activ, `Alt+Shift+E` activează/dezactivează ERATA pe site-ul curent.
+Scurtături: `Alt+Shift+F` corectează tot în câmpul activ, `Alt+Shift+E` activează/dezactivează ERATA pe site-ul curent. Tastatură: Alt+Shift+Spațiu sugestii · Alt+Shift+M meniu · Esc închide.
 
 ## Limbi suportate — ce există cu adevărat
 | Limba | Ortografie | Reguli |
@@ -29,9 +29,12 @@ Scurtături: `Alt+Shift+F` corectează tot în câmpul activ, `Alt+Shift+E` acti
 | Portugheză (pt) | dicționar inclus | pachet dedicat (restrâns) |
 | Germană (de) | **neinclus** (licențe GPL); importați propriul dicționar Hunspell | pachet minim |
 | Italiană (it) | **neinclus** (licențe GPL); importați propriul dicționar Hunspell | pachet minim |
-| Maghiară (hu) | **inexistentă în 0.3.0** | **inexistente**: doar interfața e tradusă; verificarea ortografică pentru maghiară nu există încă |
+| Maghiară (hu) | **inexistentă în 0.4.0** | **inexistente**: doar interfața e tradusă; verificarea ortografică pentru maghiară nu există încă |
 
 Orice alt dicționar Hunspell (nl etc.) se poate importa, dar detectorul de limbă le cunoaște doar pe cele de mai sus.
+
+## Traduceri
+Interfața, acest README și pagina de prezentare există în 25 de limbi. Opt dintre ele (ro, en, fr, it, es, pt, de, hu) sunt limbile de bază ale proiectului; celelalte șaptesprezece au fost adăugate în 0.4.0. **Doar cele 17 limbi noi sunt traduse automat și nu au fost încă revizuite de un vorbitor nativ. Corecturile sunt binevenite: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Cea mai scăzută încredere: rusina, romani, tătara crimeeană și idișul. Traducerea interfeței nu adaugă verificare ortografică pentru limba respectivă: vezi tabelul de mai sus pentru ce se verifică în realitate.
 
 ## Confidențialitate
 Toată verificarea se face în interiorul extensiei. Nu există server ERATA, cont, telemetrie sau analitice, iar extensia nu cere permisiuni de rețea. Singura excepție este reformularea locală, opțională și dezactivată implicit, care poate trimite o propoziție către un endpoint de pe `localhost`/`127.0.0.1` ales de dvs. Setările, dicționarul personal și dicționarele importate rămân în `storage.local` și IndexedDB, pe dispozitivul dvs. Câmpurile de parolă, e-mail și card, precum și cele marcate `data-erata="off"`, sunt ignorate. Detalii: [PRIVACY.md](PRIVACY.md).

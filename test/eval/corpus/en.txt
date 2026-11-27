@@ -1,0 +1,108 @@
+=== news ===
+The city council of Plymouth voted on Monday evening to approve a new flood barrier along the eastern waterfront, ending almost three years of debate. The project, which will cost an estimated £42 million, is expected to protect more than 1,800 homes and a dozen small businesses from rising sea levels over the next half century.
+Councillors were divided until the final hour. Supporters argued that the town could not afford to wait for another severe winter storm, while critics said the money would be better spent on public transport and affordable housing. "We have been talking about this since the last major flood," said the council leader. "Residents deserve a decision, and today they have one."
+Construction is scheduled to begin in September and should take about two years. The council has promised to keep the coastal path open wherever possible and to publish a monthly progress report on its website. Local fishermen, who rely on the harbour, have asked for a meeting to discuss access during the works. A spokesperson for the council said that the request would be considered this week.
+Elsewhere, the national statistics office reported that unemployment fell slightly in the last quarter, to 4.2 per cent. Economists had expected the figure to remain unchanged. The service sector added the most jobs, while manufacturing continued to shed workers, although at a slower pace than last year. Wages grew by an average of 3.8 per cent, which is still below the rate of inflation.
+In education, the government announced that every primary school will receive funding for a free breakfast club by the end of next year. Teachers' unions welcomed the idea but warned that many schools lack the staff and the space to run it. "Good intentions are not enough," said one union representative. "We need practical help, not just a press release."
+The weather will turn colder over the weekend. Forecasters expect temperatures to drop to around two degrees overnight in the north, with frost in sheltered valleys and snow on higher ground. Drivers are advised to check road conditions before travelling, and the rail operator said it had prepared extra de-icing equipment for the busiest lines.
+At the stadium on Saturday, the home side secured a narrow victory after a late goal from a young midfielder who had only joined the club in January. The manager praised his players' discipline and said the result was a reward for weeks of hard work. Supporters stayed long after the final whistle, singing and waving scarves in the cold.
+A new exhibition opens this Friday at the municipal museum, bringing together more than two hundred photographs taken by local residents over the past century. Organisers collected the pictures from family albums, attics and old shoeboxes. Visitors will see street scenes, weddings, factory floors and school outings, many of them shown in public for the first time. Entry is free, and the museum will stay open until nine o'clock on Thursdays.
+A study from a group of university researchers suggests that people who walk for thirty minutes a day are less likely to feel stressed at work. The team followed about 900 volunteers for a year and asked them to keep a short diary. The authors stress that the results do not prove cause and effect, but they say the pattern was clear across different ages and jobs.
+Abroad, leaders from several countries met in Geneva to discuss a shared plan for reducing plastic waste. After two days of negotiations, they agreed to set common targets for recycling and to share information about harmful chemicals used in packaging. Environmental groups called the agreement a first step, though they said it lacked binding deadlines. The next round of talks will take place in the spring.
+On the technology pages, a small start-up from Leeds has unveiled a battery that can be charged in under ten minutes. The founders say it uses a cheaper material than the cells found in most phones and electric cars. Independent experts were cautious, noting that the claim has yet to be tested outside the laboratory, but investors have already offered several million pounds to help the company build a pilot factory.
+Finally, the library on Church Street has reopened after a long renovation. The building now has a quiet reading room, a children's corner and a café run by a local charity. On the first day, hundreds of people queued outside to look around. "It feels like the heart of the town is beating again," said one visitor, who has been borrowing books there for sixty years.
+=== legal ===
+1. Definitions
+1.1 In this Agreement, the following terms have the meanings given below, unless the context requires otherwise:
+(a) "Affiliate" means any entity that directly or indirectly controls, is controlled by, or is under common control with a party;
+(b) "Confidential Information" means all information, in any form, that is disclosed by one party to the other in connection with this Agreement and that is marked as confidential or would reasonably be understood to be confidential;
+(c) "Effective Date" means the date on which the last party signs this Agreement;
+(d) "Services" means the services described in Schedule 1, as amended from time to time in accordance with clause 9.
+1.2 Headings are for convenience only and shall not affect the interpretation of this Agreement. References to clauses and schedules are to the clauses of and schedules to this Agreement.
+2. Term
+2.1 This Agreement begins on the Effective Date and continues for an initial period of twenty-four months, unless it is terminated earlier in accordance with its terms.
+2.2 Following the initial period, the Agreement shall renew automatically for successive periods of twelve months, unless either party gives the other written notice of non-renewal at least ninety days before the end of the then-current period.
+3. Payment
+3.1 The Client shall pay the fees set out in Schedule 2 within thirty days of the date of each invoice. All sums are exclusive of value added tax, which shall be added at the prevailing rate.
+3.2 If any sum is not paid when due, the Supplier may charge interest on the overdue amount at the rate of four per cent a year above the base rate of the Bank of England, accruing daily from the due date until payment is received in full.
+3.3 The Client may withhold payment of an amount that it disputes in good faith, provided that it notifies the Supplier in writing within ten days of receiving the invoice and pays the undisputed part on time.
+4. Confidentiality
+4.1 Each party shall keep the other party's Confidential Information secret, shall use it only for the purposes of this Agreement, and shall not disclose it to any third party except to those of its employees, advisers and contractors who need to know it and who are bound by equivalent obligations.
+4.2 The obligations in this clause do not apply to information that is or becomes public through no fault of the recipient, that was already lawfully known to the recipient, or that must be disclosed by law or by order of a court.
+4.3 This clause shall survive the expiry or termination of the Agreement for a period of five years.
+5. Liability
+5.1 Nothing in this Agreement limits or excludes liability for death or personal injury caused by negligence, for fraud, or for any other matter that cannot be limited under the law of England and Wales.
+5.2 Subject to clause 5.1, neither party shall be liable to the other for any indirect or consequential loss, or for loss of profits, revenue or goodwill, whether arising in contract, tort or otherwise.
+5.3 Subject to clause 5.1, the total liability of the Supplier under this Agreement in any year shall not exceed the fees paid by the Client during the preceding twelve months.
+6. Termination
+6.1 Either party may terminate this Agreement with immediate effect by written notice if the other party commits a material breach and, where the breach can be remedied, fails to remedy it within thirty days of being asked to do so.
+6.2 Either party may also terminate the Agreement if the other becomes insolvent, enters into liquidation, or ceases to carry on business.
+6.3 On termination, the Supplier shall return or destroy all of the Client's data in its possession and shall confirm in writing that it has done so.
+7. General
+7.1 This Agreement is the entire agreement between the parties and replaces all earlier discussions and understandings about its subject matter. No change to it is effective unless it is in writing and signed by both parties.
+7.2 Neither party may assign or transfer its rights under this Agreement without the prior written consent of the other, which shall not be unreasonably withheld.
+7.3 This Agreement is governed by the law of England and Wales, and the courts of England and Wales have exclusive jurisdiction over any dispute arising from it.
+=== tech ===
+To install the application on a Linux computer, download the archive from the project page and extract it into a folder of your choice. The program does not need administrator rights and does not change any other files on the system. It requires about 120 MB of disk space, and we recommend at least 4 GB of memory.
+When the program starts, it shows a main window with three areas: the toolbar, the document list and the preview pane. To open a document, press Ctrl+O or choose Open from the File menu. Recent documents appear at the bottom of the menu, and the list can be cleared in Settings.
+The configuration file is called config.toml and lives in the user's home directory. If it is missing, the application creates it on first launch with default values. You can edit it with any text editor, but it is important to keep the UTF-8 encoding. After every change, restart the program; otherwise the new values will not be read.
+The timeout setting controls how many seconds an idle connection stays open before it is closed. The default is 30, and the maximum accepted value is 600. If you work with large files or a slow network, raising this value can prevent transfer errors. The cache_size setting sets the size of the temporary memory, in megabytes.
+To run a script from the command line, use the command below, replacing the file name with the name of your own script. The output is printed to the terminal and can optionally be saved to a log file. If an error message appears, first check that you have installed version 3.10 or later of the interpreter.
+A local network can be configured automatically through DHCP or manually, by entering the IP address, the subnet mask, the gateway and the DNS servers. A typical home router uses the address 192.168.1.1, and the computers on the network receive addresses from the range 192.168.1.2 to 192.168.1.254. If two devices are given the same address, the connection will drop from time to time, and the DHCP lease will have to be renewed.
+Backups are essential. We recommend the 3-2-1 rule: keep three copies of your data on two different kinds of media, with one copy stored away from your home. An external drive of 2 TB is enough for most users, and archiving tools can compress data by up to 40% without any loss. Test the restore process regularly, because a backup that cannot be read is worth nothing.
+If the computer starts slowly, open the task manager and sort the processes by memory use. Programs that constantly consume more than 1 GB without being used should be closed or uninstalled. System updates are best installed in the evening, and a full restart once a week helps to free up resources.
+For security, use long passwords made of several words, and turn on two-factor authentication wherever possible. Do not open attachments from unknown senders, and do not enter your card details on pages that do not use an encrypted connection. If you suspect that an account has been compromised, change the password immediately and check the list of connected devices.
+A modern phone battery keeps its capacity for longer if it is not drained completely and is not left in the heat. Most manufacturers guarantee that after 500 charge cycles the battery still holds 80% of its original capacity. Fast chargers are safe as long as they are used with the original cable.
+If the printer stops responding, first check that the paper is loaded correctly and that there is enough ink. Then switch the device off, wait ten seconds, and turn it on again. If the problem persists, reinstall the driver from the manufacturer's website and clear the print queue. For network printers, make sure that the address in the settings matches the one shown on the printer's screen.
+Full documentation, examples and the list of changes are in the docs folder. Bugs can be reported through the form on the website or by email to support@example.org; please include the version number and the operating system you are using.
+=== narrative ===
+It was one of those autumn evenings when the air seems clearer than usual and sounds carry from a long way off. Anna had stepped onto the porch with a blanket around her shoulders and was watching the lights of the village come on, one after another. In the garden the apple trees had dropped nearly all their leaves, and a few forgotten apples at the tips of the branches glowed like small lamps.
+Across the road, old George was locking his gate. He moved slowly, as if each gesture needed a decision of its own. When he looked up and saw her, he raised a hand and shouted something that the wind carried away. Anna smiled and waved back, without understanding what he had said.
+She remembered the summer when she first came here, as a child, with a rucksack too big for her and a doll with one leg missing. Her grandmother had been waiting at the gate, smelling of warm bread and basil. The house had seemed enormous, and the yard endless. Later, when she grew up, she understood that things had not been so large after all; they had simply been seen from below.
+Now her grandmother was gone. What remained was the gentle look in the photographs, the cupboard of linen that smelled of lavender, and a heavy wooden chest that nobody had dared to open. That evening Anna decided that the time had come. She went inside, switched on the light in the hall and climbed down into the cellar, where the chest stood under a grey cloth.
+The lid creaked as she lifted it. Inside were letters tied with a blue ribbon, an embroidered handkerchief, a clock stopped at three, and a notebook with hard covers. Anna took the notebook and opened it at random. Her grandmother's handwriting was small and upright, like a row of well-trained ants. The words spoke of hard winters, of a child born in the middle of a snowstorm, and of a well that had never run dry.
+She read until the candle had burned almost to nothing. Then she went outside again and stayed for a long time beneath the sky full of stars. She felt strangely calm, as if someone had whispered to her that everything would be all right. The neighbours' dog barked twice and fell silent. Somewhere far away, a train was passing.
+The next morning she woke early. Mist covered the orchard, and drops of dew hung from every blade of grass. She made tea, put the notebook on the table and began to write down, on a sheet of paper, what she wanted to keep and what she wanted to give away. The stopped clock would stay on the mantelpiece. The letters she would read slowly, one a day, so that they would not run out too soon.
+Around noon her neighbour Maria arrived with a basket of walnuts. The two women sat at the table and talked about everything: this year's harvest, the price of firewood, and the village school, which had been left without a teacher. Maria said that if someone could be found, the classes might open again, and Anna thought for the first time that perhaps it was not such a mad idea after all.
+Over the following days she began to clean the house. She opened the windows, scrubbed the floors, moved the furniture, and found a forgotten memory in every room. In a drawer she came across a set of coloured pencils, still sharp. In a corner of the attic, beneath a wooden toy, lay a kite with a broken tail. She mended it one afternoon and let it fly above the field, watching it climb higher and higher.
+George came to see it and stood by the fence, leaning on his stick. "That is how ours used to fly, in the old days," he said at last. Anna did not answer. She held the string in her hand and felt the wind pulling at it, gently and firmly, like a friend inviting her somewhere.
+When evening fell, the kite was brought back and hung on a nail in the porch. Anna looked at the house once more, and then closed the door carefully. She did not yet know what she would do in the spring, but she knew that she would not leave.
+=== dialogue ===
+"You made it at last!" said Ralph, opening the door. "I was beginning to think something had happened to you."
+"No, the train was almost an hour late," Joan replied, shaking out her umbrella. "And just to make things better, it started to rain the moment I got off."
+"Come in, come in. I've put the kettle on. Would you like something to eat?"
+"Thanks, I ate at the station. Tell me instead what happened with the project. You wrote yesterday that you had news."
+Ralph sighed and sat down on the arm of the sofa. "It's complicated," he began. "The director wants to cancel the second phase. He says there's no money, but I think he simply doesn't trust us any more."
+"And what did you say?"
+"Nothing. I stood there with my mouth open. Then I walked out of the office and went home on foot, about four kilometres."
+"Why didn't you call me?"
+"I didn't want to worry you. Especially since I knew you were coming today."
+Joan laughed and took off her coat. "Ralph, I've been your friend for fifteen years. If I don't worry about you, who will?"
+"You're right," he admitted. "But what do we do now?"
+"First we drink the tea. Then we look at the budget together and see what can be cut. Maybe we can find a cheaper way. Have you spoken to Helen?"
+"Not yet. She doesn't know anything."
+"Then we'll call her too. Three minds are better than two, aren't they?"
+They both laughed. From the kitchen came the clink of cups, and outside the rain tapped on the window. A few minutes later Helen arrived, soaked to the skin, carrying a bag full of bread and cheese.
+"What are you two doing here?" she asked. "You look like conspirators!"
+"We are," said Joan seriously. "We've already started to plan something."
+"Really? Tell me!"
+"Sit down, we want to ask you something. If you had to choose between continuing the project with half the budget and stopping it altogether, what would you do?"
+Helen thought for a few seconds. "I'd carry on," she said. "Something small but alive is better than nothing."
+"That's exactly what we thought."
+"Good, then we have a plan. Tomorrow morning we go to the director and show him a more modest version. If he refuses, at least we will have tried."
+"But what if he says no?" asked Ralph.
+"Then we'll do something else. It isn't the end of the world!"
+"You're right," he smiled. "Thank you for coming, both of you."
+"Don't say that," said Joan. "What are friends for?"
+A short, pleasant silence followed. Ralph poured tea into three mugs and put a plate of biscuits on the table.
+"By the way," Helen began, "did you hear what happened on the fourth floor? It seems the people there have bought a dog."
+"A dog? In a flat of forty square metres?"
+"A big one, too! She says it's a kind of sheepdog."
+"That can't be right," exclaimed Ralph. "And what does the landlord say?"
+"He says he has no objection, as long as it doesn't bark at night."
+"Then it will be very quiet," joked Joan. "Dogs never bark, do they?"
+They looked at one another and burst out laughing. Outside, the rain had eased, and through the window they could see the lights of the building opposite coming on.
+"I'll go and get some more cake," said Helen. "Who wants more tea?"
+"I do," said Ralph. "And Joan, you're staying the night, aren't you? I won't let you go out in this rain again."
+"I'll stay," she agreed. "But we leave early tomorrow."
+"I promise."

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<title>ERATA — offline proofreader for your browser</title>
+<meta name="description" content="ERATA is a free, open-source, clean-room proofreader for Chrome, Edge, Firefox and Safari. Spelling, grammar, punctuation and typography checked 100% locally.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='26' fill='%231849a9'/%3E%3Ctext x='64' y='78' font-family='Arial,sans-serif' font-weight='700' font-size='84' text-anchor='middle' fill='%23fff'%3EE%3C/text%3E%3Cpath d='M18 102q11-14 23 0t23 0 23 0 23 0' fill='none' stroke='%23ff7a68' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light dark;--bg:#fff;--bg2:#f5f8ff;--fg:#1d2939;--mut:#4b5565;--line:#c7ced9;--acc:#1849a9;--accbg:#eef4ff;--onacc:#fff;--ok:#16794c;--bad:#b42318;--coral:#e5533f;--scale:100;--shadow:0 1px 3px rgba(16,24,40,.12)}
+@media (prefers-color-scheme:dark){:root{--bg:#101828;--bg2:#162036;--fg:#f2f4f7;--mut:#b0b9c8;--line:#3b4760;--acc:#84adff;--accbg:#1e2a4a;--onacc:#0b1220;--ok:#6ce9a6;--bad:#fda29b;--coral:#ff8a78;--shadow:none}}
+html.hc{--bg:#fff;--bg2:#fff;--fg:#000;--mut:#000;--line:#000;--acc:#0000c8;--accbg:#fff;--onacc:#fff;--ok:#005a2b;--bad:#a00000;--coral:#a00000}
+@media (prefers-color-scheme:dark){html.hc{--bg:#000;--bg2:#000;--fg:#fff;--mut:#fff;--line:#fff;--acc:#9cc2ff;--accbg:#000;--onacc:#000;--ok:#7dffb5;--bad:#ffb4ab;--coral:#ffb4ab}}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:calc(var(--scale) * 1%);scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.rm{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;overflow-wrap:anywhere}
+html.font body{font-family:"OpenDyslexic","Atkinson Hyperlegible","Lexend","Verdana","Tahoma",sans-serif}
+html.space body{line-height:1.9;letter-spacing:.12em;word-spacing:.16em}
+html.space p,html.space li{margin-bottom:1.5em}
+a{color:var(--acc);text-underline-offset:.15em}
+a:hover{text-decoration-thickness:.12em}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:3px}
+html.hc :focus-visible{outline-width:4px}
+.wrap{max-width:68rem;margin:0 auto;padding:0 1rem}
+.skip{position:absolute;left:.5rem;top:-4rem;background:var(--acc);color:var(--onacc);padding:.6rem 1rem;border-radius:.4rem;z-index:100;text-decoration:none;font-weight:600}
+.skip:focus{top:.5rem}
+header.top{border-bottom:1px solid var(--line);background:var(--bg)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;padding:.7rem 0}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.25rem;color:var(--fg);text-decoration:none;margin-right:auto;letter-spacing:.02em}
+.brand svg{width:2.2rem;height:2.2rem;flex:none}
+.tools{display:flex;align-items:center;gap:.5rem}
+select,button,.btn{font:inherit}
+select{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:.5rem;padding:.4rem .5rem;min-height:2.5rem;max-width:100%}
+.iconbtn{min-width:2.5rem;min-height:2.5rem;border:1px solid var(--line);background:var(--accbg);color:var(--acc);border-radius:.5rem;font-weight:700;cursor:pointer;padding:.2rem .6rem}
+.iconbtn[aria-expanded=true]{background:var(--acc);color:var(--onacc)}
+nav.main ul{list-style:none;margin:0;padding:0 0 .6rem;display:flex;flex-wrap:wrap;gap:.2rem .3rem}
+nav.main a{display:inline-block;padding:.3rem .6rem;border-radius:.4rem;text-decoration:none;color:var(--fg)}
+nav.main a:hover{background:var(--accbg);color:var(--acc)}
+.hero{background:linear-gradient(180deg,var(--bg2),var(--bg));padding:2.5rem 0 2rem}
+.hero .grid{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center}
+.hero .logo{width:7rem;height:7rem}
+.badge{display:inline-block;font-size:.85rem;font-weight:600;background:var(--accbg);color:var(--acc);border:1px solid var(--line);padding:.15rem .7rem;border-radius:2rem}
+h1{font-size:clamp(1.7rem,5vw,2.8rem);line-height:1.15;margin:.5rem 0}
+h2{font-size:1.6rem;line-height:1.25;margin:0 0 .6rem}
+h3{font-size:1.1rem;margin:0 0 .3rem}
+.lead{font-size:1.15rem;max-width:46rem;margin:.4rem 0 1rem}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0 0 1.2rem}
+.pills li{border:1px solid var(--acc);color:var(--acc);border-radius:2rem;padding:.15rem .8rem;font-weight:600;font-size:.95rem}
+.cta{display:flex;flex-wrap:wrap;gap:.6rem}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:.55rem;border:2px solid var(--acc);text-decoration:none;font-weight:600;cursor:pointer;background:transparent;color:var(--acc)}
+.btn.pri{background:var(--acc);color:var(--onacc)}
+.btn:hover{filter:brightness(1.08)}
+.mut{color:var(--mut)}
+.small{font-size:.9rem}
+section{padding:2.2rem 0;border-top:1px solid var(--line)}
+section>.wrap>p.intro{max-width:50rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin:1rem 0}
+.card{border:1px solid var(--line);border-radius:.8rem;padding:1rem;background:var(--bg);box-shadow:var(--shadow)}
+.card p{margin:0}
+kbd{font:inherit;font-size:.9em;border:1px solid var(--line);border-bottom-width:2px;border-radius:.3rem;padding:0 .35rem;background:var(--accbg)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+pre{background:var(--accbg);border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;max-width:100%;white-space:pre-wrap}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:.6rem;max-width:100%}
+.tablewrap:focus-visible{outline-offset:0}
+table{border-collapse:collapse;width:100%;min-width:38rem}
+table.cmp{min-width:64rem}
+caption{text-align:left;padding:.6rem .8rem;font-weight:600}
+th,td{border-top:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;overflow-wrap:normal;word-break:normal}
+thead th{background:var(--accbg);border-top:0;color:var(--fg)}
+tbody th{font-weight:600}
+td.er,th.er{background:var(--accbg)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:1rem}
+ul.ticks{padding-left:1.2rem}
+ul.ticks li{margin:.3rem 0}
+.win h3{color:var(--ok)}.lose h3{color:var(--bad)}
+ol.steps{padding-left:1.4rem}ol.steps li{margin:.3rem 0}
+.demo{border:1px solid var(--line);border-radius:.8rem;padding:1rem;background:var(--bg2)}
+.demo .txt{font-size:1.2rem;line-height:2;padding:.8rem;border:1px dashed var(--line);border-radius:.6rem;background:var(--bg)}
+.mk{font:inherit;color:inherit;background:transparent;border:0;padding:0 .1em;margin:0;cursor:pointer;text-decoration:underline wavy var(--bad);text-decoration-thickness:2px;text-underline-offset:.25em;border-radius:.2rem}
+.mk:hover{background:var(--accbg)}
+.mk.fixed{text-decoration:underline solid var(--ok);text-decoration-thickness:2px;color:var(--ok);font-weight:600}
+.demo ul{padding-left:1.2rem;margin:.6rem 0}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.7rem 0}
+.row .btn{padding:.4rem .9rem}
+.licbox{border:1px solid var(--line);border-radius:.6rem;padding:1rem;background:var(--bg2)}
+footer{border-top:1px solid var(--line);padding:1.6rem 0 4.5rem}
+footer ul{list-style:none;padding:0;margin:.5rem 0 0;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+#a11y{position:fixed;top:3.6rem;right:.75rem;width:min(22rem,calc(100vw - 1.5rem));max-height:calc(100vh - 5rem);overflow:auto;background:var(--bg);color:var(--fg);border:2px solid var(--acc);border-radius:.8rem;padding:1rem;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#a11y[hidden]{display:none}
+#a11y h2{font-size:1.2rem}
+#a11y .f{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin:.7rem 0}
+#a11y label{font-weight:600}
+#a11y input[type=range]{width:9rem;max-width:50%}
+#a11y input[type=checkbox]{width:1.4rem;height:1.4rem;accent-color:var(--acc);flex:none}
+#a11y .row{justify-content:space-between}
+#totop{position:fixed;right:1rem;bottom:1rem;width:3rem;height:3rem;border-radius:50%;border:2px solid var(--acc);background:var(--acc);color:var(--onacc);font-size:1.4rem;line-height:1;cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(.6rem);transition:opacity .25s,transform .25s,visibility .25s}
+#totop.show{opacity:1;visibility:visible;transform:none}
+html.rm #totop{transition:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#totop{transition:none}}
+@media (max-width:40rem){.hero .grid{grid-template-columns:1fr}.hero .logo{width:5rem;height:5rem}}
+@media print{#totop,#a11y,.tools{display:none!important}}
+</style>
+</head>
+<body id="top" tabindex="-1">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<header class="top">
+ <div class="wrap">
+  <div class="bar">
+   <a class="brand" href="#top" aria-label="ERATA">
+    <svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5fc7"/><stop offset="1" stop-color="#1849a9"/></linearGradient></defs><rect width="128" height="128" rx="26" fill="url(#g1)"/><path d="M40 28h50v14H58v16h28v14H58v16h34v14H40z" fill="#fff"/><path d="M16 108q12-16 24 0t24 0 24 0 24 0" fill="none" stroke="#ff7a68" stroke-width="9" stroke-linecap="round"/></svg>
+    <span>ERATA</span>
+   </a>
+   <div class="tools">
+    <label class="mut small" for="langsel" id="langlbl">Language</label>
+    <select id="langsel">
+<!--@OPTIONS@-->
+    </select>
+    <button type="button" class="iconbtn" id="a11ybtn" aria-expanded="false" aria-controls="a11y" aria-haspopup="dialog" aria-label="Accessibility settings"><span aria-hidden="true">Aa</span></button>
+   </div>
+  </div>
+  <nav class="main" id="nav" aria-label="Sections"><ul></ul></nav>
+ </div>
+</header>
+
+<div id="a11y" role="dialog" aria-labelledby="a11yh" hidden>
+ <h2 id="a11yh" data-i18n="a_title">Accessibility</h2>
+ <div class="f"><label for="a_size" data-i18n="a_size">Text size</label><input type="range" id="a_size" min="100" max="160" step="10" value="100"></div>
+ <div class="f"><label for="a_hc" data-i18n="a_hc">High contrast</label><input type="checkbox" id="a_hc"></div>
+ <div class="f"><label for="a_font" data-i18n="a_font">Readable font</label><input type="checkbox" id="a_font"></div>
+ <div class="f"><label for="a_space" data-i18n="a_space">Wider spacing</label><input type="checkbox" id="a_space"></div>
+ <div class="f"><label for="a_rm" data-i18n="a_rm">Reduce motion</label><input type="checkbox" id="a_rm"></div>
+ <div class="row"><button type="button" class="btn" id="a_reset" data-i18n="a_reset">Reset</button><button type="button" class="btn pri" id="a_close" data-i18n="a_close">Close</button></div>
+</div>
+
+<main id="main" tabindex="-1">
+ <div class="hero">
+  <div class="wrap">
+   <div class="grid">
+    <svg class="logo" viewBox="0 0 128 128" aria-hidden="true" focusable="false"><rect width="128" height="128" rx="26" fill="url(#g1)"/><path d="M40 28h50v14H58v16h28v14H58v16h34v14H40z" fill="#fff"/><path d="M16 108q12-16 24 0t24 0 24 0 24 0" fill="none" stroke="#ff7a68" stroke-width="9" stroke-linecap="round"/></svg>
+    <div>
+     <span class="badge" data-i18n="badge">Version 0.3.0</span>
+     <h1 data-i18n="h1">Proofreading that never leaves your browser</h1>
+     <p class="lead" data-i18n="lead"></p>
+     <ul class="pills"><li data-i18n="p1">100% local</li><li data-i18n="p2">Clean-room</li><li data-i18n="p3">MIT licence</li></ul>
+     <div class="cta">
+      <a class="btn pri" href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="dl">Download</a>
+      <a class="btn" href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="gh">GitHub</a>
+      <a class="btn" href="#demo" data-i18n="ctaDemo">Demo</a>
+     </div>
+     <p class="mut small" data-i18n="hnote"></p>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <section id="demo" aria-labelledby="demoH">
+  <div class="wrap">
+   <h2 id="demoH" data-i18n="demoH"></h2>
+   <p class="intro" data-i18n="demoIntro"></p>
+   <div class="demo">
+    <p class="mut small" style="margin:0 0 .5rem"><span data-i18n="demoSample"></span> <strong id="demoLangName"></strong>. <span data-i18n="demoNote"></span></p>
+    <p class="txt" id="demoTxt"></p>
+    <div class="row"><button type="button" class="btn pri" id="demoFix" data-i18n="demoFix"></button><button type="button" class="btn" id="demoReset" data-i18n="demoReset"></button><span id="demoCount" role="status" aria-live="polite" class="mut small"></span></div>
+    <h3 data-i18n="demoIssues" style="margin-top:.8rem"></h3>
+    <ul id="demoList"></ul>
+   </div>
+  </div>
+ </section>
+
+ <section id="features" aria-labelledby="featH">
+  <div class="wrap">
+   <h2 id="featH" data-i18n="featH"></h2>
+   <p class="intro" data-i18n="featIntro"></p>
+   <div class="cards" id="featCards"></div>
+   <p data-i18n="keys"></p>
+  </div>
+ </section>
+
+ <section id="languages" aria-labelledby="langH">
+  <div class="wrap">
+   <h2 id="langH" data-i18n="langH"></h2>
+   <p class="intro" data-i18n="langIntro"></p>
+   <div class="tablewrap" tabindex="0" role="region" aria-labelledby="langCap">
+    <table id="langTable"><caption id="langCap"></caption><thead></thead><tbody></tbody></table>
+   </div>
+   <p class="mut" data-i18n="langNote"></p>
+   <p class="mut small" data-i18n="mtNote"></p>
+  </div>
+ </section>
+
+ <section id="privacy" aria-labelledby="privH">
+  <div class="wrap">
+   <h2 id="privH" data-i18n="privH"></h2>
+   <p class="intro" data-i18n="privIntro"></p>
+   <ul class="ticks" id="privList"></ul>
+   <p class="mut" data-i18n="privNote"></p>
+  </div>
+ </section>
+
+ <section id="compare" aria-labelledby="cmpH">
+  <div class="wrap">
+   <h2 id="cmpH" data-i18n="cmpH"></h2>
+   <p class="intro" data-i18n="cmpIntro"></p>
+   <div class="tablewrap" tabindex="0" role="region" aria-labelledby="cmpCap">
+    <table class="cmp" id="cmpTable"><caption id="cmpCap"></caption><thead></thead><tbody></tbody></table>
+   </div>
+   <p class="mut small" data-i18n="cmpNote"></p>
+   <div class="two">
+    <div class="card win"><h3 data-i18n="winH"></h3><ul class="ticks" id="winList"></ul></div>
+    <div class="card lose"><h3 data-i18n="loseH"></h3><ul class="ticks" id="loseList"></ul></div>
+   </div>
+  </div>
+ </section>
+
+ <section id="install" aria-labelledby="instH">
+  <div class="wrap">
+   <h2 id="instH" data-i18n="instH"></h2>
+   <p class="intro" data-i18n="instIntro"></p>
+   <div class="cards" id="instCards"></div>
+   <h3 data-i18n="buildH"></h3>
+   <pre><code>npm ci &amp;&amp; npm run dicts &amp;&amp; npm test &amp;&amp; npm run build</code></pre>
+   <p><a class="btn pri" href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="dl"></a></p>
+  </div>
+ </section>
+
+ <section id="cleanroom" aria-labelledby="cleanH">
+  <div class="wrap">
+   <h2 id="cleanH" data-i18n="cleanH"></h2>
+   <div id="cleanText"></div>
+  </div>
+ </section>
+
+ <section id="limits" aria-labelledby="limH">
+  <div class="wrap">
+   <h2 id="limH" data-i18n="limH"></h2>
+   <ul class="ticks" id="limList"></ul>
+  </div>
+ </section>
+
+ <section id="license" aria-labelledby="licH">
+  <div class="wrap">
+   <h2 id="licH" data-i18n="licH"></h2>
+   <div class="licbox">
+    <p style="margin:0"><strong>MIT License</strong><br>Copyright (c) 2026 Alexandru-Ionuț Chiuță (Alexio)</p>
+   </div>
+   <p data-i18n="licText"></p>
+   <p><a href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="ftGh">GitHub</a></p>
+  </div>
+ </section>
+
+ <section id="support" aria-labelledby="supH">
+  <div class="wrap">
+   <h2 id="supH" data-i18n="supH"></h2>
+   <p class="intro" data-i18n="supText"></p>
+   <p><a class="btn pri" href="https://buymeacoffee.com/echo.of.the.strings" rel="noopener noreferrer" data-i18n="supBtn"></a></p>
+  </div>
+ </section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <p style="margin:0"><strong>ERATA 0.3.0</strong> — <span data-i18n="foot"></span></p>
+  <ul>
+   <li><a href="https://github.com/chiuta/ERATA" rel="noopener noreferrer" data-i18n="ftGh"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/releases" rel="noopener noreferrer" data-i18n="ftRel"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="ftPriv"></a></li>
+   <li><a href="https://github.com/chiuta/ERATA/blob/main/LICENSE" rel="noopener noreferrer" data-i18n="ftLic"></a></li>
+  </ul>
+ </div>
+</footer>
+
+<button type="button" id="totop" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
+
+<script>
+(function(){
+'use strict';
+/*@LANGS@*/
+var T={};
+
+/*@I18N@*/
+
+/* demo samples */
+var DEMO={
+en:{lang:'en',segs:[{w:'Their',f:`They're`,n:'their / they’re'},' going to the ',{w:'libary',f:'library',n:'spelling'},' ',{w:'tomorow',f:'tomorrow',n:'spelling'},', and I ',{w:'seen',f:'saw',n:'verb form'},' it ',{w:'alot',f:'a lot',n:'two words'},'.']},
+ro:{lang:'ro',segs:['Locuiesc ',{w:'intr-un',f:'într-un',n:'diacritice'},' oraș mic și vreau ',{w:'sa',f:'să',n:'„să” conjunctiv'},' merg la ',{w:'şcoală dar',f:'școală, dar',n:'ș cu virgulă; virgulă înainte de „dar”'},' nu am timp.']},
+fr:{lang:'fr',segs:['Je suis allé ',{w:'a',f:'à',n:'accent'},' la ',{w:'bibliotheque',f:'bibliothèque',n:'accent'},' hier et j’ai ',{w:'vue',f:'vu',n:'participe passé'},' un film ',{w:'tres',f:'très',n:'accent'},' drôle.']},
+es:{lang:'es',segs:['Mañana voy a la biblioteca, pero no ',{w:'se',f:'sé',n:'tilde'},' si tengo tiempo. ',{w:'Tambien',f:'También',n:'tilde'},' quiero preguntar: ',{w:'cuanto cuesta?',f:'¿cuánto cuesta?',n:'signos y tilde'}]},
+pt:{lang:'pt',segs:['Amanhã vou ',{w:'a',f:'à',n:'crase'},' biblioteca, mas ',{w:'nao',f:'não',n:'til'},' sei se tenho tempo. ',{w:'Tambem',f:'Também',n:'acento'},' quero ver um filme.']}
+};
+
+var KEY='erata-site-prefs';
+var root=document.documentElement;
+var prefs={};
+function load(){try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s);if(o&&typeof o==='object')prefs=o;}}catch(e){prefs={};}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(e){}}
+function $(id){return document.getElementById(id);}
+function setText(el,t){el.textContent=t;}
+
+var cur='en';
+function pick(){
+ if(prefs.lang&&SUP.indexOf(prefs.lang)>-1)return prefs.lang;
+ var list=[];try{if(navigator.languages)list=list.concat(Array.prototype.slice.call(navigator.languages));}catch(e){}
+ if(navigator.language)list.unshift(navigator.language);
+ for(var i=0;i<list.length;i++){var c=String(list[i]).toLowerCase().split('-')[0];if(SUP.indexOf(c)>-1)return c;}
+ return 'en';
+}
+function S(k){var v=T[cur][k];return v===undefined?T.en[k]:v;}
+function el(tag,txt,cls){var e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e;}
+
+function fillList(id,arr){var ul=$(id);ul.textContent='';arr.forEach(function(t){ul.appendChild(el('li',t));});}
+
+function renderStatic(){
+ document.title=S('title');
+ var m=document.querySelector('meta[name=description]');if(m)m.setAttribute('content',S('desc'));
+ var nodes=document.querySelectorAll('[data-i18n]');
+ for(var i=0;i<nodes.length;i++){var k=nodes[i].getAttribute('data-i18n');var v=S(k);if(typeof v==='string')nodes[i].textContent=v;}
+ $('langlbl').textContent=S('langLabel');
+ $('a11ybtn').setAttribute('aria-label',S('a11yBtn'));
+ $('totop').setAttribute('aria-label',S('backTop'));
+ $('nav').setAttribute('aria-label',S('navLabel'));
+ // nav
+ var ids=['features','languages','privacy','compare','install','limits','support'];
+ var ul=$('nav').querySelector('ul');ul.textContent='';
+ S('nav').forEach(function(t,i){var li=document.createElement('li');var a=el('a',t);a.href='#'+ids[i];li.appendChild(a);ul.appendChild(li);});
+ // features
+ var fc=$('featCards');fc.textContent='';
+ S('feats').forEach(function(f){var c=el('div',undefined,'card');c.appendChild(el('h3',f[0]));c.appendChild(el('p',f[1]));fc.appendChild(c);});
+ // language table
+ setText($('langCap'),S('langCap'));
+ var th=$('langTable').querySelector('thead');th.textContent='';
+ var hr=document.createElement('tr');[S('th_lang'),S('th_spell'),S('th_rules')].forEach(function(t){var h=el('th',t);h.scope='col';hr.appendChild(h);});th.appendChild(hr);
+ var tb=$('langTable').querySelector('tbody');tb.textContent='';
+ var sp=S('spell'),ru=S('rules');
+ var rows=[['ro',0,1],['en',0,0],['fr',0,1],['es',0,1],['pt',0,1],['de',1,2],['it',1,2],['hu',2,3]];
+ rows.forEach(function(r){var tr=document.createElement('tr');var h=el('th',NAMES[r[0]]+' ('+r[0]+')');h.scope='row';h.setAttribute('lang',r[0]);tr.appendChild(h);tr.appendChild(el('td',sp[r[1]]));tr.appendChild(el('td',ru[r[2]]));tb.appendChild(tr);});
+ // privacy
+ fillList('privList',S('privItems'));
+ // compare
+ setText($('cmpCap'),S('cmpCap'));
+ var ch=$('cmpTable').querySelector('thead');ch.textContent='';
+ var cr=document.createElement('tr');S('cmpHead').forEach(function(t,i){var h=el('th',t);h.scope='col';if(i===1)h.className='er';cr.appendChild(h);});ch.appendChild(cr);
+ var cb=$('cmpTable').querySelector('tbody');cb.textContent='';
+ S('cmpRows').forEach(function(r){var tr=document.createElement('tr');r.forEach(function(t,i){if(i===0){var h=el('th',t);h.scope='row';tr.appendChild(h);}else{var d=el('td',t);if(i===1)d.className='er';tr.appendChild(d);}});cb.appendChild(tr);});
+ fillList('winList',S('wins'));fillList('loseList',S('loses'));
+ // install
+ var ic=$('instCards');ic.textContent='';
+ S('inst').forEach(function(b){var c=el('div',undefined,'card');c.appendChild(el('h3',b[0]));var ol=el('ol',undefined,'steps');for(var i=1;i<b.length;i++){ol.appendChild(el('li',b[i]));}c.appendChild(ol);ic.appendChild(c);});
+ // cleanroom
+ var ct=$('cleanText');ct.textContent='';S('clean').forEach(function(p){ct.appendChild(el('p',p));});
+ fillList('limList',S('lims'));
+ renderDemo();
+}
+
+/* demo */
+var demoState=[];
+function demoKey(){return DEMO[cur]?cur:'en';}
+function renderDemo(){
+ var d=DEMO[demoKey()];
+ var box=$('demoTxt');box.textContent='';box.setAttribute('lang',d.lang);
+ $('demoLangName').textContent=NAMES[d.lang];
+ demoState=[];
+ d.segs.forEach(function(s){
+  if(typeof s==='string'){box.appendChild(document.createTextNode(s));return;}
+  var idx=demoState.length;demoState.push(false);
+  var b=document.createElement('button');b.type='button';b.className='mk';b.textContent=s.w;
+  b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',s.w+' → '+s.f+' ('+s.n+')');
+  b.addEventListener('click',function(){setFix(idx,!demoState[idx]);});
+  b.setAttribute('data-i',idx);
+  box.appendChild(b);
+ });
+ renderDemoList();
+}
+function issues(){return DEMO[demoKey()].segs.filter(function(s){return typeof s!=='string';});}
+function setFix(i,on){
+ demoState[i]=on;var is=issues()[i];
+ var b=$('demoTxt').querySelector('button[data-i="'+i+'"]');
+ b.textContent=on?is.f:is.w;b.className=on?'mk fixed':'mk';b.setAttribute('aria-pressed',on?'true':'false');
+ renderDemoList();
+}
+function renderDemoList(){
+ var ul=$('demoList');ul.textContent='';var n=0;
+ issues().forEach(function(s,i){var li=document.createElement('li');li.setAttribute('lang',DEMO[demoKey()].lang);
+  var t=s.w+' → '+s.f+' — '+s.n;if(demoState[i]){t+=' ✓';n++;}
+  li.textContent=t;
+  if(demoState[i]){var sr=el('span',' ('+S('demoApplied')+')');sr.style.cssText='position:absolute;left:-9999px';li.appendChild(sr);}
+  ul.appendChild(li);});
+ $('demoCount').textContent=n+'/'+issues().length+' '+S('demoCount');
+}
+$('demoFix').addEventListener('click',function(){issues().forEach(function(_,i){setFix(i,true);});});
+$('demoReset').addEventListener('click',function(){issues().forEach(function(_,i){setFix(i,false);});});
+
+/* language */
+function setLang(l,persist){
+ cur=l;root.setAttribute('lang',l);root.setAttribute('dir',RTL.indexOf(l)>-1?'rtl':'ltr');$('langsel').value=l;
+ if(persist){prefs.lang=l;save();}
+ renderStatic();
+}
+$('langsel').addEventListener('change',function(){setLang(this.value,true);});
+
+/* accessibility */
+var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
+function applyA11y(){
+ var size=parseInt(prefs.size,10);if(!(size>=100&&size<=160))size=100;
+ root.style.setProperty('--scale',size);
+ root.classList.toggle('hc',!!prefs.hc);
+ root.classList.toggle('font',!!prefs.font);
+ root.classList.toggle('space',!!prefs.space);
+ var rm=(prefs.rm===undefined)?!!mq.matches:!!prefs.rm;
+ root.classList.toggle('rm',rm);
+ $('a_size').value=size;$('a_hc').checked=!!prefs.hc;$('a_font').checked=!!prefs.font;$('a_space').checked=!!prefs.space;$('a_rm').checked=rm;
+}
+$('a_size').addEventListener('input',function(){prefs.size=parseInt(this.value,10);save();applyA11y();});
+[['a_hc','hc'],['a_font','font'],['a_space','space'],['a_rm','rm']].forEach(function(p){
+ $(p[0]).addEventListener('change',function(){prefs[p[1]]=this.checked;save();applyA11y();});
+});
+$('a_reset').addEventListener('click',function(){delete prefs.size;delete prefs.hc;delete prefs.font;delete prefs.space;delete prefs.rm;save();applyA11y();});
+var panel=$('a11y'),btn=$('a11ybtn');
+function openPanel(){panel.hidden=false;btn.setAttribute('aria-expanded','true');$('a_size').focus();}
+function closePanel(ret){panel.hidden=true;btn.setAttribute('aria-expanded','false');if(ret)btn.focus();}
+btn.addEventListener('click',function(){if(panel.hidden)openPanel();else closePanel(true);});
+$('a_close').addEventListener('click',function(){closePanel(true);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden){closePanel(true);}});
+document.addEventListener('click',function(e){if(!panel.hidden&&!panel.contains(e.target)&&!btn.contains(e.target)){closePanel(false);}});
+
+/* back to top */
+var tt=$('totop');
+function onScroll(){tt.classList.toggle('show',(window.pageYOffset||root.scrollTop)>400);}
+window.addEventListener('scroll',onScroll,{passive:true});
+tt.addEventListener('click',function(){
+ var rm=root.classList.contains('rm');
+ try{window.scrollTo({top:0,behavior:rm?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}
+ document.body.focus({preventScroll:true});
+});
+
+load();applyA11y();setLang(pick(),false);onScroll();
+})();
+</script>
+</body>
+</html>

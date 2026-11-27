@@ -1,8 +1,8 @@
-[English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
+[English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md) · [Українська](README.uk.md) · [Türkçe](README.tr.md) · [Qırımtatarca](README.crh.md) · [Русский](README.ru.md) · [Српски](README.sr.md) · [Slovenčina](README.sk.md) · [Български](README.bg.md) · [Hrvatski](README.hr.md) · [Ελληνικά](README.el.md) · [ייִדיש](README.yi.md) · [Čeština](README.cs.md) · [Polski](README.pl.md) · [Հայերեն](README.hy.md) · [Русиньскый](README.rue.md) · [Shqip](README.sq.md) · [Македонски](README.mk.md) · [Romani](README.rmy.md)
 
 # ERATA — Offline-Korrekturhilfe für den Browser
 
-Version: 0.3.0 · Letzte Aktualisierung: 18. November 2026
+Version: 0.4.0 · Letzte Aktualisierung: 27. November 2026
 
 ERATA ist eine Browser-Erweiterung, die Rechtschreibung, Grammatik, Zeichensetzung und Typografie **vollständig auf Ihrem Gerät** prüft. Kein Konto, kein Server, keine Telemetrie: Ihr Text verlässt Ihren Rechner nie. ERATA wurde im Clean-Room-Verfahren entwickelt (siehe [CLEANROOM.md](CLEANROOM.md)) und steht unter der MIT-Lizenz.
 
@@ -15,9 +15,9 @@ ERATA ist eine Browser-Erweiterung, die Rechtschreibung, Grammatik, Zeichensetzu
 - Persönliches Wörterbuch, eigene Regeln (Regex), Schalter pro Website, Import und Export der Einstellungen, Import beliebiger Hunspell-Wörterbücher.
 - Textstudio-Seite, „Alles korrigieren“, Lesbarkeitsindex, zwei Stilprüfungen (sehr lange Sätze, nahe Wiederholungen).
 - Optionale Umformulierung über ein **lokales** Modell (OpenAI-kompatibler Endpunkt, nur auf `localhost`), standardmäßig deaktiviert.
-- Oberfläche in 8 Sprachen: Rumänisch, Englisch, Französisch, Italienisch, Spanisch, Portugiesisch, Deutsch, Ungarisch.
+- Oberfläche in 25 Sprachen: Rumänisch, Englisch, Französisch, Italienisch, Spanisch, Portugiesisch, Deutsch, Ungarisch sowie die übrigen Sprachen der nationalen Minderheiten Rumäniens (Ukrainisch, Türkisch, Krimtatarisch, Russisch, Serbisch, Slowakisch, Bulgarisch, Kroatisch, Griechisch, Jiddisch, Tschechisch, Polnisch, Armenisch, Russinisch, Albanisch, Mazedonisch, Romani). Die Sprache der Oberfläche ist unabhängig von der geprüften Sprache.
 
-Tastenkürzel: `Alt+Shift+F` korrigiert alles im aktiven Feld, `Alt+Shift+E` schaltet ERATA für die aktuelle Website ein oder aus.
+Tastenkürzel: `Alt+Shift+F` korrigiert alles im aktiven Feld, `Alt+Shift+E` schaltet ERATA für die aktuelle Website ein oder aus. Tastatur: Alt+Umschalt+Leertaste Vorschläge · Alt+Umschalt+M Menü · Esc schließen.
 
 ## Unterstützte Sprachen — was wirklich vorhanden ist
 | Sprache | Rechtschreibung | Regeln |
@@ -29,9 +29,12 @@ Tastenkürzel: `Alt+Shift+F` korrigiert alles im aktiven Feld, `Alt+Shift+E` sch
 | Portugiesisch (pt) | Wörterbuch enthalten | eigenes Regelpaket (klein) |
 | Deutsch (de) | **nicht enthalten** (GPL-Lizenzen); eigenes Hunspell-Wörterbuch importieren | minimales Regelpaket |
 | Italienisch (it) | **nicht enthalten** (GPL-Lizenzen); eigenes Hunspell-Wörterbuch importieren | minimales Regelpaket |
-| Ungarisch (hu) | **keine in 0.3.0** | **keine**: Nur die Oberfläche ist übersetzt; eine Rechtschreibprüfung für Ungarisch gibt es noch nicht |
+| Ungarisch (hu) | **keine in 0.4.0** | **keine**: Nur die Oberfläche ist übersetzt; eine Rechtschreibprüfung für Ungarisch gibt es noch nicht |
 
 Jedes weitere Hunspell-Wörterbuch (nl, …) lässt sich importieren, doch die Spracherkennung kennt nur die oben genannten Sprachen.
+
+## Übersetzungen
+Die Oberfläche, diese README und die Präsentationsseite gibt es in 25 Sprachen. Acht davon (ro, en, fr, it, es, pt, de, hu) sind die Kernsprachen des Projekts; die übrigen siebzehn kamen in 0.4.0 hinzu. **Nur die 17 neuen Sprachen sind maschinell übersetzt und noch von keinem Muttersprachler geprüft. Korrekturen sind willkommen: https://github.com/chiuta/ERATA/issues** (Machine translation, not yet reviewed by a native speaker. Corrections are welcome: https://github.com/chiuta/ERATA/issues) Geringstes Vertrauen: Russinisch, Romani, Krimtatarisch und Jiddisch. Die Übersetzung der Oberfläche fügt keine Rechtschreibprüfung für die jeweilige Sprache hinzu: Was tatsächlich geprüft wird, zeigt die Tabelle oben.
 
 ## Datenschutz
 Die gesamte Prüfung läuft innerhalb der Erweiterung. Es gibt keinen ERATA-Server, kein Konto, keine Telemetrie und keine Analysen, und die Erweiterung fordert keine Netzwerkberechtigung an. Die einzige Ausnahme ist die optionale, standardmäßig deaktivierte lokale Umformulierung, die einen Satz an einen von Ihnen gewählten Endpunkt auf `localhost`/`127.0.0.1` senden kann. Einstellungen, persönliches Wörterbuch und importierte Wörterbücher bleiben in `storage.local` und IndexedDB auf Ihrem Gerät. Passwort-, E-Mail- und Kartenfelder sowie mit `data-erata="off"` markierte Felder werden ignoriert. Details: [PRIVACY.md](PRIVACY.md).

@@ -28,3 +28,5 @@ Dicționarele din `dict/` sunt proiecte Hunspell independente (pachete npm `dict
 
 ---
 Version note (0.3.0, 2026-11-18): the methodology is unchanged. The `docs/COMPARISON.md` research used only public product pages, documentation and store listings; no LanguageTool source code or rule files were opened. The minimal de/it/pt rule packs and the interface translations were likewise written originally. German and Italian dictionaries are not bundled (GPL licensing); users may import their own.
+
+Version note (0.4.0, 2026-11-27): the methodology is unchanged. The evaluation corpora and labelled sets under `test/eval/` were written by the project itself; no external corpus or third-party rule data was copied. The 17 new interface and documentation translations are original machine translations of the project's own English texts.

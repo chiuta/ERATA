@@ -1,5 +1,5 @@
 // Reguli pentru limba română, redactate original pentru ERATA (nu provin din alte corectoare).
-import { M, rule, scan, matchCase, tableRule, wordBefore } from './util.js';
+import { M, rule, scan, matchCase, tableRule, wordBefore, wordAfter, textBefore } from './util.js';
 
 const L = (s) => new Set(s.split(/\s+/).filter(Boolean));
 
@@ -38,6 +38,10 @@ const PRE_SA = L(`ca pentru fara fără vreau vrei vrea vrem vreți pot poți po
 const NEXT_SA = L(`nu fie fii fim fiți fiti ma te se ne va il o le mi ti isi imi iti am ai aiba avem aveti faca fac merg mearga vin vina spun
   spuna pot poata stiu stie stea dea ajunga inceapa înceapă mă ți îl îți îmi își aibă facă meargă vină spună poată știu știe ajungă`);
 
+const CLAUSE_START = L(`nu n am ai a au avem aveți ați este e sunt suntem sunteți era erau eram fi va vor voi vom vei o un el ea ei ele eu tu noi acum
+  atunci apoi acolo aici mâine azi ieri dacă când că cum să se mă te ne vă îl îi le li îmi îți își în la pe cu de din pentru fără nimeni nimic toți toate mulți
+  unii unele cei cele aceasta acesta acestea acela aceea cineva ceva fiecare orice nici niciun nicio mai tot încă deja doar totuși deci`);
+
 const NOUN_END = /(?:a|ul|ii|ele|ile|ei|ului|ilor|ea|ia)$/iu;
 
 const MONTHS = 'ianuarie februarie martie aprilie iunie iulie septembrie octombrie noiembrie decembrie'.split(' ');
@@ -67,7 +71,7 @@ export const roRules = [
       if (!to) continue;
       // „in” poate fi englezesc într-un citat; verificăm dacă vecinii sunt cuvinte românești
       const prev = wordBefore(ctx, w.start);
-      const nextTok = ctx.words.find((x) => x.start > w.end - 1 && x !== w);
+      const nextTok = wordAfter(ctx, w.end);
       if (key === 'in' && prev && /^(the|of|and|to|is|a)$/i.test(prev.text)) continue;
       if (key === 'in' && nextTok && /^(the|a|an|my|your|this|that)$/i.test(nextTok.text)) continue;
       ctx.add({
@@ -91,7 +95,7 @@ export const roRules = [
         if (/^\s*[,.;:!?]|^\s*$/.test(afterTxt)) continue; // probabil posesiv
         const p = prev && ctx.text.slice(prev.end, w.start).trim() === '' ? prev.text.toLowerCase() : '';
         const n = next && ctx.text.slice(w.end, next.start).trim() === '' ? next.text.toLowerCase() : '';
-        const sentenceStart = !prev || /[.!?…]\s*$/.test(ctx.text.slice(0, w.start));
+        const sentenceStart = !prev || /[.!?…]$/.test(textBefore(ctx.text, w.start));
         if (PRE_SA.has(p) || NEXT_SA.has(n) || sentenceStart || (prev && !NOUN_END.test(prev.text))) {
           ctx.add({
             offset: w.start,
@@ -145,8 +149,11 @@ export const roRules = [
   }),
 
   rule('RO_VIRGULA_DAR', 'punctuation', (ctx) => {
-    scan(ctx, /(?<!\p{L})(\p{L}{1,64})( {1,8})(dar|însă|insa)(?= {1,8}\p{L})/gu, (m) => {
+    scan(ctx, /(?<!\p{L})(\p{L}{1,64})( {1,8})(dar|însă|insa)(?= {1,8}(\p{L}+))/gu, (m) => {
       if (/^(ba|și|si|nu|ci|iar|dar|însă|insa|deci|ca)$/iu.test(m[1])) return null;
+      // „însă” poate sta și în interiorul propoziției („au cerut însă clarificări”): virgula e obligatorie doar
+      // când urmează un început de propoziție nouă (pronume, negație, auxiliar, adverb, prepoziție).
+      if (/^însă|insa$/iu.test(m[3]) && !CLAUSE_START.has(m[4].toLowerCase())) return null;
       return {
         offset: m.index,
         length: m[0].length,
@@ -157,7 +164,7 @@ export const roRules = [
   }),
 
   rule('RO_UNUL_DIN', 'grammar', (ctx) => {
-    const plural = /(?:ii|ilor|ele|ile|uri|ți|ști|ni|ci|gi|ori)$/iu;
+    const plural = /(?:ii|ilor|ele|ile|uri|ți|ști|ni|ci|gi|ori|vi|ri|si|zi|li|mi|pi|ti|di|bi|fi|ei|ăi|âi)$/iu;
     const pron = /^(ei|ele|noi|voi|cei|cele|aceștia|acestea|ceilalți|ceilalte)$/iu;
     scan(ctx, /\b(unul|una|unii|unele|fiecare|oricare|niciunul|niciuna) din (\p{L}+)/giu, (m) => {
       if (!plural.test(m[2]) && !pron.test(m[2])) return null;
@@ -175,7 +182,7 @@ export const roRules = [
     for (const w of ctx.words) {
       const lower = w.text.toLowerCase();
       if (!LOWER_NAMES.has(lower) || w.text === lower || w.text === w.text.toUpperCase()) continue;
-      const before = ctx.text.slice(0, w.start).trimEnd();
+      const before = textBefore(ctx.text, w.start);
       if (!before || /[.!?:„“"»—–\-(\[]$/u.test(before)) continue;
       ctx.add({
         offset: w.start,
@@ -188,12 +195,12 @@ export const roRules = [
   }),
 
   tableRule('RO_PLEONASM', 'style', [
-    [/\b(urc|urca|urcă|urcat|urcăm|urcați|urcând|urcă) sus\b/giu, '$1', M('Pleonasm: „a urca” include direcția „sus”', 'Pleonasm: “a urca” already means going up')],
-    [/\b(cobor|coborî|coboară|coborât|coborâm|coborâți|coborând) jos\b/giu, '$1', M('Pleonasm: „a coborî” include „jos”', 'Pleonasm: “a coborî” already means going down')],
-    [/\b(intra|intră|intrat|intrăm|intrați|intrând) înăuntru\b/giu, '$1', M('Pleonasm: „a intra” include „înăuntru”', 'Pleonasm: “a intra” already means going in')],
-    [/\b(ies|iese|ieși|ieșit|ieșim|ieșiți|ieșind) afară\b/giu, '$1', M('Pleonasm: „a ieși” include „afară”', 'Pleonasm: “a ieși” already means going out')],
-    [/\b(repet|repeta|repetă|repetat|repetăm|repetați|repetând) (din nou|iarăși|iarasi)\b/giu, '$1', M('Pleonasm: „a repeta” include „din nou”', 'Pleonasm: “a repeta” already means doing again')],
-    [/\b(întorc|întoarce|întors|întoarcem|întoarceți|întorcând) înapoi\b/giu, '$1', M('Pleonasm: „a (se) întoarce” include „înapoi”', 'Pleonasm: “a întoarce” already implies back')],
+    [/\b(urc\p{L}{0,6}) sus\b/giu, '$1', M('Pleonasm: „a urca” include direcția „sus”', 'Pleonasm: “a urca” already means going up')],
+    [/\b(cobor\p{L}{0,6}) jos\b/giu, '$1', M('Pleonasm: „a coborî” include „jos”', 'Pleonasm: “a coborî” already means going down')],
+    [/\b(intr\p{L}{0,6}) înăuntru\b/giu, '$1', M('Pleonasm: „a intra” include „înăuntru”', 'Pleonasm: “a intra” already means going in')],
+    [/\b(ie[sș]\p{L}{0,6}) afară\b/giu, '$1', M('Pleonasm: „a ieși” include „afară”', 'Pleonasm: “a ieși” already means going out')],
+    [/\b(repe[tț]\p{L}{0,6}) (?:din nou|iarăși|iarasi)\b/giu, '$1', M('Pleonasm: „a repeta” include „din nou”', 'Pleonasm: “a repeta” already means doing again')],
+    [/\b(în?toarc\p{L}{0,6}|în?tors\p{L}{0,4}|întorc\p{L}{0,6}) înapoi\b/giu, '$1', M('Pleonasm: „a (se) întoarce” include „înapoi”', 'Pleonasm: “a întoarce” already implies back')],
   ]),
 ];
 
@@ -215,9 +222,9 @@ roRules.push(
   ]),
 
   tableRule('RO_A_AI_AM', 'grammar', [
-    [/\btu a (\p{L}+(?:at|it|ut|ât|ît))\b/gu, (m) => `tu ai ${m[1]}`, M('Acord: „tu ai”', 'Agreement: “tu ai”')],
-    [/\b(el|ea) ai (\p{L}+(?:at|it|ut|ât|ît))\b/gu, (m) => `${m[1]} a ${m[2]}`, M('Acord: „el/ea a”', 'Agreement: “el/ea a”')],
-    [/\beu a (\p{L}+(?:at|it|ut|ât|ît))\b/gu, (m) => `eu am ${m[1]}`, M('Acord: „eu am”', 'Agreement: “eu am”')],
+    [/\b(tu) a (\p{L}+(?:at|it|ut|ât|ît))\b/giu, (m) => `${m[1]} ai ${m[2]}`, M('Acord: „tu ai”', 'Agreement: “tu ai”')],
+    [/\b(el|ea) ai (\p{L}+(?:at|it|ut|ât|ît))\b/giu, (m) => `${m[1]} a ${m[2]}`, M('Acord: „el/ea a”', 'Agreement: “el/ea a”')],
+    [/\b(eu) a (\p{L}+(?:at|it|ut|ât|ît))\b/giu, (m) => `${m[1]} am ${m[2]}`, M('Acord: „eu am”', 'Agreement: “eu am”')],
   ]),
 
   tableRule('RO_ORTO_COMPUSE', 'spelling', [
@@ -228,13 +235,19 @@ roRules.push(
   ]),
 
   rule('RO_NICIUN', 'grammar', (ctx) => {
-    scan(ctx, /\bnici (un|o) (\p{L}+)/gu, (m) => {
-      const rest = ctx.text.slice(m.index + m[0].length);
-      if (/\bnici\b/u.test(rest) || /^(unul|una)/u.test(m[2])) return null; // „nici un X, nici doi”
+    scan(ctx, /\bnici (un|o) (\p{L}+)/giu, (m) => {
+      if (/^(unul|una)/iu.test(m[2])) return null;
+      // „nici un X, nici doi” / „nici un om, nici o pasăre”: corelativ în aceeași propoziție, înainte sau după
+      const before = ctx.text.slice(Math.max(0, m.index - 80), m.index);
+      const sentBefore = before.slice(Math.max(before.lastIndexOf('.'), before.lastIndexOf('!'), before.lastIndexOf('?')) + 1);
+      const afterRaw = ctx.text.slice(m.index + m[0].length, m.index + m[0].length + 80);
+      const cut = afterRaw.search(/[.!?]/);
+      const sentAfter = cut < 0 ? afterRaw : afterRaw.slice(0, cut);
+      if (/\bnici\b/iu.test(sentBefore) || /\bnici\b/iu.test(sentAfter)) return null;
       return {
         offset: m.index,
         length: 4 + 1 + m[1].length,
-        rep: [m[1] === 'un' ? 'niciun' : 'nicio'],
+        rep: [matchCase(m[0].slice(0, 4), m[1].toLowerCase() === 'un' ? 'niciun' : 'nicio')],
         msg: M('Nehotărâtul negativ se scrie legat: „niciun/nicio”', 'The negative determiner is one word: “niciun/nicio”'),
       };
     });

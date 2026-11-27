@@ -1,9 +1,10 @@
-import { t, guessUiLang } from './ui-strings.js';
+import { t, guessUiLang, uiDir } from './ui-strings.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const send = (m) => api.runtime.sendMessage(m);
 const $ = (id) => document.getElementById(id);
-const COLORS = { spelling: '#d92d20', grammar: '#d97706', punctuation: '#b45309', typography: '#2563eb', style: '#7c3aed' };
+// fundaluri pentru text alb: raport de contrast >= 4.5:1 (WCAG AA)
+const COLORS = { spelling: '#c42418', grammar: '#a85500', punctuation: '#9a4a07', typography: '#2563eb', style: '#7c3aed' };
 let ui = guessUiLang();
 let timer = 0;
 let version = 0;
@@ -46,6 +47,7 @@ async function run() {
     const addBtn = (rep) => {
       const b = document.createElement('button');
       b.textContent = rep === '' ? '⌫' : rep;
+      b.setAttribute('aria-label', rep === '' ? t(ui, 'remove') : rep);
       b.addEventListener('click', () => {
         $('txt').value = applyEdits($('txt').value, [{ offset: m.o, length: m.l, replacement: rep }]);
         schedule(0);
@@ -84,9 +86,14 @@ const schedule = (d = 350) => {
   const r = await send({ t: 'getSettings' });
   ui = r.settings.ui || ui;
   document.documentElement.lang = ui;
+  document.documentElement.dir = uiDir(ui);
   document.title = 'ERATA — ' + t(ui, 'studio');
   $('title').textContent = 'ERATA · ' + t(ui, 'studio');
   $('hint').textContent = t(ui, 'studio_hint');
+  $('txt').setAttribute('aria-label', t(ui, 'studio'));
+  $('lang').setAttribute('aria-label', t(ui, 'language'));
+  $('copy').setAttribute('aria-label', t(ui, 'copy'));
+  $('copy').title = t(ui, 'copy');
   $('fix').textContent = t(ui, 'fix_all');
   $('restore').textContent = t(ui, 'restore');
   $('lang').append(new Option(t(ui, 'auto'), 'auto'), ...r.languages.map((l) => new Option(l.name, l.code)));

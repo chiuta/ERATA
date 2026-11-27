@@ -1,0 +1,20 @@
+{
+ "extName": {
+  "message": "ERATA — çevrimdışı yazım ve dil denetimi"
+ },
+ "extDesc": {
+  "message": "%100 yerel çalışan yazım, dil bilgisi ve tipografi denetimi: ro, en, fr, es, pt. Hesap yok, metniniz hiçbir yere gönderilmez."
+ },
+ "cmdFixAll": {
+  "message": "Etkin alandaki tüm sorunları düzelt"
+ },
+ "cmdToggleSite": {
+  "message": "Bu sitede aç/kapat"
+ },
+ "cmdSuggest": {
+  "message": "İmleçteki sorun için önerileri aç"
+ },
+ "cmdMenu": {
+  "message": "Etkin alanın ERATA menüsünü aç"
+ }
+}

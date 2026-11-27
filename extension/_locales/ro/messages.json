@@ -4,5 +4,17 @@
  },
  "extDesc": {
   "message": "Corector ortografic, gramatical și tipografic care rulează 100% local: ro, en, fr, es, pt. Fără cont, fără trimiterea textului."
+ },
+ "cmdFixAll": {
+  "message": "Corectează tot în câmpul activ"
+ },
+ "cmdToggleSite": {
+  "message": "Activează/dezactivează pe acest site"
+ },
+ "cmdSuggest": {
+  "message": "Deschide sugestiile pentru problema de la cursor"
+ },
+ "cmdMenu": {
+  "message": "Deschide meniul ERATA al câmpului activ"
  }
 }

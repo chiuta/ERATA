@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.0 — 2026-11-27
+### Added
+- Interface, README and presentation page in **25 languages**: the 8 core ones plus the national-minority languages of Romania (uk, tr, crh, ru, sr, sk, bg, hr, el, yi, cs, pl, hy, rue, sq, mk, rmy). The 17 new ones are machine translations not yet reviewed by native speakers (lowest confidence: rue, rmy, crh, yi; moderate: hy, sq). Store metadata (`_locales`) only for locales browsers' stores accept. Yiddish is laid out right-to-left.
+- Keyboard access: `Alt+Shift+Space` opens suggestions at the cursor, `Alt+Shift+M` opens the field menu; focus trap, Esc, focus restore, localised ARIA labels.
+- `npm run eval`: precision/recall/F1 per language and per rule on an author-written labelled set (not independent), false alarms per 1000 words on author-written correct corpora, language-detection rate.
+- Presentation page is now assembled from `docs/index.src.html` + `docs/i18n/*.js` (`npm run site`); UI strings live in `extension/i18n/*.js`.
+
+### Fixed (second adversarial audit)
+- Engine: quadratic time on 1 MB inputs (sentence splitting, word look-around, RO_SA): >120 s down to <4 s; hard time budget.
+- Hunspell: infinite loop on `REP ^`/`$`, exponential compounds, slow French suggestions (~1.2 s to ~0.2 s); malformed/BOM/CRLF/UTF-16/legacy-encoded dictionaries load with warnings instead of throwing.
+- Rules: false positives/negatives in EN_I, EN_AGREEMENT, EN_COULD_OF, FR_ELISION, FR_MOIS_JOURS, ES_SIGNOS_INVERTIDOS, ES_MESES_DIAS, PT_GRAMATICA, SENTENCE_CAPITAL, RO_PLEONASM; proper names and foreign quotations no longer raise spelling alarms; three non-idempotent `fixAll` cases.
+- Language detection on short fragments (3–50 words): 76.9% to 97.5% on the author's set.
+- Cache: signature collisions, stale results after invalidation, poisoning by a failing dictionary; options sanitised; unsafe (ReDoS) user rules rejected in the engine and in the extension, with a localised message.
+- Extension: UI invisible under modal `<dialog>`/popover/fullscreen (now in the top layer); underlines missing under strict CSP; wrong geometry under CSS transforms, zoom, vertical text, RTL and clipped scroll containers; IME composition, native undo and selection protected; sleeping/orphaned service worker handled (retry, "connection lost" badge).
+- Privacy: a password field switched to text ("show password") stays excluded; sensitive-field detection uses `type`/`autocomplete`/`inputmode` instead of a broad name regex; network log shows 0 external requests from the extension.
+- Accessibility: AA contrast palette, forced-colors fixes, "Checking…" state.
+
+### Known gaps
+- Engine messages (rule explanations) are localised only in the checked language/English, not in the 25 UI languages.
+- Evaluation sets are written by the author; no independent benchmark. No Hungarian or other minority-language spell checking: translating the interface adds no dictionary.
+- Firefox is linted, not run; Safari untested. Rotated contenteditable has no underlines; tiny iframes clip the card.
+
 ## 0.3.0 — 2026-11-18
 - Adversarial audit of the engine, rules and extension.
 - Added `docs/COMPARISON.md`: an adversarial, sourced comparison with the alternatives (unverified facts are marked).

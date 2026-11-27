@@ -3,9 +3,20 @@ import { M, rule, scan, matchCase, tableRule } from './util.js';
 
 const L = (s) => new Set(s.split(/\s+/).filter(Boolean));
 
+const EN_PREFIXES = L('de re co non pre post anti semi multi ex self pro sub over under mid mini micro macro mega ultra inter intra counter cross half quasi pseudo');
+
 export const enPack = {
   abbr: L(`mr mrs ms dr prof sr jr st vs etc no fig inc ltd co jan feb mar apr jun jul aug sep sept oct nov dec approx dept est misc vol pp ca cf al`),
-  repeatOk: L('had that is was do can very so no yes bye knock really'),
+  repeatOk: L('had that do can very so no yes bye knock really'),
+  /** „de-icing”, „re-enter”: prefix + cuvânt valid. */
+  hyphenOk(parts, spell) {
+    return parts.length === 2 && EN_PREFIXES.has(parts[0].toLowerCase()) && parts[1].length >= 3 && spell(parts[1]);
+  },
+  /** Împrumuturi cu diacritice (café, naïve, résumé): acceptate dacă forma fără diacritice e corectă. */
+  altSpell(w, spell) {
+    const base = w.normalize('NFD').replace(/\p{M}/gu, '');
+    return base !== w.normalize('NFD') && base.length >= 3 && spell(base);
+  },
 };
 
 // „an” înaintea unui sunet vocalic; excepții scrise de mână
@@ -26,11 +37,13 @@ const IRREG_PAST = 'went saw took made came got gave ate wrote knew thought brou
 export const enRules = [
   rule('EN_I', 'grammar', (ctx) => {
     scan(ctx, /(?<![\p{L}\p{N}'’])i(?=(?:'(?:m|ll|ve|d)|’(?:m|ll|ve|d))?(?![\p{L}\p{N}]))/gu, (m) => {
-      const after = ctx.text.slice(m.index + 1, m.index + 4);
-      const len = /^['’](?:m|ll|ve|d)/.test(after) ? 1 : 1;
+      const next = ctx.text[m.index + 1];
+      const prev = ctx.text[m.index - 1];
+      // „i.e.”, „(i)”, „i)” (numerotare romană/enumerare) nu sunt pronumele „I”
+      if ((next === '.' && /\p{L}/u.test(ctx.text[m.index + 2] || '')) || next === ')' || prev === '(' || prev === '.' || next === '-' ) return null;
       return {
         offset: m.index,
-        length: len,
+        length: 1,
         rep: ['I'],
         msg: M('Pronumele „I” se scrie cu majusculă', 'The pronoun “I” is always capitalised'),
         autofix: true,
@@ -61,7 +74,7 @@ export const enRules = [
   }),
 
   tableRule('EN_AGREEMENT', 'grammar', [
-    [/\b(he|she|it) (have|don't|don’t|are)\b/giu, (m) => `${m[0].split(' ')[0]} ${{ have: 'has', "don't": "doesn't", 'don’t': 'doesn’t', are: 'is' }[m[0].split(' ')[1].toLowerCase()]}`, M('Acordul subiect–predicat', 'Subject–verb agreement')],
+    [/(?<!\b(?:does|did|do|would|could|should|can|will|shall|may|might|must|let|lets|make|makes|made|help|helps|had|to|not|n['’]t|if|when|that|and|or|but|nor|than|as|why|how|what|where|who|whether|then|never|ever|also|just|only|still|would['’]ve|could['’]ve|should['’]ve)\s)\b(he|she|it) (have|don't|don’t|are)\b/giu, (m) => `${m[0].split(' ')[0]} ${{ have: 'has', "don't": "doesn't", 'don’t': 'doesn’t', are: 'is' }[m[0].split(' ')[1].toLowerCase()]}`, M('Acordul subiect–predicat', 'Subject–verb agreement')],
     [/\b(they|we|you) (is|has|doesn't|doesn’t)\b/giu, (m) => `${m[0].split(' ')[0]} ${{ is: 'are', has: 'have', "doesn't": "don't", 'doesn’t': 'don’t' }[m[0].split(' ')[1].toLowerCase()]}`, M('Acordul subiect–predicat', 'Subject–verb agreement')],
     [/\bI (is|are|has|does)\b/gu, (m) => `I ${{ is: 'am', are: 'am', has: 'have', does: 'do' }[m[1]]}`, M('Acordul subiect–predicat', 'Subject–verb agreement')],
   ]),
@@ -69,7 +82,7 @@ export const enRules = [
   tableRule('EN_COULD_OF', 'grammar', [
     [/\b(could|should|would|must|might) of\b/giu, (m) => `${m[1]} have`, M('Se scrie „have”, nu „of”', 'It is “have”, not “of”')],
     [/\balot\b/giu, (m) => matchCase(m[0], 'a lot'), M('Corect: „a lot”', 'Correct: “a lot”')],
-    [/\b(more|less|better|worse|bigger|smaller|rather|other|greater|fewer|higher|lower|faster|slower|older|younger|easier|harder|larger) then\b/giu, (m) => `${m[1]} than`, M('Comparativ: „than”', 'Comparatives take “than”')],
+    [/\b(more|less|better|worse|bigger|smaller|rather|other|greater|fewer|higher|lower|faster|slower|older|younger|easier|harder|larger|taller|shorter|longer|stronger|weaker|richer|poorer|cheaper|smarter|happier|lighter|heavier|louder|quieter|newer|earlier|wiser|nicer|closer|warmer|colder|cooler|hotter|deeper|wider|narrower|thinner|thicker|safer|tougher|cleaner|busier|funnier|healthier|wealthier) then\b/giu, (m) => `${m[1]} than`, M('Comparativ: „than”', 'Comparatives take “than”')],
     [/\b(and|but|if|until|just|since) than\b/giu, (m) => `${m[1]} then`, M('Secvență temporală: „then”', 'Sequence in time: “then”')],
     [/\byour welcome\b/giu, (m) => matchCase(m[0], "you're welcome"), M('Corect: „you’re welcome”', 'Correct: “you’re welcome”')],
     [/\byour (going|being|not|doing|getting|making|coming|a|an|the best|so|very|too)\b/giu, (m) => `you're ${m[1]}`, M('„you’re” = „you are”', '“you’re” means “you are”')],
@@ -78,7 +91,7 @@ export const enRules = [
     [/\b(it's|it’s) (own|value|purpose|size|shape|colou?r|content|owner|features|performance|price|members|name)\b/giu, (m) => `its ${m[2]}`, M('Posesivul este „its”', 'The possessive is “its”')],
     [/\b(their|there) (is|are|was|were|isn't|aren't)\b/giu, (m) => (m[1].toLowerCase() === 'their' ? `there ${m[2]}` : m[0]), M('„there is/are” (nu „their”)', '“there is/are”, not “their”')],
     [/\bthey're (own|car|house|name|team|work|life|friends?|family|dog|cat|company|business|website)\b/giu, (m) => `their ${m[1]}`, M('Posesivul este „their”', 'The possessive is “their”')],
-    [/\b(a|an) (people|children|men|women|peoples)\b/giu, (m) => `${{ people: 'a person', peoples: 'a person', children: 'a child', men: 'a man', women: 'a woman' }[m[2].toLowerCase()]}`, M('Substantiv la plural după „a/an”', 'Plural noun after “a/an”')],
+    [/\b(a|an) (people|children|men|women|peoples)\b(?!['’]s?\b)/giu, (m) => `${{ people: 'a person', peoples: 'a person', children: 'a child', men: 'a man', women: 'a woman' }[m[2].toLowerCase()]}`, M('Substantiv la plural după „a/an”', 'Plural noun after “a/an”')],
     [/\b(this) (things|people|days|years|times|ways|problems|ideas)\b/giu, (m) => `these ${m[2]}`, M('Acord singular/plural', 'Number agreement')],
     [/\b(these|those) (thing|person|day|year|time|way|problem|idea)\b/giu, (m) => `${m[1]} ${m[2]}s`, M('Acord singular/plural', 'Number agreement')],
   ]),

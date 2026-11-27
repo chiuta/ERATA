@@ -1,4 +1,4 @@
-import { t, guessUiLang } from './ui-strings.js';
+import { t, guessUiLang, uiDir } from './ui-strings.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const $ = (id) => document.getElementById(id);
@@ -8,12 +8,14 @@ const $ = (id) => document.getElementById(id);
   const S = r.settings;
   const ui = S.ui || guessUiLang();
   document.documentElement.lang = ui;
+  document.documentElement.dir = uiDir(ui);
   $('ver').textContent = 'v' + api.runtime.getManifest().version;
   $('tag').textContent = t(ui, 'tagline');
   $('l-enabled').textContent = t(ui, 'enabled');
   $('studio').textContent = t(ui, 'studio');
   $('opts').textContent = t(ui, 'settings');
   $('priv').textContent = t(ui, 'privacy');
+  $('kb').textContent = t(ui, 'kb_hint');
   $('enabled').checked = S.enabled;
   $('enabled').addEventListener('change', (e) => api.runtime.sendMessage({ t: 'setSettings', patch: { enabled: e.target.checked } }));
 

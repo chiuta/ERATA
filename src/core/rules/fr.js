@@ -1,5 +1,5 @@
 // Règles pour le français, rédigées de façon originale pour ERATA.
-import { M, rule, scan, matchCase, tableRule } from './util.js';
+import { M, rule, scan, matchCase, tableRule, textBefore } from './util.js';
 import { NBSP, NNBSP } from '../text.js';
 
 const L = (s) => new Set(s.split(/\s+/).filter(Boolean));
@@ -9,7 +9,7 @@ export const frPack = {
   repeatOk: L('nous vous que ça si très bien'),
 };
 
-const H_ASPIRE_OR_SEMI = L('onze oui ouistiti yacht yaourt yoga yen yéti yeti yucca ukase uhlan ululer');
+const H_ASPIRE_OR_SEMI = L('onze onzième onzièmes onzièmement oui ouistiti yacht yaourt yoga yen yéti yeti yucca ukase uhlan ululer');
 const MONTHS = 'janvier février mars avril mai juin juillet août septembre octobre novembre décembre'.split(' ');
 const DAYS = 'lundi mardi mercredi jeudi vendredi samedi dimanche'.split(' ');
 const LOWER = new Set([...MONTHS, ...DAYS]);
@@ -36,6 +36,8 @@ export const frRules = [
       if (!/^[aeiouyàâäéèêëîïôöùûüœ]/u.test(next)) return null;
       if (H_ASPIRE_OR_SEMI.has(next)) return null;
       const art = m[1].toLowerCase();
+      // « à la une » (première page) : pas d’élision
+      if (art === 'la' && next === 'une' && /(?:^|\s)(?:à|en|sur|dans|pour|faire|fait|fera|font|fais)$/iu.test(textBefore(ctx.text, m.index, 12))) return null;
       if (art === 'ce' && !/^(est|était|etait|a|ont|en)$/u.test(next)) return null; // « ce on » etc.
       if ((art === 'le' || art === 'la') && /^[aeiouyàâäéèêëîïôöùûüœ]{1,2}$/.test(next) && next.length <= 1) return null;
       const base = art === 'que' ? 'qu' : art === 'ce' ? 'c' : art[0];
@@ -76,8 +78,10 @@ export const frRules = [
     for (const w of ctx.words) {
       const lower = w.text.toLowerCase();
       if (!LOWER.has(lower) || w.text === lower || w.text === w.text.toUpperCase()) continue;
-      const before = ctx.text.slice(0, w.start).trimEnd();
+      const before = textBefore(ctx.text, w.start);
       if (!before || /[.!?:«“"—–\-(\[]$/u.test(before)) continue;
+      // « Mars » : planète ou dieu, sauf s’il suit un quantième ou une préposition de date
+      if (lower === 'mars' && !/(?:\d(?:er)?|(?:^|[\s-])(?:en|fin|début|debut|mi|avant|après|apres|depuis|pendant|dès|des|mois de)|\bd['’])$/iu.test(before)) continue;
       ctx.add({ offset: w.start, length: w.text.length, rep: [lower], msg: M('Les mois et les jours s’écrivent en minuscules', 'Months and weekdays are lowercase', { fr: 'Les mois et les jours s’écrivent en minuscules' }), autofix: true });
     }
   }),
