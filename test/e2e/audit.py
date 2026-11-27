@@ -940,6 +940,10 @@ NAMES_OK = ['user_bio', 'email_body', 'discard_reason', 'classname', 'compass_no
 NAMES_SKIP = [('username', ''), ('email', ''), ('user_email', ''), ('password', ''), ('newPassword', ''), ('card_number', ''), ('cvv', ''), ('otp', ''), ('iban', ''), ('ssn', ''), ('cnp', ''), ('captcha', '')]
 
 
+# Prag de latență pe cadru; pe mașini lente/partajate (CI) se ridică prin ERATA_LAT_MS.
+LAT_MS = float(os.environ.get('ERATA_LAT_MS', '400'))
+
+
 async def sec_names(env):
     await set_settings(env.sw, ui='ro', badge=False)
     page, errs = await open_page(env, 'blank')
@@ -1066,10 +1070,10 @@ async def sec_hostile(env):
     t0 = time.time()
     await page.keyboard.type('x', delay=0)
     lat = await page.evaluate("()=>new Promise(r=>{const s=performance.now();requestAnimationFrame(()=>r(performance.now()-s))})")
-    check('ostil: textarea 1 MB — pagina receptivă după tastare (<400 ms/cadru)', lat < 400, lat)
+    check('ostil: textarea 1 MB — pagina receptivă după tastare (<' + str(int(LAT_MS)) + ' ms/cadru)', lat < LAT_MS, lat)
     await page.wait_for_timeout(3500)
     lat = await page.evaluate("()=>new Promise(r=>{const s=performance.now();requestAnimationFrame(()=>r(performance.now()-s))})")
-    check('ostil: textarea 1 MB — pagina receptivă după verificare (<400 ms/cadru)', lat < 400, lat)
+    check('ostil: textarea 1 MB — pagina receptivă după verificare (<' + str(int(LAT_MS)) + ' ms/cadru)', lat < LAT_MS, lat)
     await page.evaluate("f.setSelectionRange(250000,250000);f.focus()")
     await page.keyboard.press('Alt+Shift+Space'); await page.wait_for_timeout(1500)
     dlg = [n for n in await ax_nodes(cdp) if n['role'] == 'dialog']
@@ -1079,10 +1083,10 @@ async def sec_hostile(env):
     t0 = time.time()
     await page.keyboard.type('y', delay=0)
     lat = await page.evaluate("()=>new Promise(r=>{const s=performance.now();requestAnimationFrame(()=>r(performance.now()-s))})")
-    check('ostil: contenteditable 1 MB — pagina receptivă după tastare (<400 ms/cadru)', lat < 400, lat)
+    check('ostil: contenteditable 1 MB — pagina receptivă după tastare (<' + str(int(LAT_MS)) + ' ms/cadru)', lat < LAT_MS, lat)
     await page.wait_for_timeout(4000)
     lat = await page.evaluate("()=>new Promise(r=>{const s=performance.now();requestAnimationFrame(()=>r(performance.now()-s))})")
-    check('ostil: contenteditable 1 MB — pagina receptivă după verificare (<400 ms/cadru)', lat < 400, lat)
+    check('ostil: contenteditable 1 MB — pagina receptivă după verificare (<' + str(int(LAT_MS)) + ' ms/cadru)', lat < LAT_MS, lat)
     # derulare rapidă în CE uriaș: costul de aranjare îl plătește pagina însăși; extensia nu trebuie să-l mărească sensibil.
     # Referință: același text într-un CE exclus de extensie (data-erata="off") în aceeași pagină.
     scroll = """async(id)=>{const e=document.getElementById(id);const t=[];for(let i=0;i<20;i++){e.scrollTop=i*300;await new Promise(r=>requestAnimationFrame(r));t.push(performance.now())}let m=0;for(let i=1;i<t.length;i++)m=Math.max(m,t[i]-t[i-1]);return m}"""
@@ -1133,6 +1137,11 @@ async def launch(env, tag):
     env.netlogs = getattr(env, 'netlogs', []) + [env.netlog]
     if os.path.exists(env.netlog):
         os.remove(env.netlog)
+    # Verificatorul nativ al browserului desenează propriile sublinieri roșii (acolo unde are dicționar),
+    # iar testele numără pixeli roșii: îl oprim din preferințele profilului, ca să măsurăm doar ERATA.
+    os.makedirs(os.path.join(prof, 'Default'), exist_ok=True)
+    with open(os.path.join(prof, 'Default', 'Preferences'), 'w') as f:
+        json.dump({'browser': {'enable_spellcheck': False}, 'spellcheck': {'dictionaries': [], 'use_spelling_service': False}}, f)
     env.ctx = await env.p.chromium.launch_persistent_context(
         prof, headless=False, locale='ro-RO',
         args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox',
