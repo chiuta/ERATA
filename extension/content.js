@@ -823,15 +823,21 @@ function boot() {
    * Caseta de padding a câmpului: {bl, bt} = chenar (+ bara de derulare din stânga, la RTL), {cw, ch} = lățime/înălțime cu padding.
    * În mod clasic asta raportează clientLeft/clientTop/clientWidth/clientHeight. Chrome 159 raportează însă, pentru <input>,
    * caseta de CONȚINUT (clientLeft include padding-ul, clientWidth îl exclude), ceea ce deplasa sublinierile cu padding-ul.
-   * Semantica se recunoaște pe axa verticală (acolo nu există bară de derulare), altfel pe cea orizontală.
    */
   function padBox(el, cs) {
     const n = (v) => parseFloat(v) || 0;
     const pl = n(cs.paddingLeft), pr = n(cs.paddingRight), pt = n(cs.paddingTop), pb = n(cs.paddingBottom);
-    const near = (a, b) => Math.abs(a - b) < 0.75;
-    const content = pt > 0 ? near(el.clientTop, n(cs.borderTopWidth) + pt) : pl > 0 && near(el.clientLeft, n(cs.borderLeftWidth) + pl);
-    if (!content) return { bl: el.clientLeft || 0, bt: el.clientTop || 0, cw: el.clientWidth, ch: el.clientHeight };
-    return { bl: el.clientLeft - pl, bt: el.clientTop - pt, cw: el.clientWidth + pl + pr, ch: el.clientHeight + pt + pb };
+    const bL = n(cs.borderLeftWidth), bR = n(cs.borderRightWidth), bT = n(cs.borderTopWidth), bB = n(cs.borderBottomWidth);
+    const near = (a, b) => Math.abs(a - b) < 1.01;
+    // fiecare axă se judecă separat: „conținut” = marginea începe după padding ȘI dimensiunea exclude padding-ul
+    const cx = pl + pr > 0 && near(el.clientLeft, bL + pl) && near(el.clientWidth, el.offsetWidth - bL - bR - pl - pr);
+    const cy = pt + pb > 0 && near(el.clientTop, bT + pt) && near(el.clientHeight, el.offsetHeight - bT - bB - pt - pb);
+    return {
+      bl: cx ? el.clientLeft - pl : el.clientLeft || 0,
+      cw: cx ? el.clientWidth + pl + pr : el.clientWidth,
+      bt: cy ? el.clientTop - pt : el.clientTop || 0,
+      ch: cy ? el.clientHeight + pt + pb : el.clientHeight,
+    };
   }
 
   /** Geometria locală (în coordonatele casetei câmpului, înainte de transformări) pentru textarea/input. */
